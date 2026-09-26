@@ -6,6 +6,7 @@
 #include "Components/RPGAttributeComponent.h"
 #include "Components/RPGSpellbookComponent.h"
 #include "Components/RPGStatusEffectComponent.h"
+#include "Core/RPGGameInstance.h"
 #include "Core/RPGPlayerController.h"
 #include "Core/RPGTestGameMode.h"
 #include "Engine/Canvas.h"
@@ -101,6 +102,14 @@ void ARPGHUD::DrawHUD()
 	const float DeltaSeconds = FMath::Min(GetWorld()->GetDeltaSeconds(), 0.1f);
 	UIScale = FMath::Max(0.5f, Canvas->ClipY / 1080.f);
 
+	ARPGPlayerController* PlayerController = Cast<ARPGPlayerController>(PlayerOwner);
+	if (PlayerController && PlayerController->IsMapSelectorOpen())
+	{
+		DrawMapSelector(*PlayerController);
+		return;
+	}
+	MapSelectorEntryBoxes.Reset();
+
 	DrawEnemyBars();
 	DrawFloatingTexts(DeltaSeconds);
 
@@ -121,7 +130,7 @@ void ARPGHUD::DrawHUD()
 
 	DrawMessage(DeltaSeconds);
 
-	if (const ARPGPlayerController* PlayerController = Cast<ARPGPlayerController>(PlayerOwner); PlayerController && PlayerController->IsHelpVisible())
+	if (PlayerController && PlayerController->IsHelpVisible())
 	{
 		DrawHelp();
 	}
@@ -335,13 +344,18 @@ void ARPGHUD::DrawFloatingTexts(float DeltaSeconds)
 
 void ARPGHUD::DrawZoneBanner(const AMageCharacter& Mage, float DeltaSeconds)
 {
-	const ARPGWorldGenerator* Generator = ARPGWorldGenerator::FindInWorld(GetWorld());
-	if (!Generator)
+	FText Zone;
+	if (const ARPGWorldGenerator* Generator = ARPGWorldGenerator::FindInWorld(GetWorld()))
 	{
-		return;
+		Zone = Generator->GetZoneNameAt(Mage.GetActorLocation());
+	}
+	else if (const URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>())
+	{
+		// Maps without zones announce the map itself.
+		const int32 MapIndex = GameInstance->FindMapIndex(GetWorld());
+		Zone = GameInstance->GetMaps().IsValidIndex(MapIndex) ? GameInstance->GetMaps()[MapIndex].DisplayName : FText::GetEmpty();
 	}
 
-	const FText Zone = Generator->GetZoneNameAt(Mage.GetActorLocation());
 	if (!Zone.EqualTo(CurrentZone))
 	{
 		CurrentZone = Zone;
@@ -410,6 +424,7 @@ void ARPGHUD::DrawHelp()
 		TEXT("3  Lightning Strike"),
 		TEXT("4  Blink"),
 		TEXT("5  Arcane Shield"),
+		TEXT("F2              Change map"),
 		TEXT("F1              Hide this panel"),
 	};
 
@@ -427,6 +442,91 @@ void ARPGHUD::DrawHelp()
 		const bool bSpellLine = Index >= 5 && Index <= 9;
 		DrawString(Lines[Index], X + 12.f * S, Y + 8.f * S + (Index + 1.4f) * LineHeight, bSpellLine ? FLinearColor(0.8f, 0.75f, 1.f) : TextColor, 16.f * S);
 	}
+}
+
+void ARPGHUD::DrawMapSelector(ARPGPlayerController& PlayerController)
+{
+	using namespace RPGHUDPrivate;
+
+	const URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>();
+	if (!GameInstance)
+	{
+		return;
+	}
+
+	const TArray<FRPGMapInfo>& Maps = GameInstance->GetMaps();
+	const int32 CurrentMap = GameInstance->FindMapIndex(GetWorld());
+	const float S = UIScale;
+	const float CenterX = Canvas->ClipX * 0.5f;
+	const float CardWidth = 720.f * S;
+	const float CardHeight = 92.f * S;
+	const float Gap = 14.f * S;
+	const float Left = CenterX - CardWidth * 0.5f;
+	const float Top = (Canvas->ClipY - (Maps.Num() * (CardHeight + Gap) - Gap)) * 0.5f;
+
+	const bool bJustOpened = MapSelectorEntryBoxes.Num() == 0;
+	MapSelectorEntryBoxes.Reset();
+	for (int32 Index = 0; Index < Maps.Num(); ++Index)
+	{
+		const float Y = Top + Index * (CardHeight + Gap);
+		MapSelectorEntryBoxes.Emplace(FVector2D(Left, Y), FVector2D(Left + CardWidth, Y + CardHeight));
+	}
+
+	// Hovering highlights an entry, but only when the mouse moves, so it does not fight the keyboard.
+	float MouseX = 0.f;
+	float MouseY = 0.f;
+	if (PlayerController.GetMousePosition(MouseX, MouseY))
+	{
+		const FVector2D MousePosition(MouseX, MouseY);
+		const int32 Hovered = GetMapSelectorEntryAt(MousePosition);
+		if (!bJustOpened && Hovered != INDEX_NONE && !MousePosition.Equals(LastMousePosition, 0.5f))
+		{
+			PlayerController.SetMapSelectorIndex(Hovered);
+		}
+		LastMousePosition = MousePosition;
+	}
+
+	DrawRect(FLinearColor(0.f, 0.f, 0.f, 0.62f), 0.f, 0.f, Canvas->ClipX, Canvas->ClipY);
+	DrawString(TEXT("CHOOSE A MAP"), CenterX, Top - 64.f * S, GoldColor, 42.f * S, true, true);
+	DrawRect(WithAlpha(GoldColor, 0.6f), CenterX - 180.f * S, Top - 38.f * S, 360.f * S, FMath::Max(1.f, 2.f * S));
+
+	const float TextLeft = Left + 78.f * S;
+	const float TextWidth = CardWidth - 78.f * S - 16.f * S;
+	for (int32 Index = 0; Index < Maps.Num(); ++Index)
+	{
+		const FRPGMapInfo& Map = Maps[Index];
+		const FBox2D& Box = MapSelectorEntryBoxes[Index];
+		const bool bSelected = Index == PlayerController.GetMapSelectorIndex();
+
+		DrawRect(bSelected ? FLinearColor(0.07f, 0.06f, 0.1f, 0.94f) : PanelColor, Box.Min.X, Box.Min.Y, CardWidth, CardHeight);
+		DrawFrame(Box.Min.X, Box.Min.Y, CardWidth, CardHeight, FMath::Max(1.f, (bSelected ? 3.f : 1.f) * S), bSelected ? GoldColor : WithAlpha(TextColor, 0.25f));
+		DrawString(FString::FromInt(Index + 1), Box.Min.X + 40.f * S, Box.Min.Y + CardHeight * 0.5f, bSelected ? GoldColor : WithAlpha(GoldColor, 0.6f), 36.f * S, true, true);
+		DrawString(Map.DisplayName.ToString(), TextLeft, Box.Min.Y + 14.f * S, bSelected ? FLinearColor::White : TextColor, 30.f * S);
+
+		// Shrink long descriptions to fit the card.
+		const FString Description = Map.Description.ToString();
+		float DescriptionHeight = 17.f * S;
+		const float DescriptionWidth = MeasureString(Description, DescriptionHeight).X;
+		if (DescriptionWidth > TextWidth)
+		{
+			DescriptionHeight *= TextWidth / DescriptionWidth;
+		}
+		DrawString(Description, TextLeft, Box.Min.Y + 56.f * S, WithAlpha(TextColor, 0.7f), DescriptionHeight);
+
+		if (Index == CurrentMap)
+		{
+			const FString Tag = TEXT("CURRENT");
+			DrawString(Tag, Box.Max.X - 14.f * S - MeasureString(Tag, 14.f * S).X, Box.Min.Y + 12.f * S, FLinearColor(0.5f, 0.85f, 0.5f), 14.f * S);
+		}
+	}
+
+	const FString Hint = FString::Printf(TEXT("W/S or Up/Down to choose    Enter or click to play    1-%d quick pick    F2 reopens this later"), Maps.Num());
+	DrawString(Hint, CenterX, Top + Maps.Num() * (CardHeight + Gap) + 24.f * S, WithAlpha(TextColor, 0.75f), 16.f * S, true);
+}
+
+int32 ARPGHUD::GetMapSelectorEntryAt(const FVector2D& ScreenPosition) const
+{
+	return MapSelectorEntryBoxes.IndexOfByPredicate([&ScreenPosition](const FBox2D& Box) { return Box.IsInside(ScreenPosition); });
 }
 
 void ARPGHUD::DrawBar(float X, float Y, float Width, float Height, float Fraction, const FLinearColor& Fill, const FLinearColor& Background)

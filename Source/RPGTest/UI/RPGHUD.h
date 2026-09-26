@@ -5,11 +5,12 @@
 #include "RPGHUD.generated.h"
 
 class AMageCharacter;
+class ARPGPlayerController;
 class UFont;
 
 /**
  * Canvas-drawn HUD: player health/mana/shield, spell hotbar with cooldowns, crosshair with target lock,
- * enemy health bars, floating combat text, zone banner, messages and a controls panel.
+ * enemy health bars, floating combat text, zone banner, messages, a controls panel and the map selector.
  */
 UCLASS()
 class RPGTEST_API ARPGHUD : public AHUD
@@ -24,6 +25,9 @@ public:
 
 	/** Shows a short centered message (e.g. "Not enough mana"). */
 	void ShowMessage(const FText& Message, const FLinearColor& Color, float Duration = 1.8f);
+
+	/** Map selector entry under a screen position, as drawn last frame. INDEX_NONE when there is none. */
+	int32 GetMapSelectorEntryAt(const FVector2D& ScreenPosition) const;
 
 private:
 	struct FFloatingText
@@ -48,6 +52,7 @@ private:
 	void DrawDeathScreen(const AMageCharacter& Mage);
 	void DrawMessage(float DeltaSeconds);
 	void DrawHelp();
+	void DrawMapSelector(ARPGPlayerController& PlayerController);
 
 	void DrawBar(float X, float Y, float Width, float Height, float Fraction, const FLinearColor& Fill, const FLinearColor& Background);
 	void DrawFrame(float X, float Y, float Width, float Height, float Thickness, const FLinearColor& Color);
@@ -70,6 +75,10 @@ private:
 
 	FText CurrentZone;
 	float ZoneBannerTime = 0.f;
+
+	/** Screen rectangles of the map selector entries; empty while the selector is closed. */
+	TArray<FBox2D> MapSelectorEntryBoxes;
+	FVector2D LastMousePosition = FVector2D::ZeroVector;
 
 	double LastDrawTime = 0.0;
 	float UIScale = 1.f;

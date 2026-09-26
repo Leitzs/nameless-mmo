@@ -12,16 +12,19 @@ State after v0.1 (first playable) and what is left from the original plan.
 | Enemy bot | `Characters/EnemyBotCharacter`, `AI/RPGBotAIController`, `AI/RPGBotSpawner` | Melee combo + telegraphed charge, patrol, chase, leash, respawn. |
 | HUD | `UI/RPGHUD` | Canvas-drawn: bars, spell bar with cooldowns, crosshair, enemy bars, damage numbers, zone banner, F1 help. |
 | Forest map | `World/RPGWorldGenerator`, `Content/RPGTest/Maps/L_Whisperwood` | Procedural terrain + instanced vegetation, roads, clearings, pond. |
+| Test arena map | `Content/RPGTest/Maps/L_TestArena`, `Scripts/create_test_arena.py` | Flat grid map of placed actors: duel bot with its patrol/aggro/leash rings drawn on the floor (`ARPGBotSpawner::bShowRangeRings`), 3-bot group behind a line-of-sight wall, 2 m platform, range lane marked every 5 m. |
+| Map selector | `Core/RPGGameInstance`, `Core/RPGPlayerController`, `UI/RPGHUD` | Canvas menu shown on the first level of each play session (pauses the game); F2 reopens it. The map list lives in `URPGGameInstance`. |
 | Medieval props | `World/RPGMedievalProp` | Only 4 types for now: Cottage, Campfire, Watchtower, Fence. |
 | Materials | `Content/RPGTest/Materials/M_RPG_Surface`, `M_RPG_FX` | Everything is primitive shapes colored via per-instance / primitive custom data. |
 | Characters | `Content/Characters/Mannequins` | Manny/Quinn + animations copied from the engine's third person template. |
 
-Debug console commands (open the console with `` ` `` during play): `RpgGod`, `RpgRefill`, `RpgGoToBot`, `RpgCast <1-5>`, `RpgStatus`, `RpgSelfTest`.
+Debug console commands (open the console with `` ` `` during play): `RpgGod`, `RpgRefill`, `RpgGoToBot`, `RpgCast <1-5>`, `RpgStatus`, `RpgSelfTest`, `RpgMap <n>` (plays map n of the selector list).
 
 ## Not done yet (cut to ship v0.1 fast)
 
 ### Verification
-- [ ] Run `RpgSelfTest` in PIE and read `LogRPG` output (casts every spell at the nearest bot and checks damage/freeze/shield/blink).
+- [x] Run `RpgSelfTest` and read `LogRPG` output (casts every spell at the nearest bot and checks damage/freeze/shield/blink). Result: 4/5 on both maps; Blink fails because of the aim bug below.
+- [ ] Fix aim soft-lock picking an enemy behind the aim direction: with a bot in melee contact behind the mage, the camera boom's probe pulls the camera next to the mage, and `AMageCharacter::ComputeAim`'s aim-assist sphere (90 cm, starting at the mage) already overlaps the bot at distance 0, so it locks on. Blink then goes towards the bot and stops on its capsule. Likely fix: skip pawn hits that are not in front of the ray start.
 - [ ] Play-test and tune numbers (damage, cooldowns, mana, bot HP 500, bot melee 16 / charge 24).
 - [ ] Check mouse-look pitch direction (uses the UE template convention; flip `bInvertLookY` on the Mage if it feels inverted).
 

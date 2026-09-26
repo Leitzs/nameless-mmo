@@ -6,6 +6,7 @@
 #include "Components/RPGAttributeComponent.h"
 #include "Components/RPGSpellbookComponent.h"
 #include "Components/RPGStatusEffectComponent.h"
+#include "Core/RPGGameInstance.h"
 #include "EngineUtils.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -22,6 +23,10 @@
 namespace RPGPlayerControllerPrivate
 {
 	constexpr int32 NumSpellSlots = 5;
+	constexpr int32 NumQuickPickKeys = 9;
+	constexpr int32 MenuContextPriority = 1;
+	/** How long the world keeps running behind the selector opened at level start, so the camera boom can settle. */
+	constexpr float StartupSelectorPauseDelay = 0.3f;
 	constexpr float SelfTestStepInterval = 1.5f;
 }
 
@@ -53,12 +58,18 @@ void ARPGPlayerController::BeginPlay()
 		PlayerCameraManager->ViewPitchMin = -70.f;
 		PlayerCameraManager->ViewPitchMax = 40.f;
 	}
+
+	if (const URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>(); GameInstance && !GameInstance->HasChosenMap())
+	{
+		OpenMapSelector(RPGPlayerControllerPrivate::StartupSelectorPauseDelay);
+	}
 }
 
-UInputAction* ARPGPlayerController::MakeAction(const TCHAR* Name, EInputActionValueType ValueType)
+UInputAction* ARPGPlayerController::MakeAction(const TCHAR* Name, EInputActionValueType ValueType, bool bTriggerWhenPaused)
 {
 	UInputAction* Action = NewObject<UInputAction>(this, Name);
 	Action->ValueType = ValueType;
+	Action->bTriggerWhenPaused = bTriggerWhenPaused;
 	return Action;
 }
 
@@ -75,6 +86,7 @@ void ARPGPlayerController::BuildInputActions()
 	JumpAction = MakeAction(TEXT("IA_Jump"), EInputActionValueType::Boolean);
 	SprintAction = MakeAction(TEXT("IA_Sprint"), EInputActionValueType::Boolean);
 	HelpAction = MakeAction(TEXT("IA_Help"), EInputActionValueType::Boolean);
+	MapSelectorAction = MakeAction(TEXT("IA_MapSelector"), EInputActionValueType::Boolean, true);
 
 	DefaultMappingContext = NewObject<UInputMappingContext>(this, TEXT("IMC_RPGDefault"));
 	UInputMappingContext* Context = DefaultMappingContext;
@@ -106,6 +118,7 @@ void ARPGPlayerController::BuildInputActions()
 	Context->MapKey(JumpAction, EKeys::SpaceBar);
 	Context->MapKey(SprintAction, EKeys::LeftShift);
 	Context->MapKey(HelpAction, EKeys::F1);
+	Context->MapKey(MapSelectorAction, EKeys::F2);
 
 	const FKey SpellKeys[RPGPlayerControllerPrivate::NumSpellSlots] = { EKeys::One, EKeys::Two, EKeys::Three, EKeys::Four, EKeys::Five };
 	for (int32 Slot = 0; Slot < RPGPlayerControllerPrivate::NumSpellSlots; ++Slot)
@@ -113,6 +126,29 @@ void ARPGPlayerController::BuildInputActions()
 		UInputAction* SpellAction = MakeAction(*FString::Printf(TEXT("IA_Spell%d"), Slot + 1), EInputActionValueType::Boolean);
 		SpellActions.Add(SpellAction);
 		Context->MapKey(SpellAction, SpellKeys[Slot]);
+	}
+
+	// Map selector navigation. Higher priority than the default context, so these keys stop moving/casting while it is open.
+	MenuUpAction = MakeAction(TEXT("IA_MenuUp"), EInputActionValueType::Boolean, true);
+	MenuDownAction = MakeAction(TEXT("IA_MenuDown"), EInputActionValueType::Boolean, true);
+	MenuConfirmAction = MakeAction(TEXT("IA_MenuConfirm"), EInputActionValueType::Boolean, true);
+	MenuClickAction = MakeAction(TEXT("IA_MenuClick"), EInputActionValueType::Boolean, true);
+
+	MenuMappingContext = NewObject<UInputMappingContext>(this, TEXT("IMC_RPGMenu"));
+	MenuMappingContext->MapKey(MenuUpAction, EKeys::Up);
+	MenuMappingContext->MapKey(MenuUpAction, EKeys::W);
+	MenuMappingContext->MapKey(MenuDownAction, EKeys::Down);
+	MenuMappingContext->MapKey(MenuDownAction, EKeys::S);
+	MenuMappingContext->MapKey(MenuConfirmAction, EKeys::Enter);
+	MenuMappingContext->MapKey(MenuConfirmAction, EKeys::SpaceBar);
+	MenuMappingContext->MapKey(MenuClickAction, EKeys::LeftMouseButton);
+
+	const FKey QuickPickKeys[RPGPlayerControllerPrivate::NumQuickPickKeys] = { EKeys::One, EKeys::Two, EKeys::Three, EKeys::Four, EKeys::Five, EKeys::Six, EKeys::Seven, EKeys::Eight, EKeys::Nine };
+	for (int32 Index = 0; Index < RPGPlayerControllerPrivate::NumQuickPickKeys; ++Index)
+	{
+		UInputAction* PickAction = MakeAction(*FString::Printf(TEXT("IA_MenuPick%d"), Index + 1), EInputActionValueType::Boolean, true);
+		MenuQuickPickActions.Add(PickAction);
+		MenuMappingContext->MapKey(PickAction, QuickPickKeys[Index]);
 	}
 }
 
@@ -137,10 +173,20 @@ void ARPGPlayerController::SetupInputComponent()
 	EnhancedInput->BindAction(SprintAction, ETriggerEvent::Started, this, &ThisClass::HandleSprintStarted);
 	EnhancedInput->BindAction(SprintAction, ETriggerEvent::Completed, this, &ThisClass::HandleSprintCompleted);
 	EnhancedInput->BindAction(HelpAction, ETriggerEvent::Started, this, &ThisClass::HandleToggleHelp);
+	EnhancedInput->BindAction(MapSelectorAction, ETriggerEvent::Started, this, &ThisClass::HandleToggleMapSelector);
 
 	for (int32 Slot = 0; Slot < SpellActions.Num(); ++Slot)
 	{
 		EnhancedInput->BindAction(SpellActions[Slot], ETriggerEvent::Started, this, &ThisClass::HandleSpell, Slot);
+	}
+
+	EnhancedInput->BindAction(MenuUpAction, ETriggerEvent::Started, this, &ThisClass::HandleMenuUp);
+	EnhancedInput->BindAction(MenuDownAction, ETriggerEvent::Started, this, &ThisClass::HandleMenuDown);
+	EnhancedInput->BindAction(MenuConfirmAction, ETriggerEvent::Started, this, &ThisClass::HandleMenuConfirm);
+	EnhancedInput->BindAction(MenuClickAction, ETriggerEvent::Started, this, &ThisClass::HandleMenuClick);
+	for (int32 Index = 0; Index < MenuQuickPickActions.Num(); ++Index)
+	{
+		EnhancedInput->BindAction(MenuQuickPickActions[Index], ETriggerEvent::Started, this, &ThisClass::HandleMenuQuickPick, Index);
 	}
 }
 
@@ -246,6 +292,149 @@ void ARPGPlayerController::ShowMessage(const FString& Message, const FLinearColo
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+// Map selector
+
+void ARPGPlayerController::OpenMapSelector(float PauseDelay)
+{
+	const URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>();
+	if (bMapSelectorOpen || !IsLocalController() || !GameInstance || GameInstance->GetMaps().Num() == 0)
+	{
+		return;
+	}
+
+	bMapSelectorOpen = true;
+	MapSelectorIndex = FMath::Max(0, GameInstance->FindMapIndex(GetWorld()));
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(MenuMappingContext, RPGPlayerControllerPrivate::MenuContextPriority);
+	}
+
+	if (PauseDelay > 0.f)
+	{
+		GetWorldTimerManager().SetTimer(MapSelectorPauseTimer, FTimerDelegate::CreateWeakLambda(this, [this]() { SetPause(true); }), PauseDelay, false);
+	}
+	else
+	{
+		SetPause(true);
+	}
+	FInputModeGameAndUI InputMode;
+	InputMode.SetHideCursorDuringCapture(false);
+	SetInputMode(InputMode);
+	bShowMouseCursor = true;
+}
+
+void ARPGPlayerController::CloseMapSelector()
+{
+	if (!bMapSelectorOpen)
+	{
+		return;
+	}
+
+	bMapSelectorOpen = false;
+	if (URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>())
+	{
+		GameInstance->MarkMapChosen();
+	}
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->RemoveMappingContext(MenuMappingContext);
+	}
+
+	GetWorldTimerManager().ClearTimer(MapSelectorPauseTimer);
+	SetPause(false);
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+}
+
+void ARPGPlayerController::SetMapSelectorIndex(int32 Index)
+{
+	if (const URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>(); GameInstance && GameInstance->GetMaps().Num() > 0)
+	{
+		MapSelectorIndex = FMath::Clamp(Index, 0, GameInstance->GetMaps().Num() - 1);
+	}
+}
+
+void ARPGPlayerController::ConfirmMapSelection(int32 Index)
+{
+	URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>();
+	if (!GameInstance || !GameInstance->GetMaps().IsValidIndex(Index))
+	{
+		ShowMessage(FString::Printf(TEXT("There is no map %d"), Index + 1), FLinearColor::Red);
+		return;
+	}
+
+	CloseMapSelector();
+	GameInstance->OpenMap(Index);
+}
+
+void ARPGPlayerController::HandleToggleMapSelector()
+{
+	if (bMapSelectorOpen)
+	{
+		CloseMapSelector();
+	}
+	else
+	{
+		OpenMapSelector();
+	}
+}
+
+void ARPGPlayerController::HandleMenuUp()
+{
+	const URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>();
+	if (bMapSelectorOpen && GameInstance && GameInstance->GetMaps().Num() > 0)
+	{
+		const int32 NumMaps = GameInstance->GetMaps().Num();
+		SetMapSelectorIndex((MapSelectorIndex - 1 + NumMaps) % NumMaps);
+	}
+}
+
+void ARPGPlayerController::HandleMenuDown()
+{
+	const URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>();
+	if (bMapSelectorOpen && GameInstance && GameInstance->GetMaps().Num() > 0)
+	{
+		SetMapSelectorIndex((MapSelectorIndex + 1) % GameInstance->GetMaps().Num());
+	}
+}
+
+void ARPGPlayerController::HandleMenuConfirm()
+{
+	if (bMapSelectorOpen)
+	{
+		ConfirmMapSelection(MapSelectorIndex);
+	}
+}
+
+void ARPGPlayerController::HandleMenuClick()
+{
+	float MouseX = 0.f;
+	float MouseY = 0.f;
+	const ARPGHUD* RPGHUD = GetHUD<ARPGHUD>();
+	if (!bMapSelectorOpen || !RPGHUD || !GetMousePosition(MouseX, MouseY))
+	{
+		return;
+	}
+
+	const int32 Index = RPGHUD->GetMapSelectorEntryAt(FVector2D(MouseX, MouseY));
+	if (Index != INDEX_NONE)
+	{
+		ConfirmMapSelection(Index);
+	}
+}
+
+void ARPGPlayerController::HandleMenuQuickPick(int32 Index)
+{
+	const URPGGameInstance* GameInstance = GetGameInstance<URPGGameInstance>();
+	if (bMapSelectorOpen && GameInstance && GameInstance->GetMaps().IsValidIndex(Index))
+	{
+		ConfirmMapSelection(Index);
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 // Debug commands
 
 void ARPGPlayerController::RpgGod()
@@ -261,6 +450,11 @@ void ARPGPlayerController::RpgGod()
 void ARPGPlayerController::RpgCast(int32 SlotNumber)
 {
 	HandleSpell(SlotNumber - 1);
+}
+
+void ARPGPlayerController::RpgMap(int32 MapNumber)
+{
+	ConfirmMapSelection(MapNumber - 1);
 }
 
 void ARPGPlayerController::RpgRefill()
