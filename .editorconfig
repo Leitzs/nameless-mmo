@@ -1,0 +1,16 @@
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cpp,h,cs,ini}]
+indent_style = tab
+indent_size = 4
+
+[*.{uproject,uplugin,json}]
+indent_style = tab
+
+[*.md]
+trim_trailing_whitespace = false
