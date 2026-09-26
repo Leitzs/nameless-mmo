@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.8",
+	"EngineAssociation": "{76588D3D-486B-6225-82D5-5AA42B96BAAE}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -23,6 +23,18 @@
 		},
 		{
 			"Name": "EnhancedInput",
+			"Enabled": true
+		},
+		{
+			"Name": "ProceduralMeshComponent",
+			"Enabled": true
+		},
+		{
+			"Name": "ModelContextProtocol",
+			"Enabled": true
+		},
+		{
+			"Name": "AllToolsets",
 			"Enabled": true
 		}
 	]

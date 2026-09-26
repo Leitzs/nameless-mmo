@@ -14,7 +14,11 @@ public class RPGTest : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"EnhancedInput"
+			"EnhancedInput",
+			"AIModule",
+			"NavigationSystem",
+			"GameplayTasks",
+			"ProceduralMeshComponent"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
