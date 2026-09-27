@@ -34,6 +34,13 @@ namespace RPGAssets
 	inline constexpr const TCHAR* QuinnMesh = TEXT("/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple");
 	inline constexpr const TCHAR* UnarmedAnimBlueprint = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/ABP_Unarmed");
 
+	// Action animations played by abilities (there are no weapon-specific sets yet).
+	inline constexpr const TCHAR* AttackAnim1 = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_01.MM_Attack_01");
+	inline constexpr const TCHAR* AttackAnim2 = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_02.MM_Attack_02");
+	inline constexpr const TCHAR* AttackAnim3 = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_03.MM_Attack_03");
+	inline constexpr const TCHAR* ChargedAttackAnim = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_ChargedAttack.MM_ChargedAttack");
+	inline constexpr const TCHAR* DashAnim = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Jump/MM_Dash.MM_Dash");
+
 	/** Surface material custom data layout, shared by C++ and M_RPG_Surface. */
 	inline constexpr int32 PrimitiveDataColor = 0;     // 4 floats (RGBA)
 	inline constexpr int32 PrimitiveDataRoughness = 4;

@@ -18,9 +18,16 @@ public class RPGTest : ModuleRules
 			"AIModule",
 			"NavigationSystem",
 			"GameplayTasks",
-			"ProceduralMeshComponent"
+			// Gameplay Ability System: abilities, attributes, effects and tags.
+			"GameplayAbilities",
+			"GameplayTags",
+			"ProceduralMeshComponent",
+			// Push-model replication (MARK_PROPERTY_DIRTY).
+			"NetCore"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { });
+		// Main menu and class picker are plain Slate widgets built in code; Sockets finds the host's LAN address;
+		// EngineSettings gives the default map to return to when leaving a game.
+		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore", "Sockets", "EngineSettings" });
 	}
 }

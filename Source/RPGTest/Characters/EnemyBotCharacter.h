@@ -16,7 +16,7 @@ class RPGTEST_API AEnemyBotCharacter : public ARPGCharacterBase
 	GENERATED_BODY()
 
 public:
-	AEnemyBotCharacter();
+	explicit AEnemyBotCharacter(const FObjectInitializer& ObjectInitializer);
 
 	virtual void Tick(float DeltaSeconds) override;
 

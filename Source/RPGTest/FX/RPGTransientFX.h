@@ -74,8 +74,14 @@ class RPGTEST_API ARPGTransientFX : public AActor
 public:
 	ARPGTransientFX();
 
-	/** Spawns an effect. When AttachTo is set, the effect follows that actor. */
+	/** Spawns an effect on this machine only (never on a dedicated server). When AttachTo is set, the effect follows that actor. */
 	static ARPGTransientFX* Spawn(const UObject* WorldContextObject, const FVector& Location, const FRotator& Rotation, const FRPGFXParams& Params, AActor* AttachTo = nullptr);
+
+	/**
+	 * Spawns an effect on every machine. Call it from server gameplay code (spell effects, explosions): on the server
+	 * it is sent to all clients through ARPGGameState; elsewhere it behaves like Spawn.
+	 */
+	static void SpawnForAll(const UObject* WorldContextObject, const FVector& Location, const FRotator& Rotation, const FRPGFXParams& Params, AActor* AttachTo = nullptr);
 
 	virtual void Tick(float DeltaSeconds) override;
 

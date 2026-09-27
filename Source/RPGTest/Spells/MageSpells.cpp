@@ -1,31 +1,95 @@
 #include "Spells/MageSpells.h"
 
-#include "Animation/AnimSequenceBase.h"
+#include "Abilities/RPGAbilitySystemComponent.h"
+#include "Abilities/RPGGameplayTags.h"
 #include "Characters/RPGCharacterBase.h"
-#include "Combat/RPGCombatLibrary.h"
-#include "Combat/RPGDamageTypes.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/RPGAttributeComponent.h"
-#include "Components/RPGStatusEffectComponent.h"
+#include "Core/RPGAssets.h"
 #include "Engine/World.h"
 #include "FX/RPGTransientFX.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Spells/RPGDelayedBlast.h"
-#include "UObject/ConstructorHelpers.h"
 
 #define LOCTEXT_NAMESPACE "RPGMageSpells"
 
-namespace
+namespace MageSpellTags
 {
-	const TCHAR* AttackAnimPath1 = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_01.MM_Attack_01");
-	const TCHAR* AttackAnimPath2 = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_02.MM_Attack_02");
-	const TCHAR* AttackAnimPath3 = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_03.MM_Attack_03");
-	const TCHAR* ChargedAnimPath = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_ChargedAttack.MM_ChargedAttack");
-	const TCHAR* DashAnimPath = TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Jump/MM_Dash.MM_Dash");
+	UE_DEFINE_GAMEPLAY_TAG_STATIC(Cooldown_Fireball, "Cooldown.Mage.Fireball");
+	UE_DEFINE_GAMEPLAY_TAG_STATIC(Cooldown_FrostNova, "Cooldown.Mage.FrostNova");
+	UE_DEFINE_GAMEPLAY_TAG_STATIC(Cooldown_LightningStrike, "Cooldown.Mage.LightningStrike");
+	UE_DEFINE_GAMEPLAY_TAG_STATIC(Cooldown_Blink, "Cooldown.Mage.Blink");
+	UE_DEFINE_GAMEPLAY_TAG_STATIC(Cooldown_ArcaneShield, "Cooldown.Mage.ArcaneShield");
+}
 
-	FVector GetFeetLocation(const ARPGCharacterBase& Character)
+// ---------------------------------------------------------------------------------------------------------------------
+// Shared helpers
+
+bool RPGSpellHelpers::TeleportCharacter(ARPGCharacterBase& Character, const FVector& Destination, const FRotator& Facing, bool bSweep)
+{
+	UWorld* World = Character.GetWorld();
+	if (!World)
 	{
-		return Character.GetActorLocation() - FVector(0.f, 0.f, Character.GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+		return false;
 	}
+
+	const FVector Start = Character.GetActorLocation();
+	const UCapsuleComponent* Capsule = Character.GetCapsuleComponent();
+	const float HalfHeight = Capsule->GetScaledCapsuleHalfHeight();
+	const FCollisionShape Shape = FCollisionShape::MakeCapsule(Capsule->GetScaledCapsuleRadius(), HalfHeight);
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(RPGTeleport), false, &Character);
+
+	// Sweep slightly above the ground so small bumps do not cut the move short.
+	const FVector Lift(0.f, 0.f, 60.f);
+	const FVector Direction = (Destination - Start).GetSafeNormal2D();
+	FVector End = Destination;
+	FHitResult Hit;
+	if (bSweep && World->SweepSingleByChannel(Hit, Start + Lift, End + Lift, FQuat::Identity, ECC_Pawn, Shape, Params))
+	{
+		End = Hit.Location - Lift - Direction * 10.f;
+	}
+
+	if (World->LineTraceSingleByChannel(Hit, End + FVector(0.f, 0.f, 300.f), End - FVector(0.f, 0.f, 1500.f), ECC_WorldStatic, Params))
+	{
+		End.Z = Hit.ImpactPoint.Z + HalfHeight + 2.f;
+	}
+
+	if (!bSweep)
+	{
+		// TeleportTo nudges the character out of anything it would overlap.
+		return Character.TeleportTo(End, Facing);
+	}
+
+	// Fall back to shorter hops if the destination is obstructed.
+	for (float Fraction = 1.f; Fraction > 0.2f; Fraction -= 0.25f)
+	{
+		if (Character.TeleportTo(FMath::Lerp(Start, End, Fraction), Facing))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Arcane Bolt
+
+USpell_ArcaneBolt::USpell_ArcaneBolt()
+{
+	SetCastAnimation(RPGAssets::AttackAnim3);
+
+	DisplayName = LOCTEXT("ArcaneBoltName", "Arcane Bolt");
+	Description = LOCTEXT("ArcaneBoltDesc", "A quick bolt of raw arcane energy. Costs nothing.");
+	Color = FLinearColor(0.8f, 0.5f, 1.f);
+	CastTime = 0.55f;
+	ReleaseDelay = 0.15f;
+	Range = 3500.f;
+	AnimationPlayRate = 1.8f;
+
+	Payload.DirectDamage = 11.f;
+	Payload.DamageType = RPGTags::Damage_Arcane;
+	ProjectileSpeed = 3600.f;
+	HomingAcceleration = 7000.f;
+	VisualScale = 0.6f;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -33,63 +97,26 @@ namespace
 
 USpell_Fireball::USpell_Fireball()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimSequenceBase> Animation(AttackAnimPath1);
-	CastAnimation = Animation.Object;
+	SetCastAnimation(RPGAssets::AttackAnim1);
 
 	DisplayName = LOCTEXT("FireballName", "Fireball");
 	Description = LOCTEXT("FireballDesc", "Hurls a homing ball of fire that explodes on impact and sets enemies ablaze.");
 	Color = FLinearColor(1.f, 0.38f, 0.06f);
-	ManaCost = 15.f;
+	CooldownTag = MageSpellTags::Cooldown_Fireball;
+	ResourceCost = 15.f;
 	Cooldown = 0.8f;
 	CastTime = 0.45f;
 	ReleaseDelay = 0.2f;
 	Range = 4500.f;
 	AnimationPlayRate = 1.4f;
 
-	ProjectileClass = ARPGProjectile::StaticClass();
-	Damage.DirectDamage = 32.f;
-	Damage.SplashDamage = 12.f;
-	Damage.SplashRadius = 280.f;
-	Damage.BurnDamagePerSecond = 5.f;
-	Damage.BurnDuration = 4.f;
-	Damage.DamageType = UDamageType_Fire::StaticClass();
-}
-
-void USpell_Fireball::Execute(const FRPGSpellContext& Context)
-{
-	UWorld* World = GetWorld();
-	ARPGCharacterBase* Caster = Context.Caster;
-	if (!World || !Caster || !ProjectileClass)
-	{
-		return;
-	}
-
-	FVector Direction = (Context.AimLocation - Context.Origin).GetSafeNormal();
-	if (Direction.IsNearlyZero())
-	{
-		Direction = Caster->GetActorForwardVector();
-	}
-
-	const FTransform SpawnTransform(Direction.Rotation(), Context.Origin);
-	ARPGProjectile* Projectile = World->SpawnActorDeferred<ARPGProjectile>(ProjectileClass, SpawnTransform, Caster, Caster, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-	if (!Projectile)
-	{
-		return;
-	}
-
-	Projectile->Configure(Damage, Color, ProjectileSpeed);
-	Projectile->FinishSpawning(SpawnTransform);
-	Projectile->SetHomingTarget(Context.Target, HomingAcceleration);
-
-	FRPGFXParams Flash;
-	Flash.Color = Color;
-	Flash.Intensity = 12.f;
-	Flash.Lifetime = 0.2f;
-	Flash.StartScale = FVector(0.2f);
-	Flash.EndScale = FVector(0.9f);
-	Flash.LightIntensity = 1500.f;
-	Flash.LightRadius = 600.f;
-	ARPGTransientFX::Spawn(Caster, Context.Origin, FRotator::ZeroRotator, Flash);
+	Payload.DirectDamage = 32.f;
+	Payload.SplashDamage = 12.f;
+	Payload.SplashRadius = 280.f;
+	Payload.DamageType = RPGTags::Damage_Fire;
+	Payload.Statuses.Emplace(RPGTags::Status_DoT_Burn, 4.f, 5.f);
+	ProjectileSpeed = 2800.f;
+	HomingAcceleration = 9000.f;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -97,79 +124,57 @@ void USpell_Fireball::Execute(const FRPGSpellContext& Context)
 
 USpell_FrostNova::USpell_FrostNova()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimSequenceBase> Animation(ChargedAnimPath);
-	CastAnimation = Animation.Object;
+	SetCastAnimation(RPGAssets::ChargedAttackAnim);
 
 	DisplayName = LOCTEXT("FrostNovaName", "Frost Nova");
 	Description = LOCTEXT("FrostNovaDesc", "Releases a wave of frost that damages and freezes nearby enemies, then slows them.");
 	Color = FLinearColor(0.45f, 0.85f, 1.f);
-	ManaCost = 30.f;
+	CooldownTag = MageSpellTags::Cooldown_FrostNova;
+	ResourceCost = 30.f;
 	Cooldown = 12.f;
 	CastTime = 0.5f;
 	ReleaseDelay = 0.25f;
 	Range = 650.f;
 	AnimationPlayRate = 1.8f;
-	bFaceAim = false;
+
+	Radius = 650.f;
+	Damage = 20.f;
+	DamageType = RPGTags::Damage_Frost;
+	Statuses.Emplace(RPGTags::Status_CC_Freeze, FreezeDuration);
+	// The slow outlasts the freeze by four seconds.
+	Statuses.Emplace(RPGTags::Status_Slow, FreezeDuration + 4.f, 0.5f);
 }
 
-void USpell_FrostNova::Execute(const FRPGSpellContext& Context)
+void USpell_FrostNova::ExecuteSpell(const FRPGSpellContext& Context)
 {
-	ARPGCharacterBase* Caster = Context.Caster;
-	if (!Caster)
+	Super::ExecuteSpell(Context);
+
+	if (Context.Caster)
+	{
+		RPGAbilityFX::SpawnBurst(Context.Caster, Context.Caster->GetActorLocation(), FLinearColor(0.8f, 0.95f, 1.f), 3.5f);
+	}
+}
+
+void USpell_FrostNova::OnNovaHit(const FRPGSpellContext& Context, ARPGCharacterBase* Target)
+{
+	if (!Target->IsAlive() || !Target->HasStatus(RPGTags::Status_CC_Freeze))
 	{
 		return;
 	}
 
-	const FVector Center = Caster->GetActorLocation();
-	const FVector Feet = GetFeetLocation(*Caster);
-
-	FRPGFXParams Wave;
-	Wave.Shape = ERPGFXShape::Cylinder;
-	Wave.Color = Color;
-	Wave.Intensity = 5.f;
-	Wave.FresnelAmount = 0.7f;
-	Wave.Lifetime = 0.7f;
-	Wave.GrowTime = 0.3f;
-	Wave.FadeStart = 0.25f;
-	Wave.StartScale = FVector(1.f, 1.f, 0.6f);
-	Wave.EndScale = FVector(Radius * 2.f / 100.f, Radius * 2.f / 100.f, 0.3f);
-	Wave.LightIntensity = 8000.f;
-	Wave.LightRadius = Radius * 1.6f;
-	ARPGTransientFX::Spawn(Caster, Feet + FVector(0.f, 0.f, 20.f), FRotator::ZeroRotator, Wave);
-
-	FRPGFXParams Burst;
-	Burst.Color = FLinearColor(0.8f, 0.95f, 1.f);
-	Burst.Intensity = 8.f;
-	Burst.FresnelAmount = 0.8f;
-	Burst.Lifetime = 0.35f;
-	Burst.StartScale = FVector(0.5f);
-	Burst.EndScale = FVector(3.5f);
-	ARPGTransientFX::Spawn(Caster, Center, FRotator::ZeroRotator, Burst);
-
-	for (ARPGCharacterBase* Target : URPGCombatLibrary::GetHostilesInRadius(Caster, Caster, Center, Radius))
-	{
-		URPGCombatLibrary::DealDamage(Target, Damage, Caster, Caster, UDamageType_Frost::StaticClass());
-		if (!Target->IsAlive())
-		{
-			continue;
-		}
-
-		Target->GetStatusEffects()->ApplyFreeze(FreezeDuration);
-		Target->GetStatusEffects()->ApplySlow(SlowMultiplier, FreezeDuration + SlowDuration);
-
-		// Ice crystal encasing the frozen target.
-		FRPGFXParams Ice;
-		Ice.Shape = ERPGFXShape::Cone;
-		Ice.Color = Color;
-		Ice.Intensity = 1.5f;
-		Ice.FresnelAmount = 0.6f;
-		Ice.Lifetime = FreezeDuration;
-		Ice.GrowTime = 0.15f;
-		Ice.FadeStart = FMath::Max(0.f, FreezeDuration - 0.4f);
-		Ice.StartScale = FVector(0.3f);
-		Ice.EndScale = FVector(1.3f, 1.3f, 2.4f);
-		ARPGTransientFX::Spawn(Caster, GetFeetLocation(*Target) + FVector(0.f, 0.f, 110.f), FRotator::ZeroRotator, Ice, Target);
-	}
+	// Ice crystal encasing the frozen target, for as long as the freeze lasts (it may be shortened by diminishing returns).
+	const float Duration = FMath::Max(0.3f, Target->GetRPGAbilitySystem()->GetStatusTimeRemaining(RPGTags::Status_CC_Freeze));
+	FRPGFXParams Ice;
+	Ice.Shape = ERPGFXShape::Cone;
+	Ice.Color = Color;
+	Ice.Intensity = 1.5f;
+	Ice.FresnelAmount = 0.6f;
+	Ice.Lifetime = Duration;
+	Ice.GrowTime = 0.15f;
+	Ice.FadeStart = FMath::Max(0.f, Duration - 0.4f);
+	Ice.StartScale = FVector(0.3f);
+	Ice.EndScale = FVector(1.3f, 1.3f, 2.4f);
+	ARPGTransientFX::SpawnForAll(Context.Caster, RPGAbilityFX::GetFeetLocation(*Target) + FVector(0.f, 0.f, 110.f), FRotator::ZeroRotator, Ice, Target);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -177,13 +182,13 @@ void USpell_FrostNova::Execute(const FRPGSpellContext& Context)
 
 USpell_LightningStrike::USpell_LightningStrike()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimSequenceBase> Animation(AttackAnimPath2);
-	CastAnimation = Animation.Object;
+	SetCastAnimation(RPGAssets::AttackAnim2);
 
 	DisplayName = LOCTEXT("LightningName", "Lightning Strike");
 	Description = LOCTEXT("LightningDesc", "Calls down a lightning bolt on the target area after a brief warning, damaging and stunning enemies.");
 	Color = FLinearColor(0.65f, 0.75f, 1.f);
-	ManaCost = 30.f;
+	CooldownTag = MageSpellTags::Cooldown_LightningStrike;
+	ResourceCost = 30.f;
 	Cooldown = 6.f;
 	CastTime = 0.45f;
 	ReleaseDelay = 0.2f;
@@ -191,7 +196,7 @@ USpell_LightningStrike::USpell_LightningStrike()
 	AnimationPlayRate = 1.3f;
 }
 
-void USpell_LightningStrike::Execute(const FRPGSpellContext& Context)
+void USpell_LightningStrike::ExecuteSpell(const FRPGSpellContext& Context)
 {
 	UWorld* World = GetWorld();
 	ARPGCharacterBase* Caster = Context.Caster;
@@ -212,7 +217,7 @@ void USpell_LightningStrike::Execute(const FRPGSpellContext& Context)
 	ARPGDelayedBlast* Blast = World->SpawnActorDeferred<ARPGDelayedBlast>(ARPGDelayedBlast::StaticClass(), SpawnTransform, Caster, Caster, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	if (Blast)
 	{
-		Blast->Configure(StrikeDelay, Radius, Damage, UDamageType_Lightning::StaticClass(), StunDuration, Color, Context.Target);
+		Blast->Configure(StrikeDelay, Radius, Damage, RPGTags::Damage_Lightning, FRPGStatusSpec(RPGTags::Status_CC_Stun, StunDuration), Color, Context.Target);
 		Blast->FinishSpawning(SpawnTransform);
 	}
 
@@ -225,7 +230,7 @@ void USpell_LightningStrike::Execute(const FRPGSpellContext& Context)
 	Spark.Flicker = 0.6f;
 	Spark.LightIntensity = 2000.f;
 	Spark.LightRadius = 500.f;
-	ARPGTransientFX::Spawn(Caster, Context.Origin, FRotator::ZeroRotator, Spark);
+	ARPGTransientFX::SpawnForAll(Caster, Context.Origin, FRotator::ZeroRotator, Spark);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -233,33 +238,34 @@ void USpell_LightningStrike::Execute(const FRPGSpellContext& Context)
 
 USpell_Blink::USpell_Blink()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimSequenceBase> Animation(DashAnimPath);
-	CastAnimation = Animation.Object;
+	SetCastAnimation(RPGAssets::DashAnim);
 
 	DisplayName = LOCTEXT("BlinkName", "Blink");
 	Description = LOCTEXT("BlinkDesc", "Teleports a short distance in the direction you are moving (or aiming when standing still).");
 	Color = FLinearColor(0.7f, 0.35f, 1.f);
-	ManaCost = 20.f;
+	CooldownTag = MageSpellTags::Cooldown_Blink;
+	ResourceCost = 20.f;
 	Cooldown = 6.f;
 	CastTime = 0.25f;
 	ReleaseDelay = 0.05f;
 	Range = 900.f;
 	AnimationPlayRate = 1.6f;
 	bFaceAim = false;
+	bSlowsWhileCasting = false;
 }
 
-void USpell_Blink::Execute(const FRPGSpellContext& Context)
+void USpell_Blink::ExecuteSpell(const FRPGSpellContext& Context)
 {
-	UWorld* World = GetWorld();
 	ARPGCharacterBase* Caster = Context.Caster;
-	if (!World || !Caster)
+	if (!Caster)
 	{
 		return;
 	}
 
 	const FVector Start = Caster->GetActorLocation();
 
-	FVector Direction = Caster->GetLastMovementInputVector().GetSafeNormal2D();
+	// Acceleration is the movement input as the server sees it (it arrives with the client's moves).
+	FVector Direction = Caster->GetCharacterMovement()->GetCurrentAcceleration().GetSafeNormal2D();
 	if (Direction.IsNearlyZero())
 	{
 		Direction = (Context.AimLocation - Start).GetSafeNormal2D();
@@ -267,25 +273,6 @@ void USpell_Blink::Execute(const FRPGSpellContext& Context)
 	if (Direction.IsNearlyZero())
 	{
 		Direction = Caster->GetActorForwardVector().GetSafeNormal2D();
-	}
-
-	const UCapsuleComponent* Capsule = Caster->GetCapsuleComponent();
-	const float HalfHeight = Capsule->GetScaledCapsuleHalfHeight();
-	const FCollisionShape Shape = FCollisionShape::MakeCapsule(Capsule->GetScaledCapsuleRadius(), HalfHeight);
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(RPGBlink), false, Caster);
-
-	// Sweep slightly above the ground so small bumps do not cut the blink short.
-	const FVector Lift(0.f, 0.f, 60.f);
-	FVector Destination = Start + Direction * Distance;
-	FHitResult Hit;
-	if (World->SweepSingleByChannel(Hit, Start + Lift, Destination + Lift, FQuat::Identity, ECC_Pawn, Shape, Params))
-	{
-		Destination = Hit.Location - Lift - Direction * 10.f;
-	}
-
-	if (World->LineTraceSingleByChannel(Hit, Destination + FVector(0.f, 0.f, 300.f), Destination - FVector(0.f, 0.f, 1500.f), ECC_WorldStatic, Params))
-	{
-		Destination.Z = Hit.ImpactPoint.Z + HalfHeight + 2.f;
 	}
 
 	FRPGFXParams Puff;
@@ -297,23 +284,14 @@ void USpell_Blink::Execute(const FRPGSpellContext& Context)
 	Puff.EndScale = FVector(0.1f, 0.1f, 2.6f);
 	Puff.LightIntensity = 2500.f;
 	Puff.LightRadius = 600.f;
-	ARPGTransientFX::Spawn(Caster, Start, FRotator::ZeroRotator, Puff);
+	ARPGTransientFX::SpawnForAll(Caster, Start, FRotator::ZeroRotator, Puff);
 
-	// Fall back to shorter hops if the destination is obstructed.
-	const FRotator Facing = Direction.Rotation();
-	bool bTeleported = false;
-	for (float Fraction = 1.f; Fraction > 0.2f && !bTeleported; Fraction -= 0.25f)
-	{
-		const FVector Candidate = FMath::Lerp(Start, Destination, Fraction);
-		bTeleported = Caster->TeleportTo(Candidate, Facing);
-	}
-
-	if (bTeleported)
+	if (RPGSpellHelpers::TeleportCharacter(*Caster, Start + Direction * Distance, Direction.Rotation()))
 	{
 		FRPGFXParams Arrive = Puff;
 		Arrive.StartScale = FVector(0.1f, 0.1f, 2.6f);
 		Arrive.EndScale = FVector(1.4f, 1.4f, 2.f);
-		ARPGTransientFX::Spawn(Caster, Caster->GetActorLocation(), FRotator::ZeroRotator, Arrive);
+		ARPGTransientFX::SpawnForAll(Caster, Caster->GetActorLocation(), FRotator::ZeroRotator, Arrive);
 	}
 }
 
@@ -322,41 +300,20 @@ void USpell_Blink::Execute(const FRPGSpellContext& Context)
 
 USpell_ArcaneShield::USpell_ArcaneShield()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimSequenceBase> Animation(AttackAnimPath3);
-	CastAnimation = Animation.Object;
+	SetCastAnimation(RPGAssets::AttackAnim3);
 
 	DisplayName = LOCTEXT("ShieldName", "Arcane Shield");
 	Description = LOCTEXT("ShieldDesc", "Surrounds you with a barrier that absorbs incoming damage.");
 	Color = FLinearColor(0.6f, 0.35f, 1.f);
-	ManaCost = 35.f;
+	CooldownTag = MageSpellTags::Cooldown_ArcaneShield;
+	ResourceCost = 35.f;
 	Cooldown = 18.f;
 	CastTime = 0.35f;
 	ReleaseDelay = 0.1f;
-	Range = 0.f;
 	AnimationPlayRate = 1.5f;
-	bFaceAim = false;
-}
 
-void USpell_ArcaneShield::Execute(const FRPGSpellContext& Context)
-{
-	ARPGCharacterBase* Caster = Context.Caster;
-	if (!Caster)
-	{
-		return;
-	}
-
-	Caster->GetAttributes()->AddShield(AbsorbAmount, Duration);
-
-	FRPGFXParams Burst;
-	Burst.Color = Color;
-	Burst.Intensity = 6.f;
-	Burst.FresnelAmount = 0.9f;
-	Burst.Lifetime = 0.45f;
-	Burst.StartScale = FVector(0.6f);
-	Burst.EndScale = FVector(3.f);
-	Burst.LightIntensity = 3000.f;
-	Burst.LightRadius = 700.f;
-	ARPGTransientFX::Spawn(Caster, Caster->GetActorLocation(), FRotator::ZeroRotator, Burst, Caster);
+	ShieldAmount = 80.f;
+	ShieldDuration = 10.f;
 }
 
 #undef LOCTEXT_NAMESPACE

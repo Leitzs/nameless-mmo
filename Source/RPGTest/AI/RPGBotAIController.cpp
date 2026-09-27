@@ -1,8 +1,8 @@
 #include "AI/RPGBotAIController.h"
 
 #include "Characters/EnemyBotCharacter.h"
+#include "Abilities/RPGAbilitySystemComponent.h"
 #include "Combat/RPGCombatLibrary.h"
-#include "Components/RPGAttributeComponent.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
@@ -54,7 +54,8 @@ void ARPGBotAIController::NotifyDamagedBy(AActor* InstigatorActor)
 bool ARPGBotAIController::IsValidTarget(const ARPGCharacterBase* Candidate) const
 {
 	const AEnemyBotCharacter* Bot = GetBot();
-	return Bot && Candidate && Candidate != Bot && Candidate->IsAlive() && Bot->IsHostileTo(Candidate);
+	// A stealthed enemy is lost unless it comes very close.
+	return Bot && Candidate && Candidate != Bot && Candidate->IsAlive() && Bot->IsHostileTo(Candidate) && Candidate->IsVisibleTo(Bot);
 }
 
 void ARPGBotAIController::SetState(EBotState NewState)
@@ -278,7 +279,7 @@ void ARPGBotAIController::TickReturn()
 	AEnemyBotCharacter* Bot = GetBot();
 	if (FVector::Dist2D(Bot->GetActorLocation(), Bot->GetHomeLocation()) <= RPGBotAIPrivate::HomeArrivalDistance)
 	{
-		Bot->GetAttributes()->RestoreAll();
+		Bot->GetRPGAbilitySystem()->RestoreAll();
 		SetState(EBotState::Idle);
 		return;
 	}

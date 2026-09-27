@@ -4,6 +4,8 @@
 #include "Engine/GameInstance.h"
 #include "RPGGameInstance.generated.h"
 
+class ARPGPlayerCharacter;
+
 /** A level offered by the map selector. */
 USTRUCT(BlueprintType)
 struct FRPGMapInfo
@@ -21,11 +23,36 @@ struct FRPGMapInfo
 	TSoftObjectPtr<UWorld> Level;
 };
 
+/** A playable class offered by the class selector. */
+USTRUCT(BlueprintType)
+struct FRPGCharacterClassInfo
+{
+	GENERATED_BODY()
+
+	/** Stable identifier sent over the network and saved in the player profile. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Class")
+	FName Id;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Class")
+	FText DisplayName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Class")
+	FText Description;
+
+	/** Accent color in menus. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Class")
+	FLinearColor Color = FLinearColor::White;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Class")
+	TSubclassOf<ARPGPlayerCharacter> PawnClass;
+};
+
 /**
- * Lives for the whole play session: holds the maps offered by the map selector and remembers whether the player
- * already picked one, so the selector only opens on the first level loaded after pressing Play.
+ * Lives for the whole play session: holds the maps and playable classes, and the local player's profile
+ * (name, chosen class, last address joined), which is saved to the user's Game.ini. URPGLocalPlayer sends the
+ * name and class to the server on every login. Hosting, joining and leaving games is done by URPGSessionSubsystem.
  */
-UCLASS()
+UCLASS(Config = Game)
 class RPGTEST_API URPGGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
@@ -33,23 +60,43 @@ class RPGTEST_API URPGGameInstance : public UGameInstance
 public:
 	URPGGameInstance();
 
+	virtual void Init() override;
+
 	const TArray<FRPGMapInfo>& GetMaps() const { return Maps; }
 
 	/** Index of the map loaded in World, or INDEX_NONE when it is not in the list. */
 	int32 FindMapIndex(const UWorld* World) const;
 
-	bool HasChosenMap() const { return bHasChosenMap; }
+	const TArray<FRPGCharacterClassInfo>& GetCharacterClasses() const { return CharacterClasses; }
+	const FRPGCharacterClassInfo* FindCharacterClass(FName ClassId) const;
+	FName GetDefaultCharacterClassId() const { return CharacterClasses.Num() > 0 ? CharacterClasses[0].Id : NAME_None; }
 
-	/** Stops the selector from opening automatically on later level loads. */
-	void MarkMapChosen() { bHasChosenMap = true; }
+	// Local player profile.
+	const FString& GetPlayerName() const { return PlayerName; }
+	void SetPlayerName(const FString& InPlayerName);
+	FName GetSelectedClassId() const { return SelectedClassId; }
+	void SetSelectedClassId(FName InClassId);
+	const FString& GetLastJoinAddress() const { return LastJoinAddress; }
+	void SetLastJoinAddress(const FString& InAddress);
 
-	/** Marks the map as chosen and travels to it unless it is already loaded. Returns true when a level change started. */
-	bool OpenMap(int32 MapIndex);
+	/** Keeps letters, digits, '_' and '-' (URL-safe), at most 20 characters. */
+	static FString SanitizePlayerName(const FString& InName);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Maps")
 	TArray<FRPGMapInfo> Maps;
 
+	/** The first entry is the default class. */
+	UPROPERTY(EditDefaultsOnly, Category = "Classes")
+	TArray<FRPGCharacterClassInfo> CharacterClasses;
+
 private:
-	bool bHasChosenMap = false;
+	UPROPERTY(Config)
+	FString PlayerName;
+
+	UPROPERTY(Config)
+	FName SelectedClassId;
+
+	UPROPERTY(Config)
+	FString LastJoinAddress;
 };

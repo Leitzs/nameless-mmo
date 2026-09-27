@@ -2,13 +2,13 @@
 
 #include "Characters/RPGCharacterBase.h"
 #include "Combat/RPGCombatLibrary.h"
-#include "Components/RPGStatusEffectComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Core/RPGAssets.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/World.h"
 #include "FX/RPGTransientFX.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Net/UnrealNetwork.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -16,6 +16,7 @@ ARPGDelayedBlast::ARPGDelayedBlast()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SetCanBeDamaged(false);
+	bReplicates = true;
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(RPGAssets::CylinderMesh);
 	Marker = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Marker"));
@@ -26,13 +27,23 @@ ARPGDelayedBlast::ARPGDelayedBlast()
 	RootComponent = Marker;
 }
 
-void ARPGDelayedBlast::Configure(float InDelay, float InRadius, float InDamage, TSubclassOf<UDamageType> InDamageType, float InStunDuration, const FLinearColor& InColor, ARPGCharacterBase* InTrackedTarget)
+void ARPGDelayedBlast::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ARPGDelayedBlast, TrackedTarget, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ARPGDelayedBlast, Color, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ARPGDelayedBlast, Delay, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ARPGDelayedBlast, Radius, COND_InitialOnly);
+}
+
+void ARPGDelayedBlast::Configure(float InDelay, float InRadius, float InDamage, const FGameplayTag& InDamageType, const FRPGStatusSpec& InStatus, const FLinearColor& InColor, ARPGCharacterBase* InTrackedTarget)
 {
 	Delay = FMath::Max(0.05f, InDelay);
 	Radius = InRadius;
 	Damage = InDamage;
 	DamageType = InDamageType;
-	StunDuration = InStunDuration;
+	Status = InStatus;
 	Color = InColor;
 	TrackedTarget = InTrackedTarget;
 }
@@ -48,7 +59,10 @@ void ARPGDelayedBlast::BeginPlay()
 	}
 
 	SnapToGround();
-	GetWorldTimerManager().SetTimer(DetonateTimer, this, &ThisClass::Detonate, Delay, false);
+	if (HasAuthority())
+	{
+		GetWorldTimerManager().SetTimer(DetonateTimer, this, &ThisClass::Detonate, Delay, false);
+	}
 }
 
 void ARPGDelayedBlast::Tick(float DeltaSeconds)
@@ -96,10 +110,10 @@ void ARPGDelayedBlast::Detonate()
 
 	for (ARPGCharacterBase* Target : URPGCombatLibrary::GetHostilesInRadius(this, InstigatorActor, Ground + FVector(0.f, 0.f, 90.f), Radius))
 	{
-		URPGCombatLibrary::DealDamage(Target, Damage, InstigatorActor, this, DamageType);
-		if (Target->IsAlive() && StunDuration > 0.f)
+		URPGCombatLibrary::ApplyDamage(InstigatorActor, Target, Damage, DamageType, this);
+		if (Status.Status.IsValid())
 		{
-			Target->GetStatusEffects()->ApplyStun(StunDuration);
+			URPGCombatLibrary::ApplyStatus(InstigatorActor, Target, Status, this);
 		}
 	}
 
@@ -114,7 +128,7 @@ void ARPGDelayedBlast::Detonate()
 	Bolt.StartScale = FVector(0.5f, 0.5f, 40.f);
 	Bolt.EndScale = FVector(0.25f, 0.25f, 40.f);
 	Bolt.Flicker = 0.7f;
-	ARPGTransientFX::Spawn(this, Ground + FVector(0.f, 0.f, 2000.f), FRotator::ZeroRotator, Bolt);
+	ARPGTransientFX::SpawnForAll(this, Ground + FVector(0.f, 0.f, 2000.f), FRotator::ZeroRotator, Bolt);
 
 	FRPGFXParams Impact;
 	Impact.Color = Color;
@@ -127,7 +141,7 @@ void ARPGDelayedBlast::Detonate()
 	Impact.LightIntensity = 20000.f;
 	Impact.LightRadius = Radius * 6.f;
 	Impact.Flicker = 0.5f;
-	ARPGTransientFX::Spawn(this, Ground, FRotator::ZeroRotator, Impact);
+	ARPGTransientFX::SpawnForAll(this, Ground, FRotator::ZeroRotator, Impact);
 
 	Destroy();
 }

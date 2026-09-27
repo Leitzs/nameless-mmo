@@ -19,6 +19,7 @@ Layout (1 unit = 1 cm, X is forward from the spawn, Y is to the right, the floor
   Cover wall   16 m before the group, across the path from the spawn: behind it the bots cannot see you
                                 (they need line of sight to aggro), step out and they come.
   Range lane   X = -6500        Runs from the spawn towards -Y with a mark every 5 m up to 45 m (Fireball range).
+  PvP starts   +Y side          4 more player starts for deathmatch, away from every bot's aggro ring.
 """
 
 import math
@@ -44,6 +45,7 @@ RANGE_LANE_START_Y = -500.0
 RANGE_LANE_WIDTH = 1400.0
 RANGE_MARK_SPACING = 500.0
 RANGE_MARK_COUNT = 9
+PVP_STARTS = [(-6500.0, 4500.0), (-2500.0, 4800.0), (2500.0, 4800.0), (7000.0, 3000.0)]
 
 FLOOR_MATERIAL = "/Game/LevelPrototyping/Materials/MI_PrototypeGrid_Gray"
 BLOCK_MATERIAL = "/Game/LevelPrototyping/Materials/MI_PrototypeGrid_TopDark"
@@ -223,6 +225,12 @@ def build_signs(cube, surface):
 
 def build_gameplay():
     spawn(unreal.PlayerStart, "PlayerStart", GAMEPLAY, (SPAWN[0], SPAWN[1], 100.0))
+
+    # Extra starts for deathmatch: the game mode respawns players at the start farthest from the other players.
+    # All of them are outside the bots' aggro rings.
+    for index, (x, y) in enumerate(PVP_STARTS):
+        yaw = math.degrees(math.atan2(-y, -x))  # face the arena center
+        spawn(unreal.PlayerStart, "PlayerStart_PvP%d" % (index + 1), GAMEPLAY, (x, y, 100.0), (0.0, yaw, 0.0))
 
     duel = spawn(unreal.RPGBotSpawner, "DuelBotSpawner", GAMEPLAY, (DUEL[0], DUEL[1], 0.0), FACE_SPAWN)
     duel.set_editor_property("bot_count", 1)

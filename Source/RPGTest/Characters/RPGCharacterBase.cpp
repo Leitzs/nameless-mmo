@@ -1,21 +1,28 @@
 #include "Characters/RPGCharacterBase.h"
 
+#include "Abilities/RPGAbilitySystemComponent.h"
+#include "Abilities/RPGAttributeSet.h"
+#include "Abilities/RPGGameplayAbility.h"
+#include "Abilities/RPGGameplayTags.h"
+#include "Abilities/RPGStatusEffects.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimSequenceBase.h"
+#include "Characters/RPGCharacterMovementComponent.h"
 #include "Combat/RPGCombatLibrary.h"
-#include "Combat/RPGDamageTypes.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/RPGAttributeComponent.h"
-#include "Components/RPGStatusEffectComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Core/RPGAssets.h"
-#include "Engine/DamageEvents.h"
+#include "Core/RPGTestGameMode.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/StaticMesh.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/PlayerState.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Net/Core/PushModel/PushModel.h"
+#include "Net/UnrealNetwork.h"
 #include "TimerManager.h"
 #include "UI/RPGHUD.h"
 #include "UObject/ConstructorHelpers.h"
@@ -27,11 +34,32 @@ namespace
 	const FName DefaultSlotName(TEXT("DefaultSlot"));
 	const FName PaintTintParameter(TEXT("Paint Tint"));
 	const FName IntensityParameter(TEXT("Intensity"));
+
+	/** Overlay priorities of the effects that are not statuses (statuses use RPGStatusEffects). */
+	constexpr int32 HitFlashPriority = 80;
+	constexpr int32 TelegraphPriority = 60;
+
+	/** Feared characters run a bit slower than normal. */
+	constexpr float FearSpeedMultiplier = 0.85f;
+
+	const TCHAR* GetPartMeshPath(ERPGPartShape Shape)
+	{
+		switch (Shape)
+		{
+		case ERPGPartShape::Sphere: return RPGAssets::SphereMesh;
+		case ERPGPartShape::Cylinder: return RPGAssets::CylinderMesh;
+		case ERPGPartShape::Cone: return RPGAssets::ConeMesh;
+		default: return RPGAssets::CubeMesh;
+		}
+	}
 }
 
-ARPGCharacterBase::ARPGCharacterBase()
+ARPGCharacterBase::ARPGCharacterBase(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<URPGCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
+	SetReplicatingMovement(true);
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
 
@@ -76,8 +104,8 @@ ARPGCharacterBase::ARPGCharacterBase()
 		}
 	}
 
-	Attributes = CreateDefaultSubobject<URPGAttributeComponent>(TEXT("Attributes"));
-	StatusEffects = CreateDefaultSubobject<URPGStatusEffectComponent>(TEXT("StatusEffects"));
+	AbilitySystem = CreateDefaultSubobject<URPGAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AttributeSet = CreateDefaultSubobject<URPGAttributeSet>(TEXT("AttributeSet"));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(RPGAssets::SphereMesh);
 	ShieldBubble = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldBubble"));
@@ -91,22 +119,61 @@ ARPGCharacterBase::ARPGCharacterBase()
 	ShieldBubble->SetVisibility(false);
 }
 
+void ARPGCharacterBase::SetClassStats(float InMaxHealth, float InHealthRegen, const FRPGResourceConfig& InResource)
+{
+	MaxHealth = InMaxHealth;
+	HealthRegen = InHealthRegen;
+	ResourceConfig = InResource;
+}
+
+UAbilitySystemComponent* ARPGCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystem;
+}
+
 void ARPGCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Attributes->OnDamaged.AddDynamic(this, &ThisClass::HandleAttributesDamaged);
-	Attributes->OnDeath.AddDynamic(this, &ThisClass::HandleAttributesDeath);
-	StatusEffects->OnStatusChanged.AddDynamic(this, &ThisClass::HandleStatusChanged);
+	InitAbilitySystem();
 
 	ApplyBodyTint();
 	ApplyCosmeticMaterials();
 	CreateStatusMaterials();
-	UpdateMovementSpeed();
 
 	// Give the anim blueprint a few frames to settle into its idle pose before attaching cosmetics.
 	SetCosmeticsVisible(false);
 	GetWorldTimerManager().SetTimer(CosmeticAlignTimer, this, &ThisClass::RunCosmeticAlignment, 0.25f, false);
+}
+
+void ARPGCharacterBase::InitAbilitySystem()
+{
+	AbilitySystem->InitAbilityActorInfo(this, this);
+	if (bAbilitySystemInitialized)
+	{
+		return;
+	}
+	bAbilitySystemInitialized = true;
+
+	AbilitySystem->InitVitals(MaxHealth, HealthRegen, ResourceConfig);
+	AbilitySystem->AddLooseGameplayTags(PassiveTags);
+	if (HasAuthority())
+	{
+		AbilitySystem->GrantSlotAbilities(AbilityClasses);
+	}
+}
+
+void ARPGCharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	// The actor info caches the controller (local control, prediction).
+	AbilitySystem->InitAbilityActorInfo(this, this);
+}
+
+void ARPGCharacterBase::OnRep_Controller()
+{
+	Super::OnRep_Controller();
+	AbilitySystem->InitAbilityActorInfo(this, this);
 }
 
 void ARPGCharacterBase::OnConstruction(const FTransform& Transform)
@@ -116,42 +183,51 @@ void ARPGCharacterBase::OnConstruction(const FTransform& Transform)
 	ApplyCosmeticMaterials();
 }
 
+void ARPGCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	FDoRepLifetimeParams Params;
+	Params.bIsPushBased = true;
+	DOREPLIFETIME_WITH_PARAMS_FAST(ARPGCharacterBase, DeathPose, Params);
+}
+
 void ARPGCharacterBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	UpdateMovementSpeed();
 	UpdateFacing(DeltaSeconds);
+	UpdateFearMovement(DeltaSeconds);
 	UpdateStatusVisuals(DeltaSeconds);
+	UpdateStealthVisibility();
 }
 
-float ARPGCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+// ---------------------------------------------------------------------------------------------------------------------
+// State
+
+FString ARPGCharacterBase::GetCombatName() const
 {
-	if (!IsAlive() || DamageAmount <= 0.f)
+	const APlayerState* State = GetPlayerState();
+	return State ? State->GetPlayerName() : CharacterName.ToString();
+}
+
+float ARPGCharacterBase::GetMoveSpeed() const
+{
+	if (!IsAlive() || !AbilitySystem)
+	{
+		return 0.f;
+	}
+	if (HasStatus(RPGTags::Status_CC_Stun) || HasStatus(RPGTags::Status_CC_Freeze))
 	{
 		return 0.f;
 	}
 
-	AActor* InstigatorActor = URPGCombatLibrary::ResolveInstigator(EventInstigator, DamageCauser);
-	if (InstigatorActor && InstigatorActor != this && !IsHostileTo(InstigatorActor))
+	float Speed = GetDesiredMoveSpeed() * AbilitySystem->GetMoveSpeedMultiplier();
+	if (HasStatus(RPGTags::Status_CC_Fear))
 	{
-		return 0.f;
+		Speed *= FearSpeedMultiplier;
 	}
-
-	const float Amount = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	if (Amount <= 0.f)
-	{
-		return 0.f;
-	}
-
-	const float Absorbed = FMath::Min(Attributes->GetShield(), Amount);
-	const float HealthDamage = Attributes->ApplyDamage(Amount, InstigatorActor);
-
-	const URPGDamageType* DamageTypeCDO = DamageEvent.DamageTypeClass ? Cast<URPGDamageType>(DamageEvent.DamageTypeClass->GetDefaultObject()) : nullptr;
-	const FLinearColor Color = DamageTypeCDO ? DamageTypeCDO->DisplayColor : FLinearColor::White;
-	ARPGHUD::NotifyDamage(this, GetActorLocation() + FVector(0.f, 0.f, 110.f), HealthDamage, Absorbed, Color, Team == ERPGTeam::Player);
-
-	return HealthDamage;
+	return Speed;
 }
 
 bool ARPGCharacterBase::IsHostileTo(const AActor* Other) const
@@ -161,12 +237,66 @@ bool ARPGCharacterBase::IsHostileTo(const AActor* Other) const
 
 bool ARPGCharacterBase::IsAlive() const
 {
-	return !bDeathHandled && Attributes && Attributes->IsAlive();
+	return !bDeathHandled && AttributeSet && AttributeSet->GetHealth() > 0.f;
 }
 
 bool ARPGCharacterBase::IsIncapacitated() const
 {
-	return StatusEffects && StatusEffects->IsIncapacitated();
+	return HasStatus(RPGTags::Status_CC);
+}
+
+bool ARPGCharacterBase::HasStatus(const FGameplayTag& Status) const
+{
+	return AbilitySystem && AbilitySystem->HasMatchingGameplayTag(Status);
+}
+
+bool ARPGCharacterBase::IsStealthed() const
+{
+	return HasStatus(RPGTags::Status_Stealth);
+}
+
+bool ARPGCharacterBase::IsVisibleTo(const AActor* Viewer) const
+{
+	if (!IsStealthed())
+	{
+		return true;
+	}
+
+	const ARPGCharacterBase* ViewerCharacter = Cast<ARPGCharacterBase>(Viewer);
+	if (!ViewerCharacter)
+	{
+		return false;
+	}
+	if (ViewerCharacter == this || !IsHostileTo(ViewerCharacter))
+	{
+		return true;
+	}
+	return FVector::Dist(ViewerCharacter->GetActorLocation(), GetActorLocation()) <= StealthRevealDistance;
+}
+
+float ARPGCharacterBase::GetHealth() const
+{
+	return AttributeSet ? AttributeSet->GetHealth() : 0.f;
+}
+
+float ARPGCharacterBase::GetMaxHealth() const
+{
+	return AttributeSet ? AttributeSet->GetMaxHealth() : 1.f;
+}
+
+float ARPGCharacterBase::GetResource() const
+{
+	return AttributeSet ? AttributeSet->GetResource() : 0.f;
+}
+
+float ARPGCharacterBase::GetMaxResource() const
+{
+	return AttributeSet ? AttributeSet->GetMaxResource() : 0.f;
+}
+
+float ARPGCharacterBase::GetShield() const
+{
+	return AttributeSet ? AttributeSet->GetShield() : 0.f;
 }
 
 FVector ARPGCharacterBase::GetTargetPoint() const
@@ -184,6 +314,66 @@ void ARPGCharacterBase::ComputeAim(float MaxRange, FVector& OutAimLocation, ARPG
 	OutAimLocation = GetTargetPoint() + GetActorForwardVector() * MaxRange;
 	OutTarget = nullptr;
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Combat feedback
+
+void ARPGCharacterBase::NotifyDamageTaken(float HealthDamage, float AbsorbedDamage, AActor* InstigatorActor, const FGameplayTag& DamageType)
+{
+	MulticastDamageFeedback(HealthDamage, AbsorbedDamage, DamageType);
+	OnDamageTaken(HealthDamage, AbsorbedDamage, InstigatorActor);
+}
+
+void ARPGCharacterBase::NotifyHealed(float Amount)
+{
+	if (Amount >= 0.5f)
+	{
+		MulticastHealFeedback(Amount);
+	}
+}
+
+void ARPGCharacterBase::ShowCombatText(const FText& Text, const FLinearColor& Color)
+{
+	if (HasAuthority())
+	{
+		MulticastCombatText(Text, Color);
+	}
+}
+
+void ARPGCharacterBase::MulticastDamageFeedback_Implementation(float HealthDamage, float AbsorbedDamage, FGameplayTag DamageType)
+{
+	if (GetNetMode() == NM_DedicatedServer)
+	{
+		return;
+	}
+
+	if (HealthDamage > 0.f)
+	{
+		HitFlashRemaining = 0.12f;
+	}
+
+	const bool bLocalPlayerWasHit = IsLocallyControlled() && IsPlayerControlled();
+	ARPGHUD::NotifyDamage(this, GetActorLocation() + FVector(0.f, 0.f, 110.f), HealthDamage, AbsorbedDamage, RPGTags::GetDamageTypeColor(DamageType), bLocalPlayerWasHit);
+}
+
+void ARPGCharacterBase::MulticastHealFeedback_Implementation(float Amount)
+{
+	if (GetNetMode() != NM_DedicatedServer)
+	{
+		ARPGHUD::NotifyText(this, GetActorLocation() + FVector(0.f, 0.f, 120.f), FString::Printf(TEXT("+%d"), FMath::RoundToInt(Amount)), FLinearColor(0.35f, 1.f, 0.4f), 0.9f);
+	}
+}
+
+void ARPGCharacterBase::MulticastCombatText_Implementation(const FText& Text, FLinearColor Color)
+{
+	if (GetNetMode() != NM_DedicatedServer)
+	{
+		ARPGHUD::NotifyText(this, GetActorLocation() + FVector(0.f, 0.f, 140.f), Text.ToString(), Color, 0.75f);
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Animation and movement helpers
 
 float ARPGCharacterBase::PlayActionAnimation(UAnimSequenceBase* Animation, float PlayRate)
 {
@@ -203,6 +393,61 @@ void ARPGCharacterBase::StopActionAnimation(float BlendOutTime)
 	{
 		AnimInstance->Montage_Stop(BlendOutTime);
 	}
+}
+
+void ARPGCharacterBase::PlayActionAnimationForAll(UAnimSequenceBase* Animation, float PlayRate)
+{
+	// The controlling machine plays it right away; the multicast skips it (see the implementation).
+	if (IsLocallyControlled())
+	{
+		PlayActionAnimation(Animation, PlayRate);
+	}
+	if (HasAuthority() && Animation)
+	{
+		MulticastPlayActionAnimation(Animation, PlayRate);
+	}
+}
+
+void ARPGCharacterBase::StopActionAnimationForAll(float BlendOutTime)
+{
+	if (IsLocallyControlled())
+	{
+		StopActionAnimation(BlendOutTime);
+	}
+	if (HasAuthority())
+	{
+		MulticastStopActionAnimation(BlendOutTime);
+	}
+}
+
+void ARPGCharacterBase::MulticastPlayActionAnimation_Implementation(UAnimSequenceBase* Animation, float PlayRate)
+{
+	if (!IsLocallyControlled() && GetNetMode() != NM_DedicatedServer)
+	{
+		PlayActionAnimation(Animation, PlayRate);
+	}
+}
+
+void ARPGCharacterBase::MulticastStopActionAnimation_Implementation(float BlendOutTime)
+{
+	if (!IsLocallyControlled())
+	{
+		StopActionAnimation(BlendOutTime);
+	}
+}
+
+void ARPGCharacterBase::SetTelegraphGlow(float Duration)
+{
+	TelegraphRemaining = Duration;
+	if (HasAuthority() && GetNetMode() != NM_Standalone)
+	{
+		MulticastTelegraphGlow(Duration);
+	}
+}
+
+void ARPGCharacterBase::MulticastTelegraphGlow_Implementation(float Duration)
+{
+	TelegraphRemaining = Duration;
 }
 
 void ARPGCharacterBase::FaceLocation(const FVector& Location, bool bInstant)
@@ -234,9 +479,116 @@ void ARPGCharacterBase::ApplyKnockback(const FVector& Direction, float Strength,
 	}
 }
 
+void ARPGCharacterBase::UpdateFacing(float DeltaSeconds)
+{
+	if (!bHasDesiredFacing || !CanAct())
+	{
+		return;
+	}
+
+	const FRotator NewRotation = FMath::RInterpConstantTo(GetActorRotation(), DesiredFacing, DeltaSeconds, 720.f);
+	SetActorRotation(NewRotation);
+	if (NewRotation.Equals(DesiredFacing, 1.f))
+	{
+		bHasDesiredFacing = false;
+	}
+}
+
+void ARPGCharacterBase::UpdateFearMovement(float DeltaSeconds)
+{
+	const bool bNowFeared = IsAlive() && HasStatus(RPGTags::Status_CC_Fear);
+	if (!bNowFeared)
+	{
+		bFeared = false;
+		return;
+	}
+
+	// Whoever drives this character's movement (the owning player, or the server for bots) makes it run.
+	if (!IsLocallyControlled())
+	{
+		return;
+	}
+
+	if (!bFeared)
+	{
+		bFeared = true;
+		FearDirection = FVector(FMath::RandPointInCircle(1.f), 0.f).GetSafeNormal();
+		if (FearDirection.IsNearlyZero())
+		{
+			FearDirection = -GetActorForwardVector();
+		}
+		FearTurnTimer = 0.6f;
+	}
+
+	FearTurnTimer -= DeltaSeconds;
+	if (FearTurnTimer <= 0.f)
+	{
+		// Panic: wander, and turn around when running into a wall.
+		const bool bStuck = GetVelocity().Size2D() < 50.f;
+		FearDirection = FearDirection.RotateAngleAxis(bStuck ? FMath::FRandRange(120.f, 240.f) : FMath::FRandRange(-60.f, 60.f), FVector::UpVector);
+		FearTurnTimer = FMath::FRandRange(0.5f, 0.9f);
+	}
+
+	AddMovementInput(FearDirection, 1.f);
+}
+
+void ARPGCharacterBase::OnIncapacitatedChanged(bool bIncapacitated)
+{
+	if (bIncapacitated && IsAlive())
+	{
+		GetCharacterMovement()->StopMovementImmediately();
+		StopActionAnimation(0.1f);
+	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Death
+
+void ARPGCharacterBase::NotifyKilled(AActor* Killer)
+{
+	// Only the server applies damage, so this only runs there. Clients die through OnRep_DeathPose.
+	if (bDeathHandled)
+	{
+		return;
+	}
+
+	DeathPose = static_cast<uint8>(DeathAnimations.Num() > 0 ? FMath::RandRange(1, DeathAnimations.Num()) : 1);
+	MARK_PROPERTY_DIRTY_FROM_NAME(ARPGCharacterBase, DeathPose, this);
+	ApplyDeath(Killer);
+
+	if (ARPGTestGameMode* GameMode = GetWorld()->GetAuthGameMode<ARPGTestGameMode>())
+	{
+		GameMode->NotifyCharacterDied(this, Killer);
+	}
+}
+
+void ARPGCharacterBase::OnRep_DeathPose()
+{
+	if (DeathPose > 0)
+	{
+		ApplyDeath(nullptr);
+	}
+}
+
+void ARPGCharacterBase::ApplyDeath(AActor* Killer)
+{
+	if (bDeathHandled)
+	{
+		return;
+	}
+
+	bDeathHandled = true;
+	HandleDeath(Killer);
+}
+
 void ARPGCharacterBase::HandleDeath(AActor* Killer)
 {
-	StatusEffects->ClearAll();
+	AbilitySystem->AddLooseGameplayTag(RPGTags::State_Dead);
+	if (HasAuthority())
+	{
+		AbilitySystem->CancelAllAbilities();
+		AbilitySystem->RemoveStatuses(FGameplayTagContainer(RPGTags::Status));
+	}
 	StopActionAnimation(0.1f);
 	TelegraphRemaining = 0.f;
 
@@ -254,11 +606,14 @@ void ARPGCharacterBase::HandleDeath(AActor* Killer)
 	USkeletalMeshComponent* SkeletalMesh = GetMesh();
 	SkeletalMesh->SetOverlayMaterial(nullptr);
 	SkeletalMesh->GlobalAnimRateScale = 1.f;
+	SkeletalMesh->SetVisibility(true, true);
+	bHiddenByStealth = false;
 	ShieldBubble->SetVisibility(false);
 
-	if (DeathAnimations.Num() > 0)
+	const int32 DeathAnimationIndex = static_cast<int32>(DeathPose) - 1;
+	if (DeathAnimations.IsValidIndex(DeathAnimationIndex))
 	{
-		if (UAnimSequenceBase* DeathAnimation = DeathAnimations[FMath::RandRange(0, DeathAnimations.Num() - 1)])
+		if (UAnimSequenceBase* DeathAnimation = DeathAnimations[DeathAnimationIndex])
 		{
 			SkeletalMesh->PlayAnimation(DeathAnimation, false);
 		}
@@ -269,11 +624,15 @@ void ARPGCharacterBase::HandleDeath(AActor* Killer)
 		OwningController->StopMovement();
 	}
 
-	if (CorpseLifeSpan > 0.f)
+	// The server removes the body; clients follow when the actor is destroyed there.
+	if (CorpseLifeSpan > 0.f && HasAuthority())
 	{
 		SetLifeSpan(CorpseLifeSpan);
 	}
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Cosmetics
 
 UStaticMeshComponent* ARPGCharacterBase::CreateCosmeticPart(FName Name, UStaticMesh* PartMesh, FName Bone)
 {
@@ -286,6 +645,53 @@ UStaticMeshComponent* ARPGCharacterBase::CreateCosmeticPart(FName Name, UStaticM
 	Part->bReceivesDecals = false;
 	Part->ComponentTags.Add(CosmeticTag);
 	return Part;
+}
+
+UStaticMeshComponent* ARPGCharacterBase::AddCosmeticPart(const FRPGCosmeticPart& Part)
+{
+	ConstructorHelpers::FObjectFinder<UStaticMesh> PartMesh(GetPartMeshPath(Part.Shape));
+	UStaticMeshComponent* Component = CreateCosmeticPart(Part.Name, PartMesh.Object, Part.Bone);
+	CosmeticPartSpecs.Add(Part);
+	CosmeticPartComponents.Add(Component);
+	return Component;
+}
+
+void ARPGCharacterBase::AddBladeParts(const FString& Prefix, FName Bone, const FVector& Direction, float BladeLength, float BladeWidth, const FLinearColor& BladeColor, const FLinearColor& HiltColor)
+{
+	const FVector Along = Direction.GetSafeNormal();
+	const FRotator Rotation = FRotationMatrix::MakeFromZY(Along, FVector::RightVector).Rotator();
+	const float GripLength = FMath::Clamp(BladeLength * 0.22f, 10.f, 22.f);
+
+	FRPGCosmeticPart Grip;
+	Grip.Name = *(Prefix + TEXT("Grip"));
+	Grip.Shape = ERPGPartShape::Cylinder;
+	Grip.Bone = Bone;
+	Grip.Offset = Along * 2.f;
+	Grip.Rotation = Rotation;
+	Grip.Scale = FVector(0.035f, 0.035f, GripLength / 100.f);
+	Grip.Color = FLinearColor(0.1f, 0.05f, 0.03f);
+	Grip.Roughness = 0.8f;
+	AddCosmeticPart(Grip);
+
+	FRPGCosmeticPart Guard;
+	Guard.Name = *(Prefix + TEXT("Guard"));
+	Guard.Bone = Bone;
+	Guard.Offset = Along * (GripLength * 0.5f + 3.f);
+	Guard.Rotation = Rotation;
+	Guard.Scale = FVector(0.05f, FMath::Max(0.12f, BladeWidth * 3.5f), 0.04f);
+	Guard.Color = HiltColor;
+	Guard.Roughness = 0.4f;
+	AddCosmeticPart(Guard);
+
+	FRPGCosmeticPart Blade;
+	Blade.Name = *(Prefix + TEXT("Blade"));
+	Blade.Bone = Bone;
+	Blade.Offset = Along * (GripLength * 0.5f + 4.f + BladeLength * 0.5f);
+	Blade.Rotation = Rotation;
+	Blade.Scale = FVector(0.02f, BladeWidth, BladeLength / 100.f);
+	Blade.Color = BladeColor;
+	Blade.Roughness = 0.25f;
+	AddCosmeticPart(Blade);
 }
 
 void ARPGCharacterBase::AlignCosmeticPart(UStaticMeshComponent* Part, FName Bone, const FVector& Offset, const FRotator& Rotation, const FVector& Scale) const
@@ -301,36 +707,21 @@ void ARPGCharacterBase::AlignCosmeticPart(UStaticMeshComponent* Part, FName Bone
 	Part->SetRelativeTransform(Desired.GetRelativeTransform(BoneTransform));
 }
 
+void ARPGCharacterBase::AlignCosmetics()
+{
+	for (int32 Index = 0; Index < CosmeticPartSpecs.Num() && Index < CosmeticPartComponents.Num(); ++Index)
+	{
+		const FRPGCosmeticPart& Spec = CosmeticPartSpecs[Index];
+		AlignCosmeticPart(CosmeticPartComponents[Index], Spec.Bone, Spec.Offset, Spec.Rotation, Spec.Scale);
+	}
+}
+
 void ARPGCharacterBase::ApplyCosmeticMaterials()
 {
-}
-
-void ARPGCharacterBase::HandleAttributesDamaged(URPGAttributeComponent* InAttributes, float HealthDamage, float AbsorbedDamage, AActor* InstigatorActor)
-{
-	if (HealthDamage > 0.f)
+	for (int32 Index = 0; Index < CosmeticPartSpecs.Num() && Index < CosmeticPartComponents.Num(); ++Index)
 	{
-		HitFlashRemaining = 0.12f;
-	}
-	OnDamageTaken(HealthDamage, AbsorbedDamage, InstigatorActor);
-}
-
-void ARPGCharacterBase::HandleAttributesDeath(AActor* Killer)
-{
-	if (bDeathHandled)
-	{
-		return;
-	}
-
-	bDeathHandled = true;
-	HandleDeath(Killer);
-}
-
-void ARPGCharacterBase::HandleStatusChanged()
-{
-	if (IsAlive() && IsIncapacitated())
-	{
-		GetCharacterMovement()->StopMovementImmediately();
-		StopActionAnimation(0.1f);
+		const FRPGCosmeticPart& Spec = CosmeticPartSpecs[Index];
+		RPGAssets::ApplySurface(CosmeticPartComponents[Index], Spec.Color, Spec.Roughness, Spec.Emissive);
 	}
 }
 
@@ -350,7 +741,7 @@ void ARPGCharacterBase::SetCosmeticsVisible(bool bVisible)
 void ARPGCharacterBase::RunCosmeticAlignment()
 {
 	AlignCosmetics();
-	SetCosmeticsVisible(true);
+	SetCosmeticsVisible(!bHiddenByStealth);
 }
 
 void ARPGCharacterBase::ApplyBodyTint()
@@ -370,13 +761,22 @@ void ARPGCharacterBase::ApplyBodyTint()
 	}
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Status visuals
+
 void ARPGCharacterBase::CreateStatusMaterials()
 {
-	FrozenOverlay = RPGAssets::CreateFXMaterial(this, FLinearColor(0.3f, 0.75f, 1.f), 3.f, 0.85f);
-	BurningOverlay = RPGAssets::CreateFXMaterial(this, FLinearColor(1.f, 0.35f, 0.05f), 2.5f, 0.9f);
-	ShieldOverlay = RPGAssets::CreateFXMaterial(this, FLinearColor(0.6f, 0.3f, 1.f), 1.5f, 1.f);
+	for (const FRPGStatusDefinition& Definition : RPGStatusEffects::GetDefinitions())
+	{
+		if (Definition.OverlayPriority > 0)
+		{
+			StatusOverlays.Add(Definition.Tag, RPGAssets::CreateFXMaterial(this, Definition.Color, Definition.OverlayIntensity, Definition.OverlayFresnel));
+		}
+	}
+
 	HitOverlay = RPGAssets::CreateFXMaterial(this, FLinearColor::White, 2.5f, 0.6f);
 	TelegraphOverlay = RPGAssets::CreateFXMaterial(this, FLinearColor(1.f, 0.1f, 0.05f), 3.f, 0.8f);
+	StealthOverlay = RPGAssets::CreateFXMaterial(this, FLinearColor(0.35f, 0.4f, 0.6f), 1.2f, 1.f);
 	ShieldBubbleMaterial = RPGAssets::CreateFXMaterial(this, FLinearColor(0.55f, 0.3f, 1.f), 1.2f, 1.f);
 	if (ShieldBubbleMaterial)
 	{
@@ -396,34 +796,39 @@ void ARPGCharacterBase::UpdateStatusVisuals(float DeltaSeconds)
 
 	const float Time = GetWorld()->GetTimeSeconds();
 
-	UMaterialInterface* DesiredOverlay = nullptr;
-	if (StatusEffects->IsFrozen())
+	// The highest-priority effect wins the overlay slot.
+	UMaterialInstanceDynamic* DesiredOverlay = nullptr;
+	int32 BestPriority = 0;
+	for (const FRPGStatusDefinition& Definition : RPGStatusEffects::GetDefinitions())
 	{
-		DesiredOverlay = FrozenOverlay;
+		if (Definition.OverlayPriority > BestPriority && HasStatus(Definition.Tag))
+		{
+			if (UMaterialInstanceDynamic* Overlay = StatusOverlays.FindRef(Definition.Tag))
+			{
+				DesiredOverlay = Overlay;
+				BestPriority = Definition.OverlayPriority;
+				if (Definition.DamageOverTimeType.IsValid())
+				{
+					Overlay->SetScalarParameterValue(IntensityParameter, Definition.OverlayIntensity * (0.8f + FMath::PerlinNoise1D(Time * 6.f) * 0.8f));
+				}
+			}
+		}
 	}
-	else if (HitFlashRemaining > 0.f)
+	if (HitFlashRemaining > 0.f && HitFlashPriority > BestPriority)
 	{
 		DesiredOverlay = HitOverlay;
+		BestPriority = HitFlashPriority;
 	}
-	else if (TelegraphRemaining > 0.f)
+	if (TelegraphRemaining > 0.f && TelegraphPriority > BestPriority && TelegraphOverlay)
 	{
 		DesiredOverlay = TelegraphOverlay;
-		if (TelegraphOverlay)
-		{
-			TelegraphOverlay->SetScalarParameterValue(IntensityParameter, 2.5f + 2.f * FMath::Sin(Time * 25.f));
-		}
+		TelegraphOverlay->SetScalarParameterValue(IntensityParameter, 2.5f + 2.f * FMath::Sin(Time * 25.f));
 	}
-	else if (StatusEffects->IsBurning())
+	if (IsStealthed() && StealthOverlay)
 	{
-		DesiredOverlay = BurningOverlay;
-		if (BurningOverlay)
-		{
-			BurningOverlay->SetScalarParameterValue(IntensityParameter, 2.f + FMath::PerlinNoise1D(Time * 6.f) * 2.f);
-		}
-	}
-	else if (Attributes->GetShield() > 0.f)
-	{
-		DesiredOverlay = ShieldOverlay;
+		// Stealth overrides everything else: a faint shimmer, stronger for enemies who spotted it up close.
+		DesiredOverlay = StealthOverlay;
+		StealthOverlay->SetScalarParameterValue(IntensityParameter, 0.8f + 0.4f * FMath::Sin(Time * 5.f));
 	}
 
 	USkeletalMeshComponent* SkeletalMesh = GetMesh();
@@ -432,7 +837,7 @@ void ARPGCharacterBase::UpdateStatusVisuals(float DeltaSeconds)
 		SkeletalMesh->SetOverlayMaterial(DesiredOverlay);
 	}
 
-	const bool bShowShield = Attributes->GetShield() > 0.f;
+	const bool bShowShield = GetShield() > 0.f && !bHiddenByStealth;
 	if (ShieldBubble->IsVisible() != bShowShield)
 	{
 		ShieldBubble->SetVisibility(bShowShield);
@@ -443,30 +848,32 @@ void ARPGCharacterBase::UpdateStatusVisuals(float DeltaSeconds)
 	}
 
 	// Frozen characters hold their pose.
-	const float AnimRate = StatusEffects->IsFrozen() ? 0.f : 1.f;
+	const float AnimRate = HasStatus(RPGTags::Status_CC_Freeze) ? 0.f : 1.f;
 	if (SkeletalMesh->GlobalAnimRateScale != AnimRate)
 	{
 		SkeletalMesh->GlobalAnimRateScale = AnimRate;
 	}
 }
 
-void ARPGCharacterBase::UpdateMovementSpeed()
+void ARPGCharacterBase::UpdateStealthVisibility()
 {
-	const float Speed = IsAlive() ? GetDesiredMoveSpeed() * StatusEffects->GetSpeedMultiplier() : 0.f;
-	GetCharacterMovement()->MaxWalkSpeed = Speed;
-}
-
-void ARPGCharacterBase::UpdateFacing(float DeltaSeconds)
-{
-	if (!bHasDesiredFacing || !CanAct())
+	if (GetNetMode() == NM_DedicatedServer || !IsAlive())
 	{
 		return;
 	}
 
-	const FRotator NewRotation = FMath::RInterpConstantTo(GetActorRotation(), DesiredFacing, DeltaSeconds, 720.f);
-	SetActorRotation(NewRotation);
-	if (NewRotation.Equals(DesiredFacing, 1.f))
+	// Rendering is per machine: hide the character from the local player when it is a stealthed enemy out of reveal range.
+	bool bHide = false;
+	if (IsStealthed() && !IsLocallyControlled())
 	{
-		bHasDesiredFacing = false;
+		const APlayerController* LocalController = GetWorld()->GetFirstPlayerController();
+		const APawn* Viewer = LocalController ? LocalController->GetPawn() : nullptr;
+		bHide = !IsVisibleTo(Viewer);
+	}
+
+	if (bHide != bHiddenByStealth)
+	{
+		bHiddenByStealth = bHide;
+		GetMesh()->SetVisibility(!bHide, true);
 	}
 }

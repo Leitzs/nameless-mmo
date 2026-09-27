@@ -1,12 +1,11 @@
-#include "Characters/EnemyBotCharacter.h"
+﻿#include "Characters/EnemyBotCharacter.h"
 
 #include "AI/RPGBotAIController.h"
+#include "Abilities/RPGAbilitySystemComponent.h"
+#include "Abilities/RPGGameplayTags.h"
 #include "Animation/AnimSequenceBase.h"
 #include "Combat/RPGCombatLibrary.h"
-#include "Combat/RPGDamageTypes.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/RPGAttributeComponent.h"
-#include "Components/RPGStatusEffectComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Core/RPGAssets.h"
 #include "Engine/StaticMesh.h"
@@ -22,7 +21,8 @@ namespace EnemyBotPrivate
 	const FName RightHandBone(TEXT("hand_r"));
 }
 
-AEnemyBotCharacter::AEnemyBotCharacter()
+AEnemyBotCharacter::AEnemyBotCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	using namespace EnemyBotPrivate;
 
@@ -35,7 +35,9 @@ AEnemyBotCharacter::AEnemyBotCharacter()
 	AIControllerClass = ARPGBotAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	Attributes->SetDefaults(500.f, 0.f, 12.f, 0.f);
+	SetClassStats(500.f, 12.f, FRPGResourceConfig());
+	// Nobody predicts a bot's abilities: everyone only needs its tags.
+	AbilitySystem->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);
 
 	static ConstructorHelpers::FObjectFinder<UAnimSequenceBase> Attack1(TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_01.MM_Attack_01"));
@@ -153,7 +155,7 @@ void AEnemyBotCharacter::StartMeleeAttack(ARPGCharacterBase* Target)
 
 	if (AttackAnimations.Num() > 0)
 	{
-		PlayActionAnimation(AttackAnimations[ComboIndex % AttackAnimations.Num()], AttackPlayRate);
+		PlayActionAnimationForAll(AttackAnimations[ComboIndex % AttackAnimations.Num()], AttackPlayRate);
 		ComboIndex = (ComboIndex + 1) % AttackAnimations.Num();
 	}
 
@@ -182,7 +184,7 @@ void AEnemyBotCharacter::StartCharge(ARPGCharacterBase* Target)
 		BotController->StopMovement();
 	}
 	GetCharacterMovement()->StopMovementImmediately();
-	PlayActionAnimation(ChargeAnimation, 1.f);
+	PlayActionAnimationForAll(ChargeAnimation, 1.f);
 	SetTelegraphGlow(ChargeWindup);
 	FaceLocation(Target->GetActorLocation(), false);
 	SetAction(EBotAction::ChargeWindup, ChargeWindup);
@@ -198,7 +200,7 @@ void AEnemyBotCharacter::CancelAction()
 {
 	if (Action != EBotAction::None)
 	{
-		StopActionAnimation(0.15f);
+		StopActionAnimationForAll(0.15f);
 		SetTelegraphGlow(0.f);
 		SetAction(EBotAction::None, 0.f);
 	}
@@ -225,7 +227,7 @@ void AEnemyBotCharacter::ResolveMeleeHit()
 		return;
 	}
 
-	URPGCombatLibrary::DealDamage(Target, MeleeDamage, this, this, UDamageType_Physical::StaticClass());
+	URPGCombatLibrary::ApplyDamage(this, Target, MeleeDamage, RPGTags::Damage_Physical);
 	Target->ApplyKnockback(ToTarget, 250.f, 60.f);
 }
 
@@ -258,11 +260,11 @@ void AEnemyBotCharacter::TryChargeHit()
 	}
 
 	bChargeHitApplied = true;
-	URPGCombatLibrary::DealDamage(Target, ChargeDamage, this, this, UDamageType_Physical::StaticClass());
+	URPGCombatLibrary::ApplyDamage(this, Target, ChargeDamage, RPGTags::Damage_Physical);
 	if (Target->IsAlive())
 	{
 		Target->ApplyKnockback(ToTarget, ChargeKnockback, 350.f);
-		Target->GetStatusEffects()->ApplyStun(0.4f);
+		URPGCombatLibrary::ApplyStatus(this, Target, FRPGStatusSpec(RPGTags::Status_CC_Stun, 0.4f));
 	}
 	GetCharacterMovement()->StopMovementImmediately();
 }

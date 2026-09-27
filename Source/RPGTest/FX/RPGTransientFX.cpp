@@ -3,6 +3,7 @@
 #include "Components/PointLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Core/RPGAssets.h"
+#include "Core/RPGGameState.h"
 #include "Engine/World.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
@@ -43,7 +44,7 @@ ARPGTransientFX::ARPGTransientFX()
 ARPGTransientFX* ARPGTransientFX::Spawn(const UObject* WorldContextObject, const FVector& Location, const FRotator& Rotation, const FRPGFXParams& Params, AActor* AttachTo)
 {
 	UWorld* World = WorldContextObject ? WorldContextObject->GetWorld() : nullptr;
-	if (!World)
+	if (!World || World->GetNetMode() == NM_DedicatedServer)
 	{
 		return nullptr;
 	}
@@ -60,6 +61,26 @@ ARPGTransientFX* ARPGTransientFX::Spawn(const UObject* WorldContextObject, const
 		}
 	}
 	return Effect;
+}
+
+void ARPGTransientFX::SpawnForAll(const UObject* WorldContextObject, const FVector& Location, const FRotator& Rotation, const FRPGFXParams& Params, AActor* AttachTo)
+{
+	UWorld* World = WorldContextObject ? WorldContextObject->GetWorld() : nullptr;
+	if (!World)
+	{
+		return;
+	}
+
+	const ENetMode NetMode = World->GetNetMode();
+	ARPGGameState* GameState = World->GetGameState<ARPGGameState>();
+	if (GameState && (NetMode == NM_ListenServer || NetMode == NM_DedicatedServer))
+	{
+		// The multicast also runs here on the server.
+		GameState->MulticastSpawnFX(Location, Rotation, Params, AttachTo);
+		return;
+	}
+
+	Spawn(WorldContextObject, Location, Rotation, Params, AttachTo);
 }
 
 void ARPGTransientFX::Initialize(const FRPGFXParams& InParams)

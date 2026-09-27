@@ -1,8 +1,12 @@
 #include "Core/RPGGameInstance.h"
 
+#include "AbilitySystemGlobals.h"
+#include "Characters/MageCharacter.h"
+#include "Characters/PaladinCharacter.h"
+#include "Characters/RogueCharacter.h"
+#include "Characters/WarlockCharacter.h"
+#include "Characters/WarriorCharacter.h"
 #include "Engine/World.h"
-#include "Kismet/GameplayStatics.h"
-#include "RPGTest.h"
 
 #define LOCTEXT_NAMESPACE "RPGGameInstance"
 
@@ -19,6 +23,54 @@ URPGGameInstance::URPGGameInstance()
 		TEXT("/Game/RPGTest/Maps/L_Whisperwood.L_Whisperwood"));
 	AddMap(LOCTEXT("TestArena", "Test Arena"), LOCTEXT("TestArenaDescription", "Flat grid arena: duel bot with range rings, bot group, cover, range lane."),
 		TEXT("/Game/RPGTest/Maps/L_TestArena.L_TestArena"));
+
+	// New classes: add a row here (and a pawn class deriving from ARPGPlayerCharacter).
+	auto AddClass = [this](FName Id, const FText& Name, const FText& Description, const FLinearColor& Color, TSubclassOf<ARPGPlayerCharacter> PawnClass)
+	{
+		FRPGCharacterClassInfo& Info = CharacterClasses.AddDefaulted_GetRef();
+		Info.Id = Id;
+		Info.DisplayName = Name;
+		Info.Description = Description;
+		Info.Color = Color;
+		Info.PawnClass = PawnClass;
+	};
+	AddClass(TEXT("Mage"), LOCTEXT("MageClass", "Mage"),
+		LOCTEXT("MageClassDescription", "Ranged caster (mana). Fireball, Frost Nova, Lightning Strike, Blink, Arcane Shield."),
+		FLinearColor(0.6f, 0.35f, 1.f), AMageCharacter::StaticClass());
+	AddClass(TEXT("Warlock"), LOCTEXT("WarlockClass", "Warlock"),
+		LOCTEXT("WarlockClassDescription", "Shadow caster (mana). Shadow Bolt, Corruption, Drain Life, Fear, Demonic Circle."),
+		FLinearColor(0.35f, 0.9f, 0.25f), AWarlockCharacter::StaticClass());
+	AddClass(TEXT("Paladin"), LOCTEXT("PaladinClass", "Paladin"),
+		LOCTEXT("PaladinClassDescription", "Sword and shield (mana). Crusader Strike, Hammer of Justice, Flash of Light, Cleanse, Divine Shield."),
+		FLinearColor(1.f, 0.82f, 0.35f), APaladinCharacter::StaticClass());
+	AddClass(TEXT("Rogue"), LOCTEXT("RogueClass", "Rogue"),
+		LOCTEXT("RogueClassDescription", "Daggers (energy). Stealth, Backstab, Throwing Knife, Kidney Shot, Shadowstep."),
+		FLinearColor(0.95f, 0.9f, 0.4f), ARogueCharacter::StaticClass());
+	AddClass(TEXT("Warrior"), LOCTEXT("WarriorClass", "Warrior"),
+		LOCTEXT("WarriorClassDescription", "Greatsword (rage). Charge, Mortal Strike, Hamstring, Whirlwind, Berserker Rush."),
+		FLinearColor(0.9f, 0.3f, 0.2f), AWarriorCharacter::StaticClass());
+}
+
+void URPGGameInstance::Init()
+{
+	Super::Init();
+
+	// Loads the ability system's global data (target data types used to send aim to the server).
+	if (!UAbilitySystemGlobals::Get().IsAbilitySystemGlobalsInitialized())
+	{
+		UAbilitySystemGlobals::Get().InitGlobalData();
+	}
+
+	if (!FindCharacterClass(SelectedClassId))
+	{
+		SelectedClassId = GetDefaultCharacterClassId();
+	}
+	PlayerName = SanitizePlayerName(PlayerName);
+	if (PlayerName.IsEmpty())
+	{
+		PlayerName = FString::Printf(TEXT("Player%03d"), FMath::RandRange(1, 999));
+		SaveConfig();
+	}
 }
 
 int32 URPGGameInstance::FindMapIndex(const UWorld* World) const
@@ -33,22 +85,50 @@ int32 URPGGameInstance::FindMapIndex(const UWorld* World) const
 	return Maps.IndexOfByPredicate([&PackageName](const FRPGMapInfo& Map) { return Map.Level.GetLongPackageName() == PackageName; });
 }
 
-bool URPGGameInstance::OpenMap(int32 MapIndex)
+const FRPGCharacterClassInfo* URPGGameInstance::FindCharacterClass(FName ClassId) const
 {
-	if (!Maps.IsValidIndex(MapIndex))
-	{
-		return false;
-	}
+	return CharacterClasses.FindByPredicate([ClassId](const FRPGCharacterClassInfo& Info) { return Info.Id == ClassId; });
+}
 
-	MarkMapChosen();
-	if (FindMapIndex(GetWorld()) == MapIndex)
+void URPGGameInstance::SetPlayerName(const FString& InPlayerName)
+{
+	const FString Sanitized = SanitizePlayerName(InPlayerName);
+	if (!Sanitized.IsEmpty() && Sanitized != PlayerName)
 	{
-		return false;
+		PlayerName = Sanitized;
+		SaveConfig();
 	}
+}
 
-	UE_LOG(LogRPG, Log, TEXT("Opening map '%s'"), *Maps[MapIndex].Level.GetLongPackageName());
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this, Maps[MapIndex].Level);
-	return true;
+void URPGGameInstance::SetSelectedClassId(FName InClassId)
+{
+	if (FindCharacterClass(InClassId) && InClassId != SelectedClassId)
+	{
+		SelectedClassId = InClassId;
+		SaveConfig();
+	}
+}
+
+void URPGGameInstance::SetLastJoinAddress(const FString& InAddress)
+{
+	if (InAddress != LastJoinAddress)
+	{
+		LastJoinAddress = InAddress;
+		SaveConfig();
+	}
+}
+
+FString URPGGameInstance::SanitizePlayerName(const FString& InName)
+{
+	FString Result;
+	for (const TCHAR Character : InName.TrimStartAndEnd())
+	{
+		if (FChar::IsAlnum(Character) || Character == TEXT('_') || Character == TEXT('-'))
+		{
+			Result.AppendChar(Character);
+		}
+	}
+	return Result.Left(20);
 }
 
 #undef LOCTEXT_NAMESPACE

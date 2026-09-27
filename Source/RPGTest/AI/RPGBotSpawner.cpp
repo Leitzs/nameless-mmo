@@ -92,6 +92,12 @@ void ARPGBotSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Bots are server actors; clients receive them through replication.
+	if (!HasAuthority())
+	{
+		return;
+	}
+
 	for (int32 Index = 0; Index < BotCount; ++Index)
 	{
 		SpawnBot();

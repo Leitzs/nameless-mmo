@@ -1,10 +1,9 @@
 #include "Spells/RPGProjectile.h"
 
+#include "Abilities/RPGGameplayTags.h"
 #include "Characters/RPGCharacterBase.h"
 #include "Combat/RPGCombatLibrary.h"
-#include "Combat/RPGDamageTypes.h"
 #include "Components/PointLightComponent.h"
-#include "Components/RPGStatusEffectComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Core/RPGAssets.h"
@@ -12,13 +11,18 @@
 #include "FX/RPGTransientFX.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Net/UnrealNetwork.h"
+#include "RPGTest.h"
 #include "UObject/ConstructorHelpers.h"
 
 ARPGProjectile::ARPGProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SetCanBeDamaged(false);
-	InitialLifeSpan = 2.f;
+
+	bReplicates = true;
+	SetReplicatingMovement(true);
+	SetNetUpdateFrequency(30.f);
 
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Collision->InitSphereRadius(16.f);
@@ -63,24 +67,54 @@ ARPGProjectile::ARPGProjectile()
 	Movement->bShouldBounce = false;
 	Movement->ProjectileGravityScale = 0.f;
 
-	Damage.DamageType = UDamageType_Fire::StaticClass();
+	Payload.DamageType = RPGTags::Damage_Fire;
 }
 
-void ARPGProjectile::Configure(const FRPGProjectileDamage& InDamage, const FLinearColor& InColor, float Speed)
+void ARPGProjectile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Damage = InDamage;
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ARPGProjectile, Color, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ARPGProjectile, VisualScale, COND_InitialOnly);
+	DOREPLIFETIME(ARPGProjectile, HomingTarget);
+	DOREPLIFETIME(ARPGProjectile, HomingAcceleration);
+}
+
+void ARPGProjectile::Configure(const FRPGProjectilePayload& InPayload, const FLinearColor& InColor, float Speed, float MaxRange, float InVisualScale)
+{
+	Payload = InPayload;
 	Color = InColor;
+	VisualScale = FMath::Max(0.1f, InVisualScale);
 	Movement->InitialSpeed = Speed;
 	Movement->MaxSpeed = Speed;
+	if (MaxRange > 0.f && Speed > 0.f)
+	{
+		MaxFlightTime = FMath::Max(0.15f, MaxRange / Speed);
+	}
 }
 
 void ARPGProjectile::SetHomingTarget(AActor* Target, float Acceleration)
 {
 	if (Target && Acceleration > 0.f)
 	{
+		HomingTarget = Target;
+		HomingAcceleration = Acceleration;
+		ApplyHoming();
+	}
+}
+
+void ARPGProjectile::OnRep_Homing()
+{
+	ApplyHoming();
+}
+
+void ARPGProjectile::ApplyHoming()
+{
+	if (HomingTarget && HomingAcceleration > 0.f)
+	{
 		Movement->bIsHomingProjectile = true;
-		Movement->HomingTargetComponent = Target->GetRootComponent();
-		Movement->HomingAccelerationMagnitude = Acceleration;
+		Movement->HomingTargetComponent = HomingTarget->GetRootComponent();
+		Movement->HomingAccelerationMagnitude = HomingAcceleration;
 	}
 }
 
@@ -88,11 +122,23 @@ void ARPGProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (AActor* InstigatorActor = GetInstigator())
+	if (HasAuthority())
 	{
-		Collision->IgnoreActorWhenMoving(InstigatorActor, true);
+		if (AActor* InstigatorActor = GetInstigator())
+		{
+			Collision->IgnoreActorWhenMoving(InstigatorActor, true);
+		}
+		Collision->OnComponentHit.AddDynamic(this, &ThisClass::HandleHit);
+		SetLifeSpan(MaxFlightTime);
 	}
-	Collision->OnComponentHit.AddDynamic(this, &ThisClass::HandleHit);
+	else
+	{
+		// The client copy is only visual: the server decides what it hits.
+		Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
+	Core->SetRelativeScale3D(FVector(0.34f * VisualScale));
+	Glow->SetRelativeScale3D(FVector(0.7f * VisualScale));
 
 	CoreMaterial = RPGAssets::CreateFXMaterial(this, FLinearColor::LerpUsingHSV(Color, FLinearColor(1.f, 0.9f, 0.6f), 0.5f), 25.f, 0.1f);
 	if (CoreMaterial)
@@ -130,14 +176,16 @@ void ARPGProjectile::Tick(float DeltaSeconds)
 		Spark.Intensity = 10.f;
 		Spark.FresnelAmount = 0.3f;
 		Spark.Lifetime = 0.3f;
-		Spark.StartScale = FVector(0.32f);
-		Spark.EndScale = FVector(0.04f);
+		Spark.StartScale = FVector(0.32f * VisualScale);
+		Spark.EndScale = FVector(0.04f * VisualScale);
 		ARPGTransientFX::Spawn(this, GetActorLocation() + FMath::VRand() * 6.f, FRotator::ZeroRotator, Spark);
 	}
 }
 
 void ARPGProjectile::LifeSpanExpired()
 {
+	UE_LOG(LogRPG, Verbose, TEXT("%s fizzles at %s"), *GetName(), *GetActorLocation().ToCompactString());
+
 	// Reached max range: burst harmlessly in the air.
 	FRPGFXParams Fizzle;
 	Fizzle.Color = Color;
@@ -145,75 +193,80 @@ void ARPGProjectile::LifeSpanExpired()
 	Fizzle.Lifetime = 0.25f;
 	Fizzle.StartScale = FVector(0.4f);
 	Fizzle.EndScale = FVector(1.2f);
-	ARPGTransientFX::Spawn(this, GetActorLocation(), FRotator::ZeroRotator, Fizzle);
+	ARPGTransientFX::SpawnForAll(this, GetActorLocation(), FRotator::ZeroRotator, Fizzle);
 
 	Super::LifeSpanExpired();
 }
 
 void ARPGProjectile::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	// The projectile's own moves ignore the caster, but the caster walking into it (cast animations step forward)
+	// is reported here too.
+	if (OtherActor && OtherActor == GetInstigator())
+	{
+		return;
+	}
 	Explode(Hit.ImpactPoint, OtherActor);
 }
 
 void ARPGProjectile::Explode(const FVector& Location, AActor* DirectHitActor)
 {
-	if (bExploded)
+	if (bExploded || !HasAuthority())
 	{
 		return;
 	}
 	bExploded = true;
+	UE_LOG(LogRPG, Verbose, TEXT("%s bursts at %s on %s"), *GetName(), *Location.ToCompactString(), DirectHitActor ? *DirectHitActor->GetName() : TEXT("nothing"));
 
 	AActor* InstigatorActor = GetInstigator();
-	AController* InstigatorController = GetInstigatorController();
 
-	auto ApplyBurn = [this, InstigatorController](ARPGCharacterBase* Target)
+	auto HitTarget = [this, InstigatorActor](ARPGCharacterBase* Target, float Amount)
 	{
-		if (Damage.BurnDamagePerSecond > 0.f && Damage.BurnDuration > 0.f && Target->IsAlive())
+		if (URPGCombatLibrary::ApplyDamage(InstigatorActor, Target, Amount, Payload.DamageType, this))
 		{
-			Target->GetStatusEffects()->ApplyBurn(Damage.BurnDamagePerSecond, Damage.BurnDuration, InstigatorController, this);
+			URPGCombatLibrary::ApplyStatuses(InstigatorActor, Target, Payload.Statuses, this);
 		}
 	};
 
 	ARPGCharacterBase* DirectTarget = Cast<ARPGCharacterBase>(DirectHitActor);
 	if (DirectTarget && DirectTarget->IsAlive() && URPGCombatLibrary::AreHostile(InstigatorActor, DirectTarget))
 	{
-		URPGCombatLibrary::DealDamage(DirectTarget, Damage.DirectDamage, InstigatorActor, this, Damage.DamageType);
-		ApplyBurn(DirectTarget);
+		HitTarget(DirectTarget, Payload.DirectDamage);
 	}
 	else
 	{
 		DirectTarget = nullptr;
 	}
 
-	for (ARPGCharacterBase* Target : URPGCombatLibrary::GetHostilesInRadius(this, InstigatorActor, Location, Damage.SplashRadius))
+	for (ARPGCharacterBase* Target : URPGCombatLibrary::GetHostilesInRadius(this, InstigatorActor, Location, Payload.SplashRadius))
 	{
 		if (Target != DirectTarget)
 		{
-			URPGCombatLibrary::DealDamage(Target, Damage.SplashDamage, InstigatorActor, this, Damage.DamageType);
-			ApplyBurn(Target);
+			HitTarget(Target, Payload.SplashDamage);
 		}
 	}
 
+	const float BlastRadius = FMath::Max(Payload.SplashRadius, 60.f * VisualScale);
 	FRPGFXParams Blast;
 	Blast.Color = Color;
 	Blast.Intensity = 14.f;
 	Blast.FresnelAmount = 0.35f;
 	Blast.Lifetime = 0.45f;
 	Blast.GrowTime = 0.2f;
-	Blast.StartScale = FVector(0.3f);
-	Blast.EndScale = FVector(Damage.SplashRadius * 2.f / 100.f);
+	Blast.StartScale = FVector(0.3f * VisualScale);
+	Blast.EndScale = FVector(BlastRadius * 2.f / 100.f);
 	Blast.LightIntensity = 6000.f;
-	Blast.LightRadius = Damage.SplashRadius * 4.f;
-	ARPGTransientFX::Spawn(this, Location, FRotator::ZeroRotator, Blast);
+	Blast.LightRadius = BlastRadius * 4.f;
+	ARPGTransientFX::SpawnForAll(this, Location, FRotator::ZeroRotator, Blast);
 
 	FRPGFXParams Flash;
 	Flash.Color = FLinearColor(1.f, 0.85f, 0.5f);
 	Flash.Intensity = 30.f;
 	Flash.FresnelAmount = 0.f;
 	Flash.Lifetime = 0.15f;
-	Flash.StartScale = FVector(0.8f);
-	Flash.EndScale = FVector(1.6f);
-	ARPGTransientFX::Spawn(this, Location, FRotator::ZeroRotator, Flash);
+	Flash.StartScale = FVector(0.8f * VisualScale);
+	Flash.EndScale = FVector(1.6f * VisualScale);
+	ARPGTransientFX::SpawnForAll(this, Location, FRotator::ZeroRotator, Flash);
 
 	Destroy();
 }
