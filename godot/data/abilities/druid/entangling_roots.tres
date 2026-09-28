@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_anpur"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_djvfk"]
+[ext_resource type="Resource" path="res://data/statuses/root.tres" id="3_irm0r"]
+
+[sub_resource type="Resource" id="Resource_3gfst"]
+script = ExtResource("2_djvfk")
+status = ExtResource("3_irm0r")
+duration = 3.0
+
+[resource]
+script = ExtResource("1_anpur")
+damage = 8.0
+damage_type = 7
+statuses = Array[ExtResource("2_djvfk")]([SubResource("Resource_3gfst")])
+id = &"druid.entangling_roots"
+display_name = "Entangling Roots"
+description = "Roots burst from the ground and hold the target in place for 3 seconds."
+color = Color(0.6262097, 0.85430586, 0.42358288, 1)
+resource_cost = 25.0
+cooldown = 8.0
+cast_time = 0.9
+release_delay = 0.7
+requires_target = true
+animation = &"charged"
+animation_speed = 1.2

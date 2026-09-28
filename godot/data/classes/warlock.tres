@@ -1,0 +1,67 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_ykqqk"]
+[ext_resource type="Resource" path="res://data/abilities/warlock/fel_bolt.tres" id="2_47u6a"]
+[ext_resource type="Resource" path="res://data/abilities/warlock/shadow_bolt.tres" id="3_fm5jb"]
+[ext_resource type="Resource" path="res://data/abilities/warlock/corruption.tres" id="4_f31if"]
+[ext_resource type="Resource" path="res://data/abilities/warlock/drain_life.tres" id="5_86lxv"]
+[ext_resource type="Resource" path="res://data/abilities/warlock/fear.tres" id="6_dc7pg"]
+[ext_resource type="Resource" path="res://data/abilities/warlock/demonic_circle.tres" id="7_dumyp"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_nwqdf"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="9_xtj3b"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="10_xgpoa"]
+
+[sub_resource type="Resource" id="Resource_beke2"]
+script = ExtResource("8_nwqdf")
+part_name = &"HornLeft"
+shape = 3
+offset = Vector3(-0.13407034, 0.25852817, 0.022054706)
+direction = Vector3(-0.45058614, 0.8210681, 0.35045588)
+size = Vector3(0.07, 0.28, 0.07)
+color = Color(0.38109186, 0.3491902, 0.33183005, 1)
+roughness = 0.5
+
+[sub_resource type="Resource" id="Resource_omafj"]
+script = ExtResource("8_nwqdf")
+part_name = &"HornRight"
+shape = 3
+offset = Vector3(0.13407034, 0.25852817, 0.022054706)
+direction = Vector3(0.45058614, 0.8210681, 0.35045588)
+size = Vector3(0.07, 0.28, 0.07)
+color = Color(0.38109186, 0.3491902, 0.33183005, 1)
+roughness = 0.5
+
+[sub_resource type="Resource" id="Resource_rsj2r"]
+script = ExtResource("8_nwqdf")
+part_name = &"FelOrb"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.08, -0.12)
+size = Vector3(0.16, 0.16, 0.16)
+color = Color(0.6262097, 1, 0.48452926, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[sub_resource type="Resource" id="Resource_djtpa"]
+script = ExtResource("9_xtj3b")
+type = 1
+max_value = 260.0
+regen_per_second = 11.0
+
+[resource]
+script = ExtResource("10_xgpoa")
+id = &"warlock"
+display_name = "Warlock"
+description = "Shadow caster (mana). Shadow Bolt, Corruption, Drain Life, Fear, Demonic Circle."
+color = Color(0.6262097, 0.9546871, 0.5370987, 1)
+max_health = 320.0
+health_regen = 4.0
+resource = SubResource("Resource_djtpa")
+move_speed = 4.7
+abilities = Array[ExtResource("1_ykqqk")]([ExtResource("2_47u6a"), ExtResource("3_fm5jb"), ExtResource("4_f31if"), ExtResource("5_86lxv"), ExtResource("6_dc7pg"), ExtResource("7_dumyp")])
+body_color = Color(0.3499023, 0.4816969, 0.3299638, 1)
+limb_color = Color(0.19069183, 0.28380758, 0.17660485, 1)
+cosmetics = Array[ExtResource("8_nwqdf")]([SubResource("Resource_beke2"), SubResource("Resource_omafj"), SubResource("Resource_rsj2r")])

@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_csblv"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_8t2l5"]
+[ext_resource type="Resource" path="res://data/statuses/stun.tres" id="3_p16d7"]
+
+[sub_resource type="Resource" id="Resource_5brx1"]
+script = ExtResource("2_8t2l5")
+status = ExtResource("3_p16d7")
+duration = 1.75
+
+[resource]
+script = ExtResource("1_csblv")
+damage = 8.0
+arc_degrees = 100.0
+statuses = Array[ExtResource("2_8t2l5")]([SubResource("Resource_5brx1")])
+id = &"rogue.kidney_shot"
+display_name = "Kidney Shot"
+description = "A low blow that stuns the target for 1.75 seconds."
+color = Color(1, 0.88082504, 0.58383155, 1)
+resource_cost = 30.0
+cooldown = 20.0
+cast_time = 0.4
+max_range = 4.5
+slows_while_casting = false
+animation = &"attack_1"
+animation_speed = 1.8

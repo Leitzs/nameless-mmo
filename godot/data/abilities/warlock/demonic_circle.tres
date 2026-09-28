@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="DemonicCircleAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/special/demonic_circle_ability.gd" id="1_6717j"]
+
+[resource]
+script = ExtResource("1_6717j")
+id = &"warlock.demonic_circle"
+display_name = "Demonic Circle"
+description = "Leaves a demonic circle at your feet. Use it again to teleport back to the circle."
+color = Color(0.6651851, 1, 0.48452926, 1)
+resource_cost = 15.0
+cast_time = 0.3
+release_delay = 0.05
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+animation = &"dash"
+animation_speed = 1.6

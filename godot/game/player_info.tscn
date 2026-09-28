@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/player_info.gd" id="1_script"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_info"]
+properties/0/path = NodePath(".:player_name")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:class_id")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:kills")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:deaths")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:respawn_time")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
+[node name="PlayerInfo" type="Node"]
+script = ExtResource("1_script")
+
+[node name="Sync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_info")

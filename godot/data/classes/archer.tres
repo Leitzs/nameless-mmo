@@ -1,0 +1,115 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_mexef"]
+[ext_resource type="Resource" path="res://data/abilities/archer/quick_shot.tres" id="2_lhpsp"]
+[ext_resource type="Resource" path="res://data/abilities/archer/aimed_shot.tres" id="3_b7n5a"]
+[ext_resource type="Resource" path="res://data/abilities/archer/multi_shot.tres" id="4_ph6oo"]
+[ext_resource type="Resource" path="res://data/abilities/archer/concussive_shot.tres" id="5_5f657"]
+[ext_resource type="Resource" path="res://data/abilities/archer/disengage.tres" id="6_0cl20"]
+[ext_resource type="Resource" path="res://data/abilities/archer/rain_of_arrows.tres" id="7_badkf"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_8xc2o"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="9_ug3og"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="10_odnyy"]
+
+[sub_resource type="Resource" id="Resource_1yor6"]
+script = ExtResource("8_8xc2o")
+part_name = &"Cap"
+shape = 3
+offset = Vector3(0, 0.18, 0.03)
+rotation_degrees = Vector3(-20, 0, 0)
+size = Vector3(0.28, 0.3, 0.3)
+color = Color(0.48452926, 0.7014107, 0.42358288, 1)
+roughness = 0.85
+
+[sub_resource type="Resource" id="Resource_cioi6"]
+script = ExtResource("8_8xc2o")
+part_name = &"CapFeather"
+shape = 2
+offset = Vector3(0.08, 0.24, 0.1)
+rotation_degrees = Vector3(-50, 0, 15)
+size = Vector3(0.06, 0.3, 0.02)
+color = Color(0.88082504, 0.42358288, 0.3491902, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_l6vxe"]
+script = ExtResource("8_8xc2o")
+part_name = &"BowGrip"
+shape = 2
+socket = &"hand_l"
+size = Vector3(0.05, 0.16, 0.05)
+color = Color(0.5657284, 0.4492039, 0.3133042, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_dbg6b"]
+script = ExtResource("8_8xc2o")
+part_name = &"BowUpperLimb"
+shape = 2
+socket = &"hand_l"
+offset = Vector3(0, 0.36, 0.04)
+rotation_degrees = Vector3(12, 0, 0)
+size = Vector3(0.035, 0.6, 0.035)
+color = Color(0.6651851, 0.5271128, 0.3491902, 1)
+
+[sub_resource type="Resource" id="Resource_jcbp4"]
+script = ExtResource("8_8xc2o")
+part_name = &"BowLowerLimb"
+shape = 2
+socket = &"hand_l"
+offset = Vector3(0, -0.36, 0.04)
+rotation_degrees = Vector3(-12, 0, 0)
+size = Vector3(0.035, 0.6, 0.035)
+color = Color(0.6651851, 0.5271128, 0.3491902, 1)
+
+[sub_resource type="Resource" id="Resource_f5h7u"]
+script = ExtResource("8_8xc2o")
+part_name = &"BowString"
+shape = 2
+socket = &"hand_l"
+offset = Vector3(0, 0, 0.11)
+size = Vector3(0.006, 1.3, 0.006)
+color = Color(0.9309246, 0.91627353, 0.85430586, 1)
+roughness = 0.5
+
+[sub_resource type="Resource" id="Resource_t57hh"]
+script = ExtResource("8_8xc2o")
+part_name = &"Quiver"
+shape = 2
+socket = &"spine_03"
+offset = Vector3(0, 0.05, 0.22)
+rotation_degrees = Vector3(0, 0, -25.000002)
+size = Vector3(0.13, 0.55, 0.13)
+color = Color(0.5657284, 0.4492039, 0.3133042, 1)
+roughness = 0.85
+
+[sub_resource type="Resource" id="Resource_kdbjq"]
+script = ExtResource("8_8xc2o")
+part_name = &"Fletchings"
+shape = 3
+socket = &"spine_03"
+offset = Vector3(0.13, 0.35, 0.22)
+rotation_degrees = Vector3(0, 0, -25.000002)
+size = Vector3(0.11, 0.12, 0.11)
+color = Color(0.9546871, 0.9452769, 0.9063318, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_kk1i4"]
+script = ExtResource("9_ug3og")
+type = 2
+max_value = 100.0
+regen_per_second = 15.0
+
+[resource]
+script = ExtResource("10_odnyy")
+id = &"archer"
+display_name = "Archer"
+description = "Longbow (energy). Aimed Shot, Multi-Shot, Concussive Shot, Disengage, Rain of Arrows."
+color = Color(0.58383155, 0.88082504, 0.76737565, 1)
+max_health = 330.0
+health_regen = 4.0
+resource = SubResource("Resource_kk1i4")
+move_speed = 5.1
+sprint_speed = 7.8
+abilities = Array[ExtResource("1_mexef")]([ExtResource("2_lhpsp"), ExtResource("3_b7n5a"), ExtResource("4_ph6oo"), ExtResource("5_5f657"), ExtResource("6_0cl20"), ExtResource("7_badkf")])
+body_color = Color(0.40125498, 0.5257669, 0.36823985, 1)
+limb_color = Color(0.22697362, 0.314944, 0.20364772, 1)
+cosmetics = Array[ExtResource("8_8xc2o")]([SubResource("Resource_1yor6"), SubResource("Resource_cioi6"), SubResource("Resource_l6vxe"), SubResource("Resource_dbg6b"), SubResource("Resource_jcbp4"), SubResource("Resource_f5h7u"), SubResource("Resource_t57hh"), SubResource("Resource_kdbjq")])

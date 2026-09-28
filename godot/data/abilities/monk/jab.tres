@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_goiqv"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_vs845"]
+
+[resource]
+script = ExtResource("1_goiqv")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2", &"attack_3"])
+damage = 9.0
+reach = 1.9
+arc_degrees = 100.0
+id = &"monk.jab"
+display_name = "Jab"
+description = "Lightning-fast punches and kicks."
+color = Color(0.97769153, 0.9546871, 0.9063318, 1)
+cast_time = 0.38
+release_delay = 0.12
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 2.0

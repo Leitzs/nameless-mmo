@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_xnyhp"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_krx8j"]
+
+[resource]
+script = ExtResource("1_xnyhp")
+heal_amount = 70.0
+id = &"paladin.flash_of_light"
+display_name = "Flash of Light"
+description = "After a short cast, heals you for 70. A stun interrupts it; Mortal Strike halves it."
+color = Color(1, 0.97769153, 0.7977378, 1)
+resource_cost = 40.0
+cooldown = 8.0
+cast_time = 1.2
+release_delay = 1.0
+max_range = 0.0
+face_aim = false
+breaks_stealth = false
+animation = &"charged"
+animation_speed = 0.8

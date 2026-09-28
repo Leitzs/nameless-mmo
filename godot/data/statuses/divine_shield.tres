@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_0a2au"]
+
+[resource]
+script = ExtResource("1_0a2au")
+id = &"divine_shield"
+display_name = "DIVINE SHIELD"
+color = Color(1, 0.9309246, 0.6262097, 1)
+harmful = false
+effect = 8
+replace_existing = true
+overlay_priority = 95
+overlay_intensity = 3.0
+overlay_fresnel = 1.0

@@ -1,0 +1,98 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://characters/combat_character.gd" id="1_character"]
+[ext_resource type="Script" path="res://characters/components/health.gd" id="2_health"]
+[ext_resource type="Script" path="res://characters/components/resource_pool.gd" id="3_pool"]
+[ext_resource type="Script" path="res://characters/components/status_effects.gd" id="4_statuses"]
+[ext_resource type="Script" path="res://abilities/ability_caster.gd" id="5_caster"]
+[ext_resource type="PackedScene" path="res://characters/visual/blockout_body.tscn" id="6_body"]
+[ext_resource type="Script" path="res://characters/player/player_camera.gd" id="7_camera"]
+[ext_resource type="Script" path="res://characters/player/player_input.gd" id="8_input"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.42
+height = 1.92
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_camera"]
+radius = 0.14
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_movement"]
+properties/0/path = NodePath(".:sync_position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:sync_yaw")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:sync_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_server"]
+properties/0/path = NodePath("Health:health")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("Health:max_health")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("Health:shield")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath("Health:death_pose")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath("ResourcePool:value")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath("ResourcePool:max_value")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath("StatusEffects:active")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath("AbilityCaster:cooldowns")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+
+[node name="PlayerCharacter" type="CharacterBody3D" groups=["players"]]
+script = ExtResource("1_character")
+team = 0
+
+[node name="CollisionShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.96, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2_health")
+
+[node name="ResourcePool" type="Node" parent="."]
+script = ExtResource("3_pool")
+
+[node name="StatusEffects" type="Node" parent="."]
+script = ExtResource("4_statuses")
+
+[node name="AbilityCaster" type="Node" parent="."]
+script = ExtResource("5_caster")
+
+[node name="Visual" parent="." instance=ExtResource("6_body")]
+
+[node name="PlayerCamera" type="Node3D" parent="."]
+script = ExtResource("7_camera")
+
+[node name="SpringArm" type="SpringArm3D" parent="PlayerCamera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.7, 0)
+shape = SubResource("SphereShape3D_camera")
+spring_length = 5.5
+
+[node name="Camera" type="Camera3D" parent="PlayerCamera/SpringArm"]
+fov = 58.0
+
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("8_input")
+
+[node name="MovementSync" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("..")
+replication_config = SubResource("SceneReplicationConfig_movement")
+
+[node name="ServerSync" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("..")
+replication_config = SubResource("SceneReplicationConfig_server")

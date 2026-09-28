@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_x0gy4"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_n28q6"]
+[ext_resource type="Resource" path="res://data/statuses/fear.tres" id="3_l4rya"]
+
+[sub_resource type="Resource" id="Resource_mhodb"]
+script = ExtResource("2_n28q6")
+status = ExtResource("3_l4rya")
+duration = 3.0
+
+[resource]
+script = ExtResource("1_x0gy4")
+statuses = Array[ExtResource("2_n28q6")]([SubResource("Resource_mhodb")])
+id = &"warlock.fear"
+display_name = "Fear"
+description = "Strikes terror into the target, who runs in panic for 3 seconds. Heavy damage breaks the effect."
+color = Color(0.76737565, 0.3491902, 0.9309246, 1)
+resource_cost = 30.0
+cooldown = 20.0
+cast_time = 0.6
+release_delay = 0.35
+max_range = 20.0
+requires_target = true
+animation = &"attack_1"
+animation_speed = 1.4

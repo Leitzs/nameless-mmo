@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_m5j26"]
+[ext_resource type="Resource" path="res://data/statuses/immune_cc.tres" id="2_lmtox"]
+[ext_resource type="Resource" path="res://data/statuses/immune_slow.tres" id="3_y2yf3"]
+
+[resource]
+script = ExtResource("1_m5j26")
+id = &"slow"
+display_name = "SLOWED"
+color = Color(0.7977378, 0.9546871, 1, 1)
+effect = 5
+blocked_by = Array[ExtResource("1_m5j26")]([ExtResource("2_lmtox"), ExtResource("3_y2yf3")])

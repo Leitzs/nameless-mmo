@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://game/match.gd" id="2_match"]
+[ext_resource type="Script" path="res://game/dev/dev_commands.gd" id="3_dev_commands"]
+[ext_resource type="Script" path="res://game/dev/self_test.gd" id="4_self_test"]
+[ext_resource type="PackedScene" path="res://ui/game_ui.tscn" id="5_ui"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main")
+
+[node name="Level" type="Node" parent="."]
+
+[node name="LevelSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../Level")
+
+[node name="Players" type="Node" parent="."]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../Players")
+
+[node name="Match" type="Node" parent="."]
+script = ExtResource("2_match")
+
+[node name="DevCommands" type="Node" parent="."]
+script = ExtResource("3_dev_commands")
+
+[node name="SelfTest" type="Node" parent="DevCommands"]
+script = ExtResource("4_self_test")
+
+[node name="Effects" type="Node3D" parent="."]
+
+[node name="UI" parent="." instance=ExtResource("5_ui")]

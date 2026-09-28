@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="DeathGripAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_ml132"]
+[ext_resource type="Resource" path="res://data/statuses/immune_cc.tres" id="2_t3r0u"]
+[ext_resource type="Script" path="res://abilities/special/death_grip_ability.gd" id="3_rhjgm"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="4_th0e7"]
+
+[resource]
+script = ExtResource("3_rhjgm")
+immunities = Array[ExtResource("1_ml132")]([ExtResource("2_t3r0u")])
+id = &"death_knight.death_grip"
+display_name = "Death Grip"
+description = "Yanks the target through the air to you. Unstoppable targets resist."
+color = Color(0.7014107, 0.48452926, 0.7977378, 1)
+cooldown = 20.0
+cast_time = 0.35
+max_range = 25.0
+slows_while_casting = false
+requires_target = true
+animation = &"attack_2"
+animation_speed = 1.5

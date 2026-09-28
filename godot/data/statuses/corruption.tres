@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_6je78"]
+
+[resource]
+script = ExtResource("1_6je78")
+id = &"corruption"
+display_name = "CORRUPTED"
+color = Color(0.76737565, 0.3491902, 0.88082504, 1)
+effect = 10
+damage_type = 5
+replace_existing = true
+overlay_priority = 25
+overlay_intensity = 1.5

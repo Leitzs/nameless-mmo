@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="FrostNovaAbility" format=3]
+
+[ext_resource type="Resource" path="res://data/statuses/freeze.tres" id="1_edfbo"]
+[ext_resource type="Script" path="res://abilities/special/frost_nova_ability.gd" id="2_66djn"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="3_di7ef"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="4_2wrsn"]
+
+[sub_resource type="Resource" id="Resource_8bf37"]
+script = ExtResource("3_di7ef")
+status = ExtResource("1_edfbo")
+duration = 3.0
+
+[sub_resource type="Resource" id="Resource_owhfs"]
+script = ExtResource("3_di7ef")
+status = ExtResource("4_2wrsn")
+duration = 7.0
+magnitude = 0.5
+
+[resource]
+script = ExtResource("2_66djn")
+freeze_status = ExtResource("1_edfbo")
+radius = 6.5
+damage_type = 2
+statuses = Array[ExtResource("3_di7ef")]([SubResource("Resource_8bf37"), SubResource("Resource_owhfs")])
+id = &"mage.frost_nova"
+display_name = "Frost Nova"
+description = "Releases a wave of frost that damages and freezes nearby enemies, then slows them."
+color = Color(0.7014107, 0.9309246, 1, 1)
+resource_cost = 30.0
+cooldown = 12.0
+cast_time = 0.5
+release_delay = 0.25
+max_range = 6.5
+face_aim = false
+animation = &"charged"
+animation_speed = 1.8

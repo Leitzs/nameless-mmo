@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="ChargeAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_cknsh"]
+[ext_resource type="Resource" path="res://data/statuses/root.tres" id="2_pf8be"]
+[ext_resource type="Script" path="res://abilities/special/charge_ability.gd" id="3_kjq0r"]
+
+[sub_resource type="Resource" id="Resource_6vpw5"]
+script = ExtResource("1_cknsh")
+status = ExtResource("2_pf8be")
+
+[resource]
+script = ExtResource("3_kjq0r")
+root = SubResource("Resource_6vpw5")
+id = &"warrior.charge"
+display_name = "Charge"
+description = "Rush to the target, rooting it for 1 second on arrival and generating 20 rage."
+color = Color(1, 0.58383155, 0.42358288, 1)
+cooldown = 15.0
+cast_time = 0.2
+release_delay = 0.0
+max_range = 25.0
+slows_while_casting = false
+requires_target = true
+animation = &"dash"
+animation_speed = 1.2

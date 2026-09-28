@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_h3mpx"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_rwgsd"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="3_72ahu"]
+
+[sub_resource type="Resource" id="Resource_3khki"]
+script = ExtResource("2_rwgsd")
+status = ExtResource("3_72ahu")
+duration = 4.0
+magnitude = 0.5
+
+[resource]
+script = ExtResource("1_h3mpx")
+damage = 16.0
+damage_type = 2
+statuses = Array[ExtResource("2_rwgsd")]([SubResource("Resource_3khki")])
+id = &"shaman.frost_shock"
+display_name = "Frost Shock"
+description = "Blasts the target with frost: damage and a 50% slow for 4 seconds."
+color = Color(0.735357, 0.9309246, 1, 1)
+resource_cost = 20.0
+cooldown = 8.0
+cast_time = 0.35
+max_range = 25.0
+slows_while_casting = false
+requires_target = true
+animation = &"attack_2"
+animation_speed = 1.8

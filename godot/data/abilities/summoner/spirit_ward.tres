@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_sp4r8"]
+[ext_resource type="Resource" path="res://data/statuses/spirit_ward.tres" id="2_r30gl"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="3_3xp3x"]
+
+[resource]
+script = ExtResource("1_sp4r8")
+shield_amount = 75.0
+shield_duration = 10.0
+shield_status = ExtResource("2_r30gl")
+id = &"summoner.spirit_ward"
+display_name = "Spirit Ward"
+description = "A ward of bound spirits absorbs 75 damage for 10 seconds."
+color = Color(0.58383155, 0.9309246, 0.97769153, 1)
+resource_cost = 30.0
+cooldown = 20.0
+cast_time = 0.35
+release_delay = 0.1
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+animation = &"attack_3"
+animation_speed = 1.5

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_01402"]
+[ext_resource type="Resource" path="res://data/statuses/immune_cc.tres" id="2_b2jvg"]
+
+[resource]
+script = ExtResource("1_01402")
+id = &"paralysis"
+display_name = "PARALYZED"
+color = Color(0.48452926, 1, 0.76737565, 1)
+effect = 1
+diminishing_returns = true
+blocked_by = Array[ExtResource("1_01402")]([ExtResource("2_b2jvg")])
+break_damage_fraction = 0.0
+overlay_priority = 66
+overlay_intensity = 1.8

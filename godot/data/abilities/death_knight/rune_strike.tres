@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_a0mcj"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_wx5lk"]
+
+[resource]
+script = ExtResource("1_a0mcj")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2"])
+damage = 14.0
+reach = 2.2
+resource_on_hit = 8.0
+id = &"death_knight.rune_strike"
+display_name = "Rune Strike"
+description = "Runeblade strikes. Every hit builds runic power."
+color = Color(0.76737565, 0.9063318, 1, 1)
+cast_time = 0.6
+release_delay = 0.25
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.4

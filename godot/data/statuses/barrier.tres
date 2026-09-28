@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_0p4fu"]
+
+[resource]
+script = ExtResource("1_0p4fu")
+id = &"barrier"
+display_name = "SHIELDED"
+color = Color(0.7977378, 0.58383155, 1, 1)
+harmful = false
+effect = 7
+replace_existing = true
+overlay_priority = 5
+overlay_intensity = 1.5
+overlay_fresnel = 1.0

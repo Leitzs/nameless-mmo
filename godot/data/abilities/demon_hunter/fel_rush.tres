@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DashStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_o3tno"]
+[ext_resource type="Script" path="res://abilities/archetypes/dash_strike_ability.gd" id="2_fq14u"]
+
+[resource]
+script = ExtResource("2_fq14u")
+distance = 12.0
+duration = 0.25
+damage_type = 1
+path_damage = 16.0
+id = &"demon_hunter.fel_rush"
+display_name = "Fel Rush"
+description = "Rush forward 12 meters in a burst of fel fire, burning every enemy in your path."
+color = Color(0.6262097, 1, 0.5370987, 1)
+cooldown = 10.0
+cast_time = 0.3
+release_delay = 0.0
+max_range = 12.0
+slows_while_casting = false
+animation = &"dash"
+animation_speed = 1.6

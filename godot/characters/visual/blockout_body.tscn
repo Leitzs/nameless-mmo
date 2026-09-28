@@ -1,0 +1,385 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://characters/visual/character_visual.gd" id="1_42l11"]
+[ext_resource type="Material" path="res://fx/materials/fx_glow.tres" id="2_r4g4v"]
+[ext_resource type="AnimationLibrary" path="res://characters/visual/blockout_animations.tres" id="3_trmdo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7enpy"]
+albedo_color = Color(0.5, 0.5, 0.52, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_rkras"]
+size = Vector3(0.34, 0.2, 0.22)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_cehe5"]
+radius = 0.2
+height = 0.52
+radial_segments = 12
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_batds"]
+albedo_color = Color(0.78, 0.6, 0.48, 1)
+roughness = 0.7
+
+[sub_resource type="SphereMesh" id="SphereMesh_enkgj"]
+radius = 0.13
+height = 0.26
+radial_segments = 16
+rings = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pi6q5"]
+albedo_color = Color(0.08, 0.06, 0.05, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_vmstd"]
+size = Vector3(0.17, 0.035, 0.04)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lnkwe"]
+radius = 0.055
+height = 0.32
+radial_segments = 12
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wt7i2"]
+albedo_color = Color(0.32, 0.32, 0.35, 1)
+roughness = 0.7
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_hqyx5"]
+radius = 0.05
+height = 0.3
+radial_segments = 12
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_xnkvh"]
+radius = 0.05
+height = 0.1
+radial_segments = 16
+rings = 8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_xphn3"]
+radius = 0.055
+height = 0.32
+radial_segments = 12
+rings = 4
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_awpok"]
+radius = 0.05
+height = 0.3
+radial_segments = 12
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_xo4qk"]
+radius = 0.05
+height = 0.1
+radial_segments = 16
+rings = 8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_7gh48"]
+radius = 0.075
+height = 0.48
+radial_segments = 12
+rings = 4
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_06ieu"]
+radius = 0.06
+height = 0.46
+radial_segments = 12
+rings = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ygar"]
+albedo_color = Color(0.2, 0.14, 0.1, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_q5jng"]
+size = Vector3(0.11, 0.07, 0.24)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_bu4u4"]
+radius = 0.075
+height = 0.48
+radial_segments = 12
+rings = 4
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_wxwhk"]
+radius = 0.06
+height = 0.46
+radial_segments = 12
+rings = 4
+
+[sub_resource type="BoxMesh" id="BoxMesh_ionx4"]
+size = Vector3(0.11, 0.07, 0.24)
+
+[sub_resource type="SphereMesh" id="SphereMesh_6od16"]
+radial_segments = 24
+rings = 12
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_4cn1i"]
+filter_enabled = true
+filters = ["Pivot/Hips/Spine", "Pivot/Hips/Spine/Neck", "Pivot/Hips/Spine/ShoulderL", "Pivot/Hips/Spine/ShoulderL/ElbowL", "Pivot/Hips/Spine/ShoulderR", "Pivot/Hips/Spine/ShoulderR/ElbowR"]
+fadein_time = 0.08
+fadeout_time = 0.2
+
+[sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_xuftx"]
+input_0/name = "attack_1"
+input_0/auto_advance = false
+input_0/break_loop_at_end = false
+input_0/reset = true
+input_1/name = "attack_2"
+input_1/auto_advance = false
+input_1/break_loop_at_end = false
+input_1/reset = true
+input_2/name = "attack_3"
+input_2/auto_advance = false
+input_2/break_loop_at_end = false
+input_2/reset = true
+input_3/name = "charged"
+input_3/auto_advance = false
+input_3/break_loop_at_end = false
+input_3/reset = true
+input_4/name = "dash"
+input_4/auto_advance = false
+input_4/break_loop_at_end = false
+input_4/reset = true
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_6nh8c"]
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_fwst3"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_a6fmo"]
+animation = &"attack_1"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5a7qe"]
+animation = &"attack_2"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_k5csu"]
+animation = &"attack_3"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fsb5q"]
+animation = &"charged"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jvpu8"]
+animation = &"dash"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wib7b"]
+animation = &"fall"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_l8l0t"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wiqsq"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_pr5p3"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lt22c"]
+animation = &"run"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_v142r"]
+min_space = 0.0
+max_space = 5.5
+sync_mode = 1
+blend_point_0/node = SubResource("AnimationNodeAnimation_wiqsq")
+blend_point_0/pos = 0.0
+blend_point_0/name = &"idle"
+blend_point_1/node = SubResource("AnimationNodeAnimation_pr5p3")
+blend_point_1/pos = 2.5
+blend_point_1/name = &"walk"
+blend_point_2/node = SubResource("AnimationNodeAnimation_lt22c")
+blend_point_2/pos = 5.5
+blend_point_2/name = &"run"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_oy7tq"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_m272m"]
+nodes/locomotion/node = SubResource("AnimationNodeBlendSpace1D_v142r")
+nodes/locomotion/position = Vector2(0, 0)
+nodes/locomotion_speed/node = SubResource("AnimationNodeTimeScale_oy7tq")
+nodes/locomotion_speed/position = Vector2(200, 0)
+nodes/fall/node = SubResource("AnimationNodeAnimation_wib7b")
+nodes/fall/position = Vector2(200, 160)
+nodes/air/node = SubResource("AnimationNodeBlend2_fwst3")
+nodes/air/position = Vector2(400, 0)
+nodes/attack_1/node = SubResource("AnimationNodeAnimation_a6fmo")
+nodes/attack_1/position = Vector2(0, 300)
+nodes/attack_2/node = SubResource("AnimationNodeAnimation_5a7qe")
+nodes/attack_2/position = Vector2(0, 390)
+nodes/attack_3/node = SubResource("AnimationNodeAnimation_k5csu")
+nodes/attack_3/position = Vector2(0, 480)
+nodes/charged/node = SubResource("AnimationNodeAnimation_fsb5q")
+nodes/charged/position = Vector2(0, 570)
+nodes/dash/node = SubResource("AnimationNodeAnimation_jvpu8")
+nodes/dash/position = Vector2(0, 660)
+nodes/action_select/node = SubResource("AnimationNodeTransition_xuftx")
+nodes/action_select/position = Vector2(200, 320)
+nodes/action_speed/node = SubResource("AnimationNodeTimeScale_6nh8c")
+nodes/action_speed/position = Vector2(400, 320)
+nodes/action/node = SubResource("AnimationNodeOneShot_4cn1i")
+nodes/action/position = Vector2(600, 0)
+nodes/freeze/node = SubResource("AnimationNodeTimeScale_l8l0t")
+nodes/freeze/position = Vector2(800, 0)
+node_connections = [&"output", 0, &"freeze", &"locomotion_speed", 0, &"locomotion", &"air", 0, &"locomotion_speed", &"air", 1, &"fall", &"action_select", 0, &"attack_1", &"action_select", 1, &"attack_2", &"action_select", 2, &"attack_3", &"action_select", 3, &"charged", &"action_select", 4, &"dash", &"action_speed", 0, &"action_select", &"action", 0, &"air", &"action", 1, &"action_speed", &"freeze", 0, &"action"]
+
+[node name="BlockoutBody" type="Node3D" unique_id=1277665612]
+script = ExtResource("1_42l11")
+
+[node name="Pivot" type="Node3D" parent="." unique_id=1321098918]
+
+[node name="Hips" type="Node3D" parent="Pivot" unique_id=1777351546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.98, 0)
+
+[node name="Pelvis" type="MeshInstance3D" parent="Pivot/Hips" unique_id=1217400644 groups=["body_part", "body_tint"]]
+material_override = SubResource("StandardMaterial3D_7enpy")
+mesh = SubResource("BoxMesh_rkras")
+
+[node name="Spine" type="Node3D" parent="Pivot/Hips" unique_id=1985434485]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+
+[node name="Chest" type="MeshInstance3D" parent="Pivot/Hips/Spine" unique_id=1298267276 groups=["body_part", "body_tint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.65, 0, 0.24, 0)
+material_override = SubResource("StandardMaterial3D_7enpy")
+mesh = SubResource("CapsuleMesh_cehe5")
+
+[node name="spine_03" type="Node3D" parent="Pivot/Hips/Spine" unique_id=645107688]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
+
+[node name="Neck" type="Node3D" parent="Pivot/Hips/Spine" unique_id=399423051]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47, 0)
+
+[node name="Head" type="MeshInstance3D" parent="Pivot/Hips/Spine/Neck" unique_id=1831389098 groups=["body_part"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+material_override = SubResource("StandardMaterial3D_batds")
+mesh = SubResource("SphereMesh_enkgj")
+
+[node name="Eyes" type="MeshInstance3D" parent="Pivot/Hips/Spine/Neck" unique_id=747704155 groups=["body_part"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, -0.105)
+material_override = SubResource("StandardMaterial3D_pi6q5")
+mesh = SubResource("BoxMesh_vmstd")
+
+[node name="head" type="Node3D" parent="Pivot/Hips/Spine/Neck" unique_id=1889179712]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+
+[node name="ShoulderL" type="Node3D" parent="Pivot/Hips/Spine" unique_id=349255396]
+transform = Transform3D(0.99280864, 0.119712204, 0, -0.119712204, 0.99280864, 0, 0, 0, 1, -0.24, 0.4, 0)
+
+[node name="UpperArmL" type="MeshInstance3D" parent="Pivot/Hips/Spine/ShoulderL" unique_id=912866078 groups=["body_part", "body_tint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
+material_override = SubResource("StandardMaterial3D_7enpy")
+mesh = SubResource("CapsuleMesh_lnkwe")
+
+[node name="ElbowL" type="Node3D" parent="Pivot/Hips/Spine/ShoulderL" unique_id=1934921575]
+transform = Transform3D(1, 0, 0, 0, 0.9689124, -0.24740396, 0, 0.24740396, 0.9689124, 0, -0.3, 0)
+
+[node name="LowerArmL" type="MeshInstance3D" parent="Pivot/Hips/Spine/ShoulderL/ElbowL" unique_id=808389634 groups=["body_part", "limb_tint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14, 0)
+material_override = SubResource("StandardMaterial3D_wt7i2")
+mesh = SubResource("CapsuleMesh_hqyx5")
+
+[node name="HandL" type="MeshInstance3D" parent="Pivot/Hips/Spine/ShoulderL/ElbowL" unique_id=505457019 groups=["body_part"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+material_override = SubResource("StandardMaterial3D_batds")
+mesh = SubResource("SphereMesh_xnkvh")
+
+[node name="hand_l" type="Node3D" parent="Pivot/Hips/Spine/ShoulderL/ElbowL" unique_id=1622951544]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.28, 0)
+
+[node name="lowerarm_l" type="Node3D" parent="Pivot/Hips/Spine/ShoulderL/ElbowL" unique_id=2045714149]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+
+[node name="ShoulderR" type="Node3D" parent="Pivot/Hips/Spine" unique_id=534924359]
+transform = Transform3D(0.99280864, -0.119712204, 0, 0.119712204, 0.99280864, 0, 0, 0, 1, 0.24, 0.4, 0)
+
+[node name="UpperArmR" type="MeshInstance3D" parent="Pivot/Hips/Spine/ShoulderR" unique_id=1371141275 groups=["body_part", "body_tint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
+material_override = SubResource("StandardMaterial3D_7enpy")
+mesh = SubResource("CapsuleMesh_xphn3")
+
+[node name="ElbowR" type="Node3D" parent="Pivot/Hips/Spine/ShoulderR" unique_id=608192777]
+transform = Transform3D(1, 0, 0, 0, 0.9689124, -0.24740396, 0, 0.24740396, 0.9689124, 0, -0.3, 0)
+
+[node name="LowerArmR" type="MeshInstance3D" parent="Pivot/Hips/Spine/ShoulderR/ElbowR" unique_id=1697432652 groups=["body_part", "limb_tint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14, 0)
+material_override = SubResource("StandardMaterial3D_wt7i2")
+mesh = SubResource("CapsuleMesh_awpok")
+
+[node name="HandR" type="MeshInstance3D" parent="Pivot/Hips/Spine/ShoulderR/ElbowR" unique_id=185412955 groups=["body_part"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+material_override = SubResource("StandardMaterial3D_batds")
+mesh = SubResource("SphereMesh_xo4qk")
+
+[node name="hand_r" type="Node3D" parent="Pivot/Hips/Spine/ShoulderR/ElbowR" unique_id=802585537]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.28, 0)
+
+[node name="lowerarm_r" type="Node3D" parent="Pivot/Hips/Spine/ShoulderR/ElbowR" unique_id=636590946]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+
+[node name="HipL" type="Node3D" parent="Pivot/Hips" unique_id=1247508745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, -0.04, 0)
+
+[node name="UpperLegL" type="MeshInstance3D" parent="Pivot/Hips/HipL" unique_id=1585486997 groups=["body_part", "limb_tint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22, 0)
+material_override = SubResource("StandardMaterial3D_wt7i2")
+mesh = SubResource("CapsuleMesh_7gh48")
+
+[node name="KneeL" type="Node3D" parent="Pivot/Hips/HipL" unique_id=1174754924]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.44, 0)
+
+[node name="LowerLegL" type="MeshInstance3D" parent="Pivot/Hips/HipL/KneeL" unique_id=2000157610 groups=["body_part", "limb_tint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.21, 0)
+material_override = SubResource("StandardMaterial3D_wt7i2")
+mesh = SubResource("CapsuleMesh_06ieu")
+
+[node name="FootL" type="MeshInstance3D" parent="Pivot/Hips/HipL/KneeL" unique_id=623093028 groups=["body_part"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.46, -0.05)
+material_override = SubResource("StandardMaterial3D_4ygar")
+mesh = SubResource("BoxMesh_q5jng")
+
+[node name="HipR" type="Node3D" parent="Pivot/Hips" unique_id=505033667]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, -0.04, 0)
+
+[node name="UpperLegR" type="MeshInstance3D" parent="Pivot/Hips/HipR" unique_id=1688603887 groups=["body_part", "limb_tint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22, 0)
+material_override = SubResource("StandardMaterial3D_wt7i2")
+mesh = SubResource("CapsuleMesh_bu4u4")
+
+[node name="KneeR" type="Node3D" parent="Pivot/Hips/HipR" unique_id=1179606360]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.44, 0)
+
+[node name="LowerLegR" type="MeshInstance3D" parent="Pivot/Hips/HipR/KneeR" unique_id=1618879834 groups=["body_part", "limb_tint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.21, 0)
+material_override = SubResource("StandardMaterial3D_wt7i2")
+mesh = SubResource("CapsuleMesh_wxwhk")
+
+[node name="FootR" type="MeshInstance3D" parent="Pivot/Hips/HipR/KneeR" unique_id=1801265637 groups=["body_part"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.46, -0.05)
+material_override = SubResource("StandardMaterial3D_4ygar")
+mesh = SubResource("BoxMesh_ionx4")
+
+[node name="ShieldBubble" type="MeshInstance3D" parent="." unique_id=996130288]
+transform = Transform3D(2.2, 0, 0, 0, 2.4, 0, 0, 0, 2.2, 0, 0.96, 0)
+visible = false
+material_override = ExtResource("2_r4g4v")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_6od16")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1566243485]
+libraries/ = ExtResource("3_trmdo")
+
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=902144680]
+tree_root = SubResource("AnimationNodeBlendTree_m272m")
+anim_player = NodePath("../AnimationPlayer")
+parameters/locomotion/blend_position = 0.0
+parameters/locomotion_speed/scale = 1.0
+parameters/air/blend_amount = 0.0
+parameters/action_select/current_state = ""
+parameters/action_select/transition_request = ""
+parameters/action_select/current_index = -1
+parameters/action_speed/scale = 1.0
+parameters/action/active = false
+parameters/action/internal_active = false
+parameters/action/request = 0
+parameters/freeze/scale = 1.0

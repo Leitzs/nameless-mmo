@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="StealthAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/special/stealth_ability.gd" id="1_bvn8u"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_ve6yn"]
+[ext_resource type="Resource" path="res://data/statuses/stealth.tres" id="3_yu8gj"]
+
+[sub_resource type="Resource" id="Resource_1l4kc"]
+script = ExtResource("2_ve6yn")
+status = ExtResource("3_yu8gj")
+duration = 0.0
+magnitude = 0.75
+
+[resource]
+script = ExtResource("1_bvn8u")
+statuses = Array[ExtResource("2_ve6yn")]([SubResource("Resource_1l4kc")])
+id = &"rogue.stealth"
+display_name = "Stealth"
+description = "Fade from sight, moving 25% slower. Attacking or taking damage reveals you; your first attack hits 50% harder. Enemies right next to you notice a shimmer. Not usable while taking damage over time."
+color = Color(0.6262097, 0.58383155, 0.76737565, 1)
+cooldown = 6.0
+cast_time = 0.2
+release_delay = 0.05
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+animation_speed = 1.5

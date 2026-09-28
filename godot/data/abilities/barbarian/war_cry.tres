@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="NovaAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/nova_ability.gd" id="1_l01xh"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_v7lq6"]
+[ext_resource type="Resource" path="res://data/statuses/weakened.tres" id="3_dmq8n"]
+
+[sub_resource type="Resource" id="Resource_2vjvl"]
+script = ExtResource("2_v7lq6")
+status = ExtResource("3_dmq8n")
+duration = 6.0
+magnitude = 0.7
+
+[resource]
+script = ExtResource("1_l01xh")
+radius = 8.0
+damage = 0.0
+statuses = Array[ExtResource("2_v7lq6")]([SubResource("Resource_2vjvl")])
+id = &"barbarian.war_cry"
+display_name = "War Cry"
+description = "A terrifying roar: enemies within 8 meters deal 30% less damage for 6 seconds."
+color = Color(1, 0.6651851, 0.42358288, 1)
+resource_cost = 20.0
+cooldown = 20.0
+cast_time = 0.4
+max_range = 8.0
+face_aim = false
+slows_while_casting = false
+animation = &"charged"
+animation_speed = 2.0

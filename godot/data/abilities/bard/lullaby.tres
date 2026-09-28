@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_3w5aj"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_dsufw"]
+[ext_resource type="Resource" path="res://data/statuses/sleep.tres" id="3_nvqvc"]
+
+[sub_resource type="Resource" id="Resource_n3ojw"]
+script = ExtResource("2_dsufw")
+status = ExtResource("3_nvqvc")
+duration = 5.0
+
+[resource]
+script = ExtResource("1_3w5aj")
+statuses = Array[ExtResource("2_dsufw")]([SubResource("Resource_n3ojw")])
+id = &"bard.lullaby"
+display_name = "Lullaby"
+description = "A soothing melody puts the target to sleep for 5 seconds. Any damage wakes it."
+color = Color(0.76737565, 0.7977378, 1, 1)
+resource_cost = 25.0
+cooldown = 25.0
+cast_time = 0.9
+release_delay = 0.7
+max_range = 20.0
+requires_target = true
+animation = &"charged"
+animation_speed = 1.2

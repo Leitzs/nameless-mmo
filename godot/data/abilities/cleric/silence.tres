@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_by7nc"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_kkktb"]
+[ext_resource type="Resource" path="res://data/statuses/silence.tres" id="3_y2utk"]
+
+[sub_resource type="Resource" id="Resource_gwifk"]
+script = ExtResource("2_kkktb")
+status = ExtResource("3_y2utk")
+duration = 3.0
+
+[resource]
+script = ExtResource("1_by7nc")
+statuses = Array[ExtResource("2_kkktb")]([SubResource("Resource_gwifk")])
+id = &"cleric.silence"
+display_name = "Silence"
+description = "Silences the target for 3 seconds: it can only use its basic attack, and the spell it is casting is interrupted."
+color = Color(0.76737565, 0.6262097, 1, 1)
+resource_cost = 20.0
+cooldown = 24.0
+cast_time = 0.35
+max_range = 25.0
+slows_while_casting = false
+requires_target = true
+animation = &"attack_2"
+animation_speed = 1.6

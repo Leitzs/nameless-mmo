@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_6wy0f"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_pgtm3"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_e35p6"]
+
+[sub_resource type="Resource" id="Resource_x6xoe"]
+script = ExtResource("1_6wy0f")
+direct_damage = 11.0
+
+[resource]
+script = ExtResource("3_e35p6")
+payload = SubResource("Resource_x6xoe")
+projectile_speed = 34.0
+homing_acceleration = 70.0
+visual_scale = 0.55
+id = &"bard.dissonant_note"
+display_name = "Dissonant Note"
+description = "A jarring note of pure sound. Costs nothing."
+color = Color(1, 0.7014107, 0.88082504, 1)
+cast_time = 0.55
+max_range = 35.0
+animation = &"attack_3"
+animation_speed = 1.8

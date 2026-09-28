@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_a35bk"]
+
+[resource]
+script = ExtResource("1_a35bk")
+id = &"poison"
+display_name = "POISONED"
+color = Color(0.6262097, 0.9546871, 0.48452926, 1)
+effect = 10
+damage_type = 7
+replace_existing = true
+overlay_priority = 20
+overlay_intensity = 1.5

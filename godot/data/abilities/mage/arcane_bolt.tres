@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_ly5ih"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_1l41h"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_l4t5u"]
+
+[sub_resource type="Resource" id="Resource_jg7mh"]
+script = ExtResource("1_ly5ih")
+direct_damage = 11.0
+
+[resource]
+script = ExtResource("3_l4t5u")
+payload = SubResource("Resource_jg7mh")
+projectile_speed = 36.0
+homing_acceleration = 70.0
+visual_scale = 0.6
+id = &"mage.arcane_bolt"
+display_name = "Arcane Bolt"
+description = "A quick bolt of raw arcane energy. Costs nothing."
+color = Color(0.9063318, 0.735357, 1, 1)
+cast_time = 0.55
+max_range = 35.0
+animation = &"attack_3"
+animation_speed = 1.8

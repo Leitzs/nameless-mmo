@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="DashStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_h88vm"]
+[ext_resource type="Resource" path="res://data/statuses/haste.tres" id="2_chnfx"]
+[ext_resource type="Resource" path="res://data/statuses/metamorphosis.tres" id="3_5spgl"]
+[ext_resource type="Script" path="res://abilities/archetypes/dash_strike_ability.gd" id="4_fnma4"]
+
+[sub_resource type="Resource" id="Resource_8jsmh"]
+script = ExtResource("1_h88vm")
+status = ExtResource("2_chnfx")
+duration = 12.0
+magnitude = 1.25
+
+[sub_resource type="Resource" id="Resource_q0hnv"]
+script = ExtResource("1_h88vm")
+status = ExtResource("3_5spgl")
+duration = 12.0
+magnitude = 1.2
+
+[resource]
+script = ExtResource("4_fnma4")
+destination = 1
+leap_height = 2.5
+damage_type = 5
+landing_damage = 25.0
+landing_radius = 5.0
+caster_statuses = Array[ExtResource("1_h88vm")]([SubResource("Resource_8jsmh"), SubResource("Resource_q0hnv")])
+id = &"demon_hunter.metamorphosis"
+display_name = "Metamorphosis"
+description = "Leap into the air and crash down in demon form, damaging enemies within 5 meters. For 12 seconds you move 25% faster and deal 20% more damage."
+color = Color(0.76737565, 0.42358288, 1, 1)
+cooldown = 60.0
+cast_time = 0.3
+release_delay = 0.05
+max_range = 15.0
+slows_while_casting = false
+animation = &"dash"
+animation_speed = 1.2

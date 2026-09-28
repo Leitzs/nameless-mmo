@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="SummonAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_tj6gw"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_j111v"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="3_b7x5p"]
+[ext_resource type="Script" path="res://abilities/archetypes/summon_ability.gd" id="4_dym8y"]
+
+[sub_resource type="Resource" id="Resource_82n6k"]
+script = ExtResource("2_j111v")
+status = ExtResource("3_b7x5p")
+duration = 1.5
+magnitude = 0.75
+
+[sub_resource type="Resource" id="Resource_2kr7j"]
+script = ExtResource("1_tj6gw")
+direct_damage = 7.0
+damage_type = 2
+statuses = Array[ExtResource("2_j111v")]([SubResource("Resource_82n6k")])
+
+[resource]
+script = ExtResource("4_dym8y")
+follow_caster = true
+follow_offset = Vector3(-0.6, 1.9, 0.3)
+look = 2
+summon_scale = 0.8
+lifetime = 20.0
+projectile = SubResource("Resource_2kr7j")
+attack_interval = 1.6
+projectile_speed = 28.0
+projectile_homing = 70.0
+projectile_scale = 0.5
+id = &"summoner.frost_wisp"
+display_name = "Frost Wisp"
+description = "Calls a frost wisp that follows you for 20 seconds, pelting the nearest enemy with chilling bolts (25% slow)."
+color = Color(0.7014107, 0.9309246, 1, 1)
+resource_cost = 30.0
+cooldown = 25.0
+cast_time = 0.6
+release_delay = 0.35
+max_range = 25.0
+face_aim = false
+animation = &"charged"
+animation_speed = 1.4

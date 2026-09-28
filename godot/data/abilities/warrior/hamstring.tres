@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_0tti3"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_2gilb"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="3_4hjd2"]
+
+[sub_resource type="Resource" id="Resource_sd7qj"]
+script = ExtResource("2_2gilb")
+status = ExtResource("3_4hjd2")
+duration = 6.0
+magnitude = 0.5
+
+[resource]
+script = ExtResource("1_0tti3")
+damage = 8.0
+reach = 2.2
+statuses = Array[ExtResource("2_2gilb")]([SubResource("Resource_sd7qj")])
+id = &"warrior.hamstring"
+display_name = "Hamstring"
+description = "A quick cut that slows the target by 50% for 6 seconds."
+color = Color(0.7977378, 0.9309246, 1, 1)
+resource_cost = 10.0
+cooldown = 1.0
+cast_time = 0.4
+max_range = 4.5
+slows_while_casting = false
+animation = &"attack_2"
+animation_speed = 1.8

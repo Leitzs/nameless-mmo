@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_frog2"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_lqkph"]
+[ext_resource type="Resource" path="res://data/statuses/renew.tres" id="3_shbmw"]
+
+[sub_resource type="Resource" id="Resource_3bq16"]
+script = ExtResource("2_lqkph")
+status = ExtResource("3_shbmw")
+duration = 9.0
+magnitude = 10.0
+
+[resource]
+script = ExtResource("1_frog2")
+statuses = Array[ExtResource("2_lqkph")]([SubResource("Resource_3bq16")])
+id = &"cleric.renew"
+display_name = "Renew"
+description = "Heals you for 90 over 9 seconds."
+color = Color(1, 0.97769153, 0.82665706, 1)
+resource_cost = 30.0
+cooldown = 12.0
+cast_time = 0.3
+release_delay = 0.1
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+animation = &"attack_3"
+animation_speed = 1.5

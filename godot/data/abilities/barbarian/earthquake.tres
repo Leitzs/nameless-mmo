@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="SummonAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_m088m"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="2_qhgfb"]
+[ext_resource type="Script" path="res://abilities/archetypes/summon_ability.gd" id="3_v48df"]
+
+[sub_resource type="Resource" id="Resource_ekusq"]
+script = ExtResource("1_m088m")
+status = ExtResource("2_qhgfb")
+duration = 0.8
+magnitude = 0.7
+
+[resource]
+script = ExtResource("3_v48df")
+follow_caster = true
+lifetime = 5.0
+radius = 5.0
+first_pulse_delay = 0.3
+pulse_interval = 0.5
+pulse_damage = 5.0
+pulse_statuses = Array[ExtResource("1_m088m")]([SubResource("Resource_ekusq")])
+id = &"barbarian.earthquake"
+display_name = "Earthquake"
+description = "Stomp so hard the ground shakes around you for 5 seconds, damaging and slowing nearby enemies."
+color = Color(0.7977378, 0.6651851, 0.48452926, 1)
+resource_cost = 35.0
+cooldown = 22.0
+cast_time = 0.5
+release_delay = 0.25
+max_range = 5.0
+face_aim = false
+animation = &"charged"
+animation_speed = 1.6

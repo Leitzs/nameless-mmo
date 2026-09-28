@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="DisengageAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/special/disengage_ability.gd" id="1_v0nae"]
+
+[resource]
+script = ExtResource("1_v0nae")
+id = &"archer.disengage"
+display_name = "Disengage"
+description = "Leap backwards, away from where you are aiming."
+color = Color(0.7014107, 0.9309246, 0.6262097, 1)
+resource_cost = 15.0
+cooldown = 16.0
+cast_time = 0.2
+release_delay = 0.0
+max_range = 4.5
+slows_while_casting = false

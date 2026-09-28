@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_vt10r"]
+[ext_resource type="Resource" path="res://data/statuses/immune_cc.tres" id="2_teab4"]
+
+[resource]
+script = ExtResource("1_vt10r")
+id = &"freeze"
+display_name = "FROZEN"
+color = Color(0.58383155, 0.88082504, 1, 1)
+effect = 2
+diminishing_returns = true
+blocked_by = Array[ExtResource("1_vt10r")]([ExtResource("2_teab4")])
+overlay_priority = 100
+overlay_intensity = 3.0

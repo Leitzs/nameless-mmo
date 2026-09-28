@@ -1,0 +1,11 @@
+# Godot text formats use LF everywhere (the editor writes LF on every platform).
+*.gd       text eol=lf
+*.gdshader text eol=lf
+*.tscn     text eol=lf
+*.tres     text eol=lf
+*.godot    text eol=lf
+*.cfg      text eol=lf
+*.import   text eol=lf
+*.uid      text eol=lf
+*.svg      text eol=lf
+*.md       text eol=lf

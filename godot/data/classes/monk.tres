@@ -1,0 +1,70 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_fdnlq"]
+[ext_resource type="Resource" path="res://data/abilities/monk/jab.tres" id="2_8m7p0"]
+[ext_resource type="Resource" path="res://data/abilities/monk/rising_sun_kick.tres" id="3_u7xin"]
+[ext_resource type="Resource" path="res://data/abilities/monk/flying_kick.tres" id="4_5f0mi"]
+[ext_resource type="Resource" path="res://data/abilities/monk/paralysis.tres" id="5_4yfhe"]
+[ext_resource type="Resource" path="res://data/abilities/monk/leg_sweep.tres" id="6_sovbd"]
+[ext_resource type="Resource" path="res://data/abilities/monk/vivify.tres" id="7_iec8j"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_nlft1"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="9_uw7to"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="10_3awcs"]
+
+[sub_resource type="Resource" id="Resource_uq8f6"]
+script = ExtResource("8_nlft1")
+part_name = &"Headband"
+shape = 2
+offset = Vector3(0, 0.15, 0)
+size = Vector3(0.285, 0.05, 0.285)
+color = Color(0.7977378, 0.24780053, 0.22091636, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_ktu2n"]
+script = ExtResource("8_nlft1")
+part_name = &"HeadbandTail"
+offset = Vector3(0.04, 0.1, 0.16)
+rotation_degrees = Vector3(30, 0, -15)
+size = Vector3(0.04, 0.16, 0.01)
+color = Color(0.7977378, 0.24780053, 0.22091636, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_h0lsi"]
+script = ExtResource("8_nlft1")
+part_name = &"WrapRight"
+socket = &"hand_r"
+offset = Vector3(0, 0.02, 0)
+size = Vector3(0.1, 0.12, 0.1)
+color = Color(0.9309246, 0.91627353, 0.88082504, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_se71u"]
+script = ExtResource("8_nlft1")
+part_name = &"WrapLeft"
+socket = &"hand_l"
+offset = Vector3(0, 0.02, 0)
+size = Vector3(0.1, 0.12, 0.1)
+color = Color(0.9309246, 0.91627353, 0.88082504, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_wkf24"]
+script = ExtResource("9_uw7to")
+type = 2
+max_value = 100.0
+regen_per_second = 16.0
+
+[resource]
+script = ExtResource("10_3awcs")
+id = &"monk"
+display_name = "Monk"
+description = "Martial artist (energy). Rising Sun Kick, Flying Kick, Paralysis, Leg Sweep, Vivify."
+color = Color(0, 1, 0.7977378, 1)
+max_health = 370.0
+health_regen = 5.0
+resource = SubResource("Resource_wkf24")
+move_speed = 5.3
+sprint_speed = 8.1
+abilities = Array[ExtResource("1_fdnlq")]([ExtResource("2_8m7p0"), ExtResource("3_u7xin"), ExtResource("4_5f0mi"), ExtResource("5_4yfhe"), ExtResource("6_sovbd"), ExtResource("7_iec8j")])
+body_color = Color(0.75652844, 0.5257669, 0.21956742, 1)
+limb_color = Color(0.477982, 0.314944, 0.09860741, 1)
+cosmetics = Array[ExtResource("8_nlft1")]([SubResource("Resource_uq8f6"), SubResource("Resource_ktu2n"), SubResource("Resource_h0lsi"), SubResource("Resource_se71u")])

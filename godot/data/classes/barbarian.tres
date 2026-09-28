@@ -1,0 +1,85 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_a1b0v"]
+[ext_resource type="Resource" path="res://data/abilities/barbarian/cleave.tres" id="2_cqd7s"]
+[ext_resource type="Resource" path="res://data/abilities/barbarian/leap.tres" id="3_aqlis"]
+[ext_resource type="Resource" path="res://data/abilities/barbarian/rend.tres" id="4_0hwuv"]
+[ext_resource type="Resource" path="res://data/abilities/barbarian/hurl_axe.tres" id="5_uquk7"]
+[ext_resource type="Resource" path="res://data/abilities/barbarian/war_cry.tres" id="6_nvkxc"]
+[ext_resource type="Resource" path="res://data/abilities/barbarian/earthquake.tres" id="7_7ngjc"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_s3i1p"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="9_eags2"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="10_qkf7h"]
+
+[sub_resource type="Resource" id="Resource_7qf1d"]
+script = ExtResource("8_s3i1p")
+part_name = &"FurMantle"
+shape = 1
+socket = &"spine_03"
+offset = Vector3(0, 0.13, 0.02)
+size = Vector3(0.58, 0.2, 0.36)
+color = Color(0.6262097, 0.5370987, 0.42358288, 1)
+roughness = 0.95
+
+[sub_resource type="Resource" id="Resource_yfklo"]
+script = ExtResource("8_s3i1p")
+part_name = &"Hair"
+shape = 3
+offset = Vector3(0, 0.17, 0.08)
+rotation_degrees = Vector3(-30, 0, 0)
+size = Vector3(0.3, 0.3, 0.3)
+color = Color(0.5370987, 0.38109186, 0.22091636, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_hh704"]
+script = ExtResource("8_s3i1p")
+part_name = &"Beard"
+offset = Vector3(0, 0.02, -0.11)
+size = Vector3(0.16, 0.12, 0.06)
+color = Color(0.5370987, 0.38109186, 0.22091636, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_ys45q"]
+script = ExtResource("8_s3i1p")
+part_name = &"AxeHandle"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.19176047, -0.23071179)
+direction = Vector3(0, 0.6392015, -0.7690393)
+size = Vector3(0.05, 0.9, 0.05)
+color = Color(0.5370987, 0.4100209, 0.2716998, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_u3nsu"]
+script = ExtResource("8_s3i1p")
+part_name = &"AxeHead"
+socket = &"hand_r"
+offset = Vector3(0, 0.39630494, -0.47680435)
+direction = Vector3(0, 0.6392015, -0.7690393)
+size = Vector3(0.03, 0.22, 0.42)
+color = Color(0.735357, 0.735357, 0.7483791, 1)
+roughness = 0.35
+
+[sub_resource type="Resource" id="Resource_2aja4"]
+script = ExtResource("9_eags2")
+type = 3
+max_value = 100.0
+out_of_combat_decay_per_second = 4.0
+gain_per_damage_dealt = 0.45
+gain_per_damage_taken = 0.35
+starts_full = false
+
+[resource]
+script = ExtResource("10_qkf7h")
+id = &"barbarian"
+display_name = "Barbarian"
+description = "Savage axe wielder (rage). Leap, Rend, Hurl Axe, War Cry, Earthquake."
+color = Color(0.7977378, 0.5370987, 0.3133042, 1)
+max_health = 460.0
+health_regen = 5.0
+resource = SubResource("Resource_2aja4")
+sprint_speed = 7.8
+abilities = Array[ExtResource("1_a1b0v")]([ExtResource("2_cqd7s"), ExtResource("3_aqlis"), ExtResource("4_0hwuv"), ExtResource("5_uquk7"), ExtResource("6_nvkxc"), ExtResource("7_7ngjc")])
+body_color = Color(0.72529787, 0.54587555, 0.43060452, 1)
+limb_color = Color(0.45591694, 0.32915118, 0.2477097, 1)
+cosmetics = Array[ExtResource("8_s3i1p")]([SubResource("Resource_7qf1d"), SubResource("Resource_yfklo"), SubResource("Resource_hh704"), SubResource("Resource_ys45q"), SubResource("Resource_u3nsu")])

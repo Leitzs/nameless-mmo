@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ChannelBeamAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/channel_beam_ability.gd" id="1_5086u"]
+
+[resource]
+script = ExtResource("1_5086u")
+heal_fraction = 1.0
+id = &"warlock.drain_life"
+display_name = "Drain Life"
+description = "Channels a beam that drains the target's life for 3 seconds, healing you for the damage dealt. Stuns and line of sight break it."
+color = Color(0.58383155, 0.97769153, 0.6262097, 1)
+resource_cost = 30.0
+cooldown = 10.0
+cast_time = 3.2
+release_delay = 0.2
+max_range = 25.0
+requires_target = true
+animation = &"charged"
+animation_speed = 0.6

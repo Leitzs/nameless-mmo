@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_ehhh7"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_7f2sx"]
+[ext_resource type="Resource" path="res://data/statuses/poison.tres" id="3_qyiff"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="4_20cag"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="5_4wbi7"]
+
+[sub_resource type="Resource" id="Resource_mvi8b"]
+script = ExtResource("2_7f2sx")
+status = ExtResource("3_qyiff")
+duration = 8.0
+magnitude = 4.0
+
+[sub_resource type="Resource" id="Resource_lvdty"]
+script = ExtResource("2_7f2sx")
+status = ExtResource("4_20cag")
+duration = 3.0
+magnitude = 0.7
+
+[sub_resource type="Resource" id="Resource_ncdl2"]
+script = ExtResource("1_ehhh7")
+direct_damage = 14.0
+damage_type = 0
+statuses = Array[ExtResource("2_7f2sx")]([SubResource("Resource_mvi8b"), SubResource("Resource_lvdty")])
+
+[resource]
+script = ExtResource("5_4wbi7")
+payload = SubResource("Resource_ncdl2")
+projectile_speed = 42.0
+homing_acceleration = 90.0
+visual_scale = 0.45
+id = &"rogue.throwing_knife"
+display_name = "Throwing Knife"
+description = "Throws a poisoned knife: poison damage over 8 seconds and a 30% slow for 3 seconds."
+color = Color(0.6651851, 0.97769153, 0.5370987, 1)
+resource_cost = 25.0
+cooldown = 5.0
+cast_time = 0.35
+max_range = 25.0
+slows_while_casting = false
+animation = &"attack_2"
+animation_speed = 1.8

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_l8x6x"]
+
+[resource]
+script = ExtResource("1_l8x6x")
+id = &"inspired"
+display_name = "INSPIRED"
+color = Color(1, 0.7977378, 0.48452926, 1)
+harmful = false
+effect = 13
+aggregation = 1
+replace_existing = true

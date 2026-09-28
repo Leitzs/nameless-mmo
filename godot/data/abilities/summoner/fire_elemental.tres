@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="SummonAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_83vr7"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_imckv"]
+[ext_resource type="Resource" path="res://data/statuses/burn.tres" id="3_ixunq"]
+[ext_resource type="Script" path="res://abilities/archetypes/summon_ability.gd" id="4_bochp"]
+
+[sub_resource type="Resource" id="Resource_3hi5x"]
+script = ExtResource("2_imckv")
+status = ExtResource("3_ixunq")
+duration = 3.0
+magnitude = 3.0
+
+[sub_resource type="Resource" id="Resource_ty5iv"]
+script = ExtResource("1_83vr7")
+direct_damage = 8.0
+damage_type = 1
+statuses = Array[ExtResource("2_imckv")]([SubResource("Resource_3hi5x")])
+
+[resource]
+script = ExtResource("4_bochp")
+follow_caster = true
+follow_offset = Vector3(0.6, 1.9, 0.3)
+look = 2
+lifetime = 20.0
+projectile = SubResource("Resource_ty5iv")
+attack_interval = 1.25
+projectile_homing = 70.0
+projectile_scale = 0.55
+id = &"summoner.fire_elemental"
+display_name = "Fire Elemental"
+description = "Calls a fire elemental that follows you for 20 seconds, hurling burning bolts at the nearest enemy."
+color = Color(1, 0.7014107, 0.3491902, 1)
+resource_cost = 35.0
+cooldown = 25.0
+cast_time = 0.6
+release_delay = 0.35
+max_range = 25.0
+face_aim = false
+animation = &"charged"
+animation_speed = 1.4

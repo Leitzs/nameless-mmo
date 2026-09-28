@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BlinkAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/special/blink_ability.gd" id="1_e2l2y"]
+
+[resource]
+script = ExtResource("1_e2l2y")
+id = &"mage.blink"
+display_name = "Blink"
+description = "Teleports a short distance in the direction you are moving (or aiming when standing still)."
+color = Color(0.85430586, 0.6262097, 1, 1)
+resource_cost = 20.0
+cooldown = 6.0
+cast_time = 0.25
+release_delay = 0.05
+max_range = 9.0
+face_aim = false
+slows_while_casting = false
+animation = &"dash"
+animation_speed = 1.6

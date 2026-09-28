@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="ChannelBeamAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/channel_beam_ability.gd" id="1_da0p0"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_iw7hm"]
+
+[resource]
+script = ExtResource("1_da0p0")
+channel_duration = 1.8
+tick_interval = 0.3
+damage_per_tick = 8.0
+damage_type = 1
+beam_thickness = 0.18
+id = &"demon_hunter.eye_beam"
+display_name = "Eye Beam"
+description = "Channels a beam of fel energy from your eyes at the target for 1.8 seconds. Stuns and line of sight break it."
+color = Color(0.6262097, 1, 0.5370987, 1)
+resource_cost = 30.0
+cooldown = 15.0
+cast_time = 2.0
+release_delay = 0.2
+max_range = 20.0
+requires_target = true
+animation = &"charged"
+animation_speed = 0.8

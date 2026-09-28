@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_yjdt1"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_kdcbi"]
+[ext_resource type="Resource" path="res://data/statuses/healing_reduced.tres" id="3_1710d"]
+
+[sub_resource type="Resource" id="Resource_i5a52"]
+script = ExtResource("2_kdcbi")
+status = ExtResource("3_1710d")
+duration = 8.0
+magnitude = 0.5
+
+[resource]
+script = ExtResource("1_yjdt1")
+damage = 36.0
+reach = 2.2
+statuses = Array[ExtResource("2_kdcbi")]([SubResource("Resource_i5a52")])
+id = &"warrior.mortal_strike"
+display_name = "Mortal Strike"
+description = "A crushing blow that wounds the target: healing it receives is halved for 8 seconds."
+color = Color(0.9309246, 0.42358288, 0.3491902, 1)
+resource_cost = 30.0
+cooldown = 6.0
+cast_time = 0.65
+release_delay = 0.3
+max_range = 4.5
+slows_while_casting = false
+animation = &"charged"
+animation_speed = 1.6

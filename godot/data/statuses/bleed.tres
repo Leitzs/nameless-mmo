@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_aqg6d"]
+
+[resource]
+script = ExtResource("1_aqg6d")
+id = &"bleed"
+display_name = "BLEEDING"
+color = Color(0.88082504, 0.18974829, 0.18974829, 1)
+effect = 10
+replace_existing = true
+overlay_priority = 22
+overlay_intensity = 1.5

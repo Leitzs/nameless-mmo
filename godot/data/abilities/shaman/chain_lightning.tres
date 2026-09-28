@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ChainLightningAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/special/chain_lightning_ability.gd" id="1_amu67"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_xgjsa"]
+
+[resource]
+script = ExtResource("1_amu67")
+id = &"shaman.chain_lightning"
+display_name = "Chain Lightning"
+description = "A bolt that strikes the target, then arcs to up to 2 more enemies nearby, weaker with each jump."
+color = Color(0.7977378, 0.9063318, 1, 1)
+resource_cost = 25.0
+cooldown = 5.0
+cast_time = 0.7
+release_delay = 0.4
+requires_target = true
+animation = &"charged"
+animation_speed = 1.4

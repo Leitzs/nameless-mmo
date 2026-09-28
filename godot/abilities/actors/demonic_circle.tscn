@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://abilities/actors/demonic_circle.gd" id="1_script"]
+[ext_resource type="Material" path="res://fx/materials/fx_glow.tres" id="2_glow"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_disc"]
+top_radius = 0.5
+bottom_radius = 0.5
+height = 1.0
+radial_segments = 32
+rings = 1
+
+[node name="DemonicCircle" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Ring" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.2, 0, 0, 0, 0.02, 0, 0, 0, 2.2, 0, 0.01, 0)
+cast_shadow = 0
+material_override = ExtResource("2_glow")
+mesh = SubResource("CylinderMesh_disc")
+
+[node name="Core" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.77, 0, 0, 0, 0.8, 0, 0, 0, 0.77, 0, 0.4, 0)
+cast_shadow = 0
+material_override = ExtResource("2_glow")
+mesh = SubResource("CylinderMesh_disc")

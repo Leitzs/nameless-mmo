@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_ddyvy"]
+[ext_resource type="Resource" path="res://data/statuses/immune_cc.tres" id="2_e1x1f"]
+
+[resource]
+script = ExtResource("1_ddyvy")
+id = &"silence"
+display_name = "SILENCED"
+color = Color(0.76737565, 0.6262097, 1, 1)
+effect = 14
+diminishing_returns = true
+blocked_by = Array[ExtResource("1_ddyvy")]([ExtResource("2_e1x1f")])
+overlay_priority = 50
+overlay_intensity = 1.5

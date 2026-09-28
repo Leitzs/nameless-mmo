@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="SummonAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_c5mj1"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_73d3j"]
+[ext_resource type="Script" path="res://abilities/archetypes/summon_ability.gd" id="3_ra3sm"]
+
+[sub_resource type="Resource" id="Resource_6bbq6"]
+script = ExtResource("1_c5mj1")
+direct_damage = 9.0
+damage_type = 5
+
+[resource]
+script = ExtResource("3_ra3sm")
+follow_caster = true
+follow_offset = Vector3(0.6, 1.9, 0.3)
+look = 2
+summon_scale = 0.9
+lifetime = 18.0
+projectile = SubResource("Resource_6bbq6")
+attack_interval = 1.4
+projectile_speed = 28.0
+projectile_scale = 0.5
+id = &"necromancer.raise_wraith"
+display_name = "Raise Wraith"
+description = "Raises a wraith that follows you for 18 seconds, hurling shadow bolts at the nearest enemy."
+color = Color(0.6651851, 1, 0.735357, 1)
+resource_cost = 35.0
+cooldown = 25.0
+cast_time = 0.6
+release_delay = 0.35
+max_range = 25.0
+face_aim = false
+animation = &"charged"
+animation_speed = 1.4

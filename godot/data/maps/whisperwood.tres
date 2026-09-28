@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MapInfo" format=3]
+
+[ext_resource type="Script" path="res://game/map_info.gd" id="1_jonbq"]
+
+[resource]
+script = ExtResource("1_jonbq")
+id = &"whisperwood"
+display_name = "Whisperwood Forest"
+description = "Procedural forest with a village, roads, ruins and a training bot."
+scene_path = "res://maps/whisperwood/whisperwood.tscn"

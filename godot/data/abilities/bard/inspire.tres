@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_gicp2"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_bj26u"]
+[ext_resource type="Resource" path="res://data/statuses/haste.tres" id="3_iiwsg"]
+[ext_resource type="Resource" path="res://data/statuses/inspired.tres" id="4_5elpm"]
+
+[sub_resource type="Resource" id="Resource_rcbg1"]
+script = ExtResource("2_bj26u")
+status = ExtResource("3_iiwsg")
+duration = 6.0
+magnitude = 1.3
+
+[sub_resource type="Resource" id="Resource_wyvae"]
+script = ExtResource("2_bj26u")
+status = ExtResource("4_5elpm")
+duration = 8.0
+magnitude = 1.2
+
+[resource]
+script = ExtResource("1_gicp2")
+statuses = Array[ExtResource("2_bj26u")]([SubResource("Resource_rcbg1"), SubResource("Resource_wyvae")])
+id = &"bard.inspire"
+display_name = "Inspire"
+description = "A rousing anthem: you move 30% faster for 6 seconds and deal 20% more damage for 8 seconds."
+color = Color(1, 0.88082504, 0.58383155, 1)
+resource_cost = 25.0
+cooldown = 25.0
+cast_time = 0.3
+release_delay = 0.1
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+animation = &"charged"
+animation_speed = 1.6

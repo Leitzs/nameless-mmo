@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_c5fvn"]
+
+[resource]
+script = ExtResource("1_c5fvn")
+id = &"healing_reduced"
+display_name = "WOUNDED"
+color = Color(0.9309246, 0.48452926, 0.48452926, 1)
+effect = 9
+replace_existing = true

@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/menus/option_card.gd" id="1_card"]
+
+[node name="OptionCard" type="VBoxContainer"]
+theme_override_constants/separation = 3
+script = ExtResource("1_card")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+toggle_mode = true
+alignment = 0
+
+[node name="Description" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"DimLabel"
+autowrap_mode = 3

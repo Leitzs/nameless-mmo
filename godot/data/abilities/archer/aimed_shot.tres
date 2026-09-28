@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_igk42"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_wbs7u"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_4ixdk"]
+
+[sub_resource type="Resource" id="Resource_7p0tt"]
+script = ExtResource("1_igk42")
+direct_damage = 48.0
+damage_type = 0
+
+[resource]
+script = ExtResource("3_4ixdk")
+payload = SubResource("Resource_7p0tt")
+projectile_speed = 65.0
+homing_acceleration = 100.0
+visual_scale = 0.6
+id = &"archer.aimed_shot"
+display_name = "Aimed Shot"
+description = "Take a moment to draw the bow fully, then release a powerful arrow. You move slower while drawing."
+color = Color(1, 0.88082504, 0.5370987, 1)
+resource_cost = 35.0
+cooldown = 6.0
+cast_time = 1.1
+release_delay = 0.9
+max_range = 50.0
+animation = &"charged"
+animation_speed = 1.0

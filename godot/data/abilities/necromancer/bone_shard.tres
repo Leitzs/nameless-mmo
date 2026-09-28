@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_yixwq"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_f4ho4"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_1sbp2"]
+
+[sub_resource type="Resource" id="Resource_by6vu"]
+script = ExtResource("1_yixwq")
+direct_damage = 11.0
+damage_type = 0
+
+[resource]
+script = ExtResource("3_1sbp2")
+payload = SubResource("Resource_by6vu")
+projectile_speed = 36.0
+homing_acceleration = 70.0
+visual_scale = 0.55
+id = &"necromancer.bone_shard"
+display_name = "Bone Shard"
+description = "A sliver of bone flung by dark magic. Costs nothing."
+color = Color(0.9309246, 0.91627353, 0.85430586, 1)
+cast_time = 0.55
+max_range = 35.0
+animation = &"attack_3"
+animation_speed = 1.8

@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_svo30"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_1r3qi"]
+[ext_resource type="Resource" path="res://data/statuses/immune_cc.tres" id="3_wwl8e"]
+[ext_resource type="Resource" path="res://data/statuses/icebound.tres" id="4_6yj1t"]
+
+[sub_resource type="Resource" id="Resource_6rcw4"]
+script = ExtResource("2_1r3qi")
+status = ExtResource("3_wwl8e")
+duration = 6.0
+
+[sub_resource type="Resource" id="Resource_jh748"]
+script = ExtResource("2_1r3qi")
+status = ExtResource("4_6yj1t")
+duration = 6.0
+magnitude = 0.6
+
+[resource]
+script = ExtResource("1_svo30")
+remove_effects = Array[int]([1, 2, 3])
+statuses = Array[ExtResource("2_1r3qi")]([SubResource("Resource_6rcw4"), SubResource("Resource_jh748")])
+id = &"death_knight.icebound_fortitude"
+display_name = "Icebound Fortitude"
+description = "Break free of stuns and fears, then you are unstoppable and take 40% less damage for 6 seconds. Usable while stunned."
+color = Color(0.7014107, 0.88082504, 1, 1)
+cooldown = 60.0
+cast_time = 0.15
+release_delay = 0.0
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+usable_while_incapacitated = true
+animation_speed = 1.5

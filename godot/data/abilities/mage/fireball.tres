@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_joy33"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_ukq1y"]
+[ext_resource type="Resource" path="res://data/statuses/burn.tres" id="3_c5bk7"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="4_byis1"]
+
+[sub_resource type="Resource" id="Resource_u6o6m"]
+script = ExtResource("2_ukq1y")
+status = ExtResource("3_c5bk7")
+duration = 4.0
+magnitude = 5.0
+
+[sub_resource type="Resource" id="Resource_84con"]
+script = ExtResource("1_joy33")
+direct_damage = 32.0
+splash_damage = 12.0
+splash_radius = 2.8
+damage_type = 1
+statuses = Array[ExtResource("2_ukq1y")]([SubResource("Resource_u6o6m")])
+
+[resource]
+script = ExtResource("4_byis1")
+payload = SubResource("Resource_84con")
+homing_acceleration = 90.0
+id = &"mage.fireball"
+display_name = "Fireball"
+description = "Hurls a homing ball of fire that explodes on impact and sets enemies ablaze."
+color = Color(1, 0.64995646, 0.2716998, 1)
+resource_cost = 15.0
+cooldown = 0.8
+release_delay = 0.2
+max_range = 45.0
+animation = &"attack_1"
+animation_speed = 1.4

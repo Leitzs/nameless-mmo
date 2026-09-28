@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_76s0o"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_xg4sx"]
+
+[resource]
+script = ExtResource("1_76s0o")
+heal_amount = 55.0
+id = &"monk.vivify"
+display_name = "Vivify"
+description = "Channels chi through your body, healing you for 55 after a short cast."
+color = Color(0.6651851, 1, 0.85430586, 1)
+resource_cost = 30.0
+cooldown = 6.0
+cast_time = 0.9
+release_delay = 0.7
+max_range = 0.0
+face_aim = false
+breaks_stealth = false
+animation = &"charged"
+animation_speed = 1.0

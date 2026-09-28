@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="SummonAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_rtvec"]
+[ext_resource type="Script" path="res://abilities/archetypes/summon_ability.gd" id="2_mwfkg"]
+
+[resource]
+script = ExtResource("2_mwfkg")
+look = 1
+lifetime = 12.0
+radius = 10.0
+caster_heal = 10.0
+id = &"shaman.healing_stream_totem"
+display_name = "Healing Stream Totem"
+description = "Drops a totem that heals you for 10 every second for 12 seconds while you stay within 10 meters of it."
+color = Color(0.58383155, 0.9309246, 1, 1)
+resource_cost = 30.0
+cooldown = 30.0
+cast_time = 0.3
+release_delay = 0.1
+max_range = 0.0
+face_aim = false
+animation = &"attack_3"
+animation_speed = 1.5

@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="SummonAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_yirve"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="2_c8ln3"]
+[ext_resource type="Script" path="res://abilities/archetypes/summon_ability.gd" id="3_mcttj"]
+
+[sub_resource type="Resource" id="Resource_10xui"]
+script = ExtResource("1_yirve")
+status = ExtResource("2_c8ln3")
+duration = 1.2
+magnitude = 0.6
+
+[resource]
+script = ExtResource("3_mcttj")
+placement = 1
+look = 1
+summon_scale = 1.5
+radius = 4.5
+first_pulse_delay = 0.5
+pulse_damage = 6.0
+pulse_statuses = Array[ExtResource("1_yirve")]([SubResource("Resource_10xui")])
+id = &"summoner.stone_guardian"
+display_name = "Stone Guardian"
+description = "Raises a stone guardian at the target for 10 seconds. It pounds the ground, damaging and slowing enemies within 4.5 meters."
+color = Color(0.88082504, 0.7977378, 0.6262097, 1)
+resource_cost = 30.0
+cooldown = 22.0
+release_delay = 0.2
+max_range = 20.0
+animation = &"attack_2"

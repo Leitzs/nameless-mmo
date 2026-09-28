@@ -1,0 +1,96 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_wuekx"]
+[ext_resource type="Resource" path="res://data/abilities/bard/dissonant_note.tres" id="2_q6xrr"]
+[ext_resource type="Resource" path="res://data/abilities/bard/vicious_mockery.tres" id="3_yw3ca"]
+[ext_resource type="Resource" path="res://data/abilities/bard/lullaby.tres" id="4_cojkg"]
+[ext_resource type="Resource" path="res://data/abilities/bard/thunderwave.tres" id="5_6sy7v"]
+[ext_resource type="Resource" path="res://data/abilities/bard/song_of_rest.tres" id="6_clhnn"]
+[ext_resource type="Resource" path="res://data/abilities/bard/inspire.tres" id="7_4rb86"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_cph5y"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="9_xacvm"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="10_ne2r1"]
+
+[sub_resource type="Resource" id="Resource_2ba2t"]
+script = ExtResource("8_cph5y")
+part_name = &"HatBrim"
+shape = 2
+offset = Vector3(0, 0.2, 0)
+rotation_degrees = Vector3(-5, 0, 8)
+size = Vector3(0.52, 0.025, 0.46)
+color = Color(0.38109186, 0.22091636, 0.46135613, 1)
+roughness = 0.7
+
+[sub_resource type="Resource" id="Resource_kmfrs"]
+script = ExtResource("8_cph5y")
+part_name = &"HatCrown"
+shape = 2
+offset = Vector3(0, 0.27, 0.01)
+size = Vector3(0.26, 0.14, 0.26)
+color = Color(0.38109186, 0.22091636, 0.46135613, 1)
+roughness = 0.7
+
+[sub_resource type="Resource" id="Resource_l2evk"]
+script = ExtResource("8_cph5y")
+part_name = &"HatFeather"
+shape = 2
+offset = Vector3(0.1, 0.38, 0.1)
+rotation_degrees = Vector3(-35, 0, -25)
+size = Vector3(0.03, 0.4, 0.08)
+color = Color(0.97769153, 0.9546871, 0.9063318, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_gi841"]
+script = ExtResource("8_cph5y")
+part_name = &"LuteBody"
+shape = 1
+socket = &"spine_03"
+offset = Vector3(0.03, -0.05, 0.22)
+rotation_degrees = Vector3(0, 0, -20)
+size = Vector3(0.34, 0.42, 0.13)
+color = Color(0.7014107, 0.5370987, 0.3133042, 1)
+roughness = 0.5
+
+[sub_resource type="Resource" id="Resource_b8qll"]
+script = ExtResource("8_cph5y")
+part_name = &"LuteNeck"
+shape = 2
+socket = &"spine_03"
+offset = Vector3(-0.1, 0.28, 0.22)
+direction = Vector3(-0.34, 0.94, 0)
+size = Vector3(0.045, 0.45, 0.03)
+color = Color(0.48452926, 0.3491902, 0.22091636, 1)
+
+[sub_resource type="Resource" id="Resource_cpghg"]
+script = ExtResource("8_cph5y")
+part_name = &"SongNote"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.06, -0.1)
+color = Color(1, 0.7014107, 0.88082504, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[sub_resource type="Resource" id="Resource_vuux2"]
+script = ExtResource("9_xacvm")
+type = 1
+max_value = 240.0
+regen_per_second = 12.0
+
+[resource]
+script = ExtResource("10_ne2r1")
+id = &"bard"
+display_name = "Bard"
+description = "Songs and spells (mana). Vicious Mockery, Lullaby, Thunderwave, Song of Rest, Inspire."
+color = Color(1, 0.7014107, 0.85430586, 1)
+max_health = 340.0
+health_regen = 4.0
+resource = SubResource("Resource_vuux2")
+sprint_speed = 7.8
+abilities = Array[ExtResource("1_wuekx")]([ExtResource("2_q6xrr"), ExtResource("3_yw3ca"), ExtResource("4_cojkg"), ExtResource("5_6sy7v"), ExtResource("6_clhnn"), ExtResource("7_4rb86")])
+body_color = Color(0.6919703, 0.28324306, 0.3499023, 1)
+limb_color = Color(0.4323703, 0.14359564, 0.19069183, 1)
+cosmetics = Array[ExtResource("8_cph5y")]([SubResource("Resource_2ba2t"), SubResource("Resource_kmfrs"), SubResource("Resource_l2evk"), SubResource("Resource_gi841"), SubResource("Resource_b8qll"), SubResource("Resource_cpghg")])

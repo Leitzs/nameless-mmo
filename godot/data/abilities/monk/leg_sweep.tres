@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="NovaAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/nova_ability.gd" id="1_dajei"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_5j404"]
+[ext_resource type="Resource" path="res://data/statuses/stun.tres" id="3_cy1nf"]
+
+[sub_resource type="Resource" id="Resource_kt272"]
+script = ExtResource("2_5j404")
+status = ExtResource("3_cy1nf")
+duration = 1.5
+
+[resource]
+script = ExtResource("1_dajei")
+damage = 8.0
+statuses = Array[ExtResource("2_5j404")]([SubResource("Resource_kt272")])
+id = &"monk.leg_sweep"
+display_name = "Leg Sweep"
+description = "Sweeps the legs of enemies within 5 meters, stunning them for 1.5 seconds."
+color = Color(0.9546871, 0.9063318, 0.735357, 1)
+resource_cost = 30.0
+cooldown = 30.0
+release_delay = 0.2
+max_range = 5.0
+face_aim = false
+slows_while_casting = false
+animation = &"charged"
+animation_speed = 1.8

@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="MultiShotAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_elhf1"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_cu3ni"]
+[ext_resource type="Script" path="res://abilities/special/multi_shot_ability.gd" id="3_f0xlw"]
+
+[sub_resource type="Resource" id="Resource_qy178"]
+script = ExtResource("1_elhf1")
+direct_damage = 18.0
+damage_type = 0
+
+[resource]
+script = ExtResource("3_f0xlw")
+payload = SubResource("Resource_qy178")
+projectile_speed = 48.0
+homing_acceleration = 80.0
+visual_scale = 0.4
+id = &"archer.multi_shot"
+display_name = "Multi-Shot"
+description = "Fires a fan of three arrows. The middle one follows the target."
+color = Color(0.97769153, 0.9452769, 0.7977378, 1)
+resource_cost = 30.0
+cooldown = 8.0
+release_delay = 0.2
+max_range = 35.0
+slows_while_casting = false
+animation = &"attack_1"
+animation_speed = 1.8

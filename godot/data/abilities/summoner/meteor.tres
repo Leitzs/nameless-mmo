@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="GroundBlastAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/ground_blast_ability.gd" id="1_3rm7n"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_rt4dm"]
+[ext_resource type="Resource" path="res://data/statuses/burn.tres" id="3_pq7et"]
+
+[sub_resource type="Resource" id="Resource_e3ij1"]
+script = ExtResource("2_rt4dm")
+status = ExtResource("3_pq7et")
+duration = 4.0
+magnitude = 5.0
+
+[resource]
+script = ExtResource("1_3rm7n")
+damage = 50.0
+radius = 3.5
+delay = 1.2
+status = SubResource("Resource_e3ij1")
+id = &"summoner.meteor"
+display_name = "Meteor"
+description = "Calls a meteor down on the target area: after a warning it crashes for 50 damage and sets enemies ablaze."
+color = Color(1, 0.6262097, 0.24780053, 1)
+resource_cost = 45.0
+cooldown = 18.0
+cast_time = 0.6
+release_delay = 0.3
+max_range = 35.0
+animation = &"charged"
+animation_speed = 1.4

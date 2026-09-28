@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_5sbgn"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_eo58k"]
+[ext_resource type="Resource" path="res://data/statuses/divine_shield.tres" id="3_y2fsv"]
+
+[sub_resource type="Resource" id="Resource_23hkh"]
+script = ExtResource("2_eo58k")
+status = ExtResource("3_y2fsv")
+duration = 4.0
+magnitude = 0.5
+
+[resource]
+script = ExtResource("1_5sbgn")
+remove_effects = Array[int]([10])
+statuses = Array[ExtResource("2_eo58k")]([SubResource("Resource_23hkh")])
+id = &"paladin.divine_shield"
+display_name = "Divine Shield"
+description = "Immune to all damage for 4 seconds and purges damage over time, but you deal 50% less damage meanwhile."
+color = Color(1, 0.9309246, 0.6651851, 1)
+resource_cost = 30.0
+cooldown = 45.0
+cast_time = 0.3
+release_delay = 0.1
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+animation = &"attack_3"
+animation_speed = 1.5

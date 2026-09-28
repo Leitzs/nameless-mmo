@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_j88oj"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_sqj1b"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_5f838"]
+
+[sub_resource type="Resource" id="Resource_ccqe3"]
+script = ExtResource("1_j88oj")
+direct_damage = 12.0
+damage_type = 0
+
+[resource]
+script = ExtResource("3_5f838")
+payload = SubResource("Resource_ccqe3")
+projectile_speed = 50.0
+homing_acceleration = 80.0
+visual_scale = 0.35
+id = &"archer.quick_shot"
+display_name = "Quick Shot"
+description = "A fast arrow. Costs nothing and can be fired on the move."
+color = Color(0.97769153, 0.9452769, 0.7977378, 1)
+cast_time = 0.6
+release_delay = 0.2
+max_range = 40.0
+slows_while_casting = false
+animation = &"attack_3"
+animation_speed = 1.8

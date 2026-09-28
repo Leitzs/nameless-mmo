@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_2573t"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_b1e7h"]
+[ext_resource type="Resource" path="res://data/statuses/bleed.tres" id="3_j068h"]
+
+[sub_resource type="Resource" id="Resource_a8hi3"]
+script = ExtResource("2_b1e7h")
+status = ExtResource("3_j068h")
+duration = 8.0
+magnitude = 6.0
+
+[resource]
+script = ExtResource("1_2573t")
+damage = 10.0
+reach = 2.2
+statuses = Array[ExtResource("2_b1e7h")]([SubResource("Resource_a8hi3")])
+id = &"barbarian.rend"
+display_name = "Rend"
+description = "A jagged cut that makes the target bleed for 48 damage over 8 seconds."
+color = Color(0.9309246, 0.3491902, 0.3133042, 1)
+resource_cost = 15.0
+cooldown = 4.0
+release_delay = 0.18
+max_range = 4.5
+slows_while_casting = false
+animation = &"attack_2"
+animation_speed = 1.8

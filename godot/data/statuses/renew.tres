@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_2dhc1"]
+
+[resource]
+script = ExtResource("1_2dhc1")
+id = &"renew"
+display_name = "RENEW"
+color = Color(1, 0.9546871, 0.735357, 1)
+harmful = false
+effect = 11
+replace_existing = true

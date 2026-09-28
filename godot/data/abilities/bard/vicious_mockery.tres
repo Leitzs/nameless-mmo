@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_3gfk5"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_3nj75"]
+[ext_resource type="Resource" path="res://data/statuses/weakened.tres" id="3_lj5h5"]
+
+[sub_resource type="Resource" id="Resource_m1pia"]
+script = ExtResource("2_3nj75")
+status = ExtResource("3_lj5h5")
+duration = 6.0
+magnitude = 0.7
+
+[resource]
+script = ExtResource("1_3gfk5")
+damage = 14.0
+damage_type = 4
+statuses = Array[ExtResource("2_3nj75")]([SubResource("Resource_m1pia")])
+id = &"bard.vicious_mockery"
+display_name = "Vicious Mockery"
+description = "A cutting insult laced with magic: damage, and the target deals 30% less damage for 6 seconds."
+color = Color(0.9546871, 0.58383155, 0.7977378, 1)
+resource_cost = 20.0
+cooldown = 10.0
+cast_time = 0.4
+max_range = 25.0
+slows_while_casting = false
+requires_target = true
+animation = &"attack_2"
+animation_speed = 1.6

@@ -6,6 +6,9 @@ RPGTest is an Unreal Engine 5.8 C++ project: a PvP deathmatch RPG prototype (lis
 classes built on the Gameplay Ability System. `README.md` has the player-facing details (controls, class kits, PvP
 rules, maps) and the "how to add an ability / status / class" recipe; read it before changing gameplay.
 
+The game is being migrated to Godot 4.7 in `godot/`, which has its own `CLAUDE.md` and `README.md`. Work there follows
+Godot conventions, not the Unreal patterns described below.
+
 ## Build and run
 
 Single runtime module `RPGTest` (`Source/RPGTest`, dependencies in `RPGTest.Build.cs`). `<UE>` below is the engine

@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="DashStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_mxsqp"]
+[ext_resource type="Script" path="res://abilities/archetypes/dash_strike_ability.gd" id="2_gi17m"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="3_yk32h"]
+
+[sub_resource type="Resource" id="Resource_yuamr"]
+script = ExtResource("1_mxsqp")
+status = ExtResource("3_yk32h")
+duration = 3.0
+magnitude = 0.5
+
+[resource]
+script = ExtResource("2_gi17m")
+destination = 1
+leap_height = 1.6
+landing_damage = 22.0
+landing_radius = 3.5
+statuses = Array[ExtResource("1_mxsqp")]([SubResource("Resource_yuamr")])
+id = &"barbarian.leap"
+display_name = "Leap"
+description = "Leap up to 16 meters onto the target or the aimed point, crashing down on nearby enemies (damage and a 50% slow for 3 seconds)."
+color = Color(0.9546871, 0.76737565, 0.48452926, 1)
+cooldown = 15.0
+cast_time = 0.3
+release_delay = 0.05
+max_range = 16.0
+slows_while_casting = false
+animation = &"dash"
+animation_speed = 1.2

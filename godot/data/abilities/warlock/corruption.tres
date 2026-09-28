@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_w04m3"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_yct7p"]
+[ext_resource type="Resource" path="res://data/statuses/corruption.tres" id="3_5romm"]
+
+[sub_resource type="Resource" id="Resource_xgka2"]
+script = ExtResource("2_yct7p")
+status = ExtResource("3_5romm")
+duration = 12.0
+magnitude = 8.0
+
+[resource]
+script = ExtResource("1_w04m3")
+statuses = Array[ExtResource("2_yct7p")]([SubResource("Resource_xgka2")])
+id = &"warlock.corruption"
+display_name = "Corruption"
+description = "Corrupts the target, dealing shadow damage over 12 seconds. Targets taking damage over time cannot enter stealth."
+color = Color(0.735357, 0.3491902, 0.85430586, 1)
+resource_cost = 20.0
+cast_time = 0.4
+slows_while_casting = false
+requires_target = true
+animation = &"attack_2"
+animation_speed = 1.6

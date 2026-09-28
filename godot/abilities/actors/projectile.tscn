@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://abilities/actors/projectile.gd" id="1_script"]
+[ext_resource type="Material" path="res://fx/materials/fx_glow.tres" id="2_glow"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ball"]
+radius = 0.5
+height = 1.0
+radial_segments = 16
+rings = 8
+
+[node name="Projectile" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Core" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+material_override = ExtResource("2_glow")
+mesh = SubResource("SphereMesh_ball")
+
+[node name="Glow" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+material_override = ExtResource("2_glow")
+mesh = SubResource("SphereMesh_ball")
+
+[node name="Light" type="OmniLight3D" parent="."]
+light_energy = 0.8
+omni_range = 7.0

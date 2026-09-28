@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_v2i02"]
+[ext_resource type="Resource" path="res://data/statuses/immune_cc.tres" id="2_2qis5"]
+[ext_resource type="Resource" path="res://data/statuses/immune_slow.tres" id="3_refmo"]
+
+[resource]
+script = ExtResource("1_v2i02")
+id = &"root"
+display_name = "ROOTED"
+color = Color(0.76737565, 0.9063318, 0.6262097, 1)
+effect = 4
+diminishing_returns = true
+blocked_by = Array[ExtResource("1_v2i02")]([ExtResource("2_2qis5"), ExtResource("3_refmo")])
+overlay_priority = 40
+overlay_intensity = 1.5

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_tay5f"]
+
+[resource]
+script = ExtResource("1_tay5f")
+id = &"song_of_rest"
+display_name = "SONG OF REST"
+color = Color(1, 0.7014107, 0.85430586, 1)
+harmful = false
+effect = 11
+replace_existing = true

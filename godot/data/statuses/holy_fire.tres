@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_dkd7n"]
+
+[resource]
+script = ExtResource("1_dkd7n")
+id = &"holy_fire"
+display_name = "HOLY FIRE"
+color = Color(1, 0.88082504, 0.5370987, 1)
+effect = 10
+damage_type = 6
+replace_existing = true
+overlay_priority = 28
+overlay_intensity = 1.8
+overlay_fresnel = 0.9

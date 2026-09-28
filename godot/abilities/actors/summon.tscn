@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://abilities/actors/summon.gd" id="1_script"]
+[ext_resource type="Material" path="res://fx/materials/fx_glow.tres" id="2_glow"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_disc"]
+top_radius = 0.5
+bottom_radius = 0.5
+height = 1.0
+radial_segments = 32
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pole"]
+top_radius = 0.4
+bottom_radius = 0.5
+height = 1.0
+radial_segments = 8
+rings = 1
+
+[sub_resource type="SphereMesh" id="SphereMesh_core"]
+radius = 0.5
+height = 1.0
+radial_segments = 16
+rings = 8
+
+[node name="Summon" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Ring" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.02, 0, 0, 0, 1, 0, 0.01, 0)
+cast_shadow = 0
+material_override = ExtResource("2_glow")
+mesh = SubResource("CylinderMesh_disc")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_pole")
+
+[node name="Core" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+material_override = ExtResource("2_glow")
+mesh = SubResource("SphereMesh_core")
+
+[node name="Light" type="OmniLight3D" parent="."]
+light_energy = 1.2
+omni_range = 4.0

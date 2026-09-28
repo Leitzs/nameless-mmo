@@ -1,0 +1,115 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_doe7o"]
+[ext_resource type="Resource" path="res://data/abilities/shaman/lightning_bolt.tres" id="2_3l1ej"]
+[ext_resource type="Resource" path="res://data/abilities/shaman/chain_lightning.tres" id="3_485vl"]
+[ext_resource type="Resource" path="res://data/abilities/shaman/frost_shock.tres" id="4_6v00n"]
+[ext_resource type="Resource" path="res://data/abilities/shaman/capacitor_totem.tres" id="5_y7kwc"]
+[ext_resource type="Resource" path="res://data/abilities/shaman/healing_stream_totem.tres" id="6_1yvw0"]
+[ext_resource type="Resource" path="res://data/abilities/shaman/ghost_wolf.tres" id="7_rtby0"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_d1q0y"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="9_u6vk7"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="10_yajwq"]
+
+[sub_resource type="Resource" id="Resource_ywwyx"]
+script = ExtResource("8_d1q0y")
+part_name = &"WolfHood"
+shape = 3
+offset = Vector3(0, 0.2, 0.03)
+rotation_degrees = Vector3(-15, 0, 0)
+size = Vector3(0.34, 0.36, 0.36)
+color = Color(0.58383155, 0.50638646, 0.42358288, 1)
+roughness = 0.95
+
+[sub_resource type="Resource" id="Resource_65u81"]
+script = ExtResource("8_d1q0y")
+part_name = &"WolfEarLeft"
+shape = 3
+offset = Vector3(-0.1, 0.37, 0.02)
+size = Vector3(0.07, 0.12, 0.05)
+color = Color(0.58383155, 0.50638646, 0.42358288, 1)
+roughness = 0.95
+
+[sub_resource type="Resource" id="Resource_1ljs8"]
+script = ExtResource("8_d1q0y")
+part_name = &"WolfEarRight"
+shape = 3
+offset = Vector3(0.1, 0.37, 0.02)
+size = Vector3(0.07, 0.12, 0.05)
+color = Color(0.58383155, 0.50638646, 0.42358288, 1)
+roughness = 0.95
+
+[sub_resource type="Resource" id="Resource_7bteg"]
+script = ExtResource("8_d1q0y")
+part_name = &"FeatherLeft"
+shape = 2
+offset = Vector3(-0.17, 0.1, 0.05)
+rotation_degrees = Vector3(0, 0, 25)
+size = Vector3(0.02, 0.22, 0.05)
+color = Color(0.9063318, 0.88082504, 0.7977378, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_djkm2"]
+script = ExtResource("8_d1q0y")
+part_name = &"FeatherRight"
+shape = 2
+offset = Vector3(0.17, 0.1, 0.05)
+rotation_degrees = Vector3(0, 0, -25)
+size = Vector3(0.02, 0.22, 0.05)
+color = Color(0.9063318, 0.88082504, 0.7977378, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_5r7s3"]
+script = ExtResource("8_d1q0y")
+part_name = &"HammerHandle"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.12784031, -0.15380786)
+direction = Vector3(0, 0.6392015, -0.7690393)
+size = Vector3(0.04, 0.55, 0.04)
+color = Color(0.5370987, 0.42358288, 0.29337206, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_vr72e"]
+script = ExtResource("8_d1q0y")
+part_name = &"HammerHead"
+socket = &"hand_r"
+offset = Vector3(0, 0.31960076, -0.38451964)
+direction = Vector3(0, 0.6392015, -0.7690393)
+size = Vector3(0.22, 0.11, 0.11)
+color = Color(0.58383155, 0.58383155, 0.60971165, 1)
+
+[sub_resource type="Resource" id="Resource_x0cdp"]
+script = ExtResource("8_d1q0y")
+part_name = &"StormOrb"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.06, -0.1)
+size = Vector3(0.13, 0.13, 0.13)
+color = Color(0.6651851, 0.85430586, 1, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[sub_resource type="Resource" id="Resource_6vnni"]
+script = ExtResource("9_u6vk7")
+type = 1
+max_value = 240.0
+regen_per_second = 11.0
+
+[resource]
+script = ExtResource("10_yajwq")
+id = &"shaman"
+display_name = "Shaman"
+description = "Elemental caster (mana). Chain Lightning, Frost Shock, Capacitor Totem, Healing Stream Totem, Ghost Wolf."
+color = Color(0, 0.694361, 0.940525, 1)
+max_health = 360.0
+health_regen = 5.0
+resource = SubResource("Resource_6vnni")
+move_speed = 4.9
+abilities = Array[ExtResource("1_doe7o")]([ExtResource("2_3l1ej"), ExtResource("3_485vl"), ExtResource("4_6v00n"), ExtResource("5_y7kwc"), ExtResource("6_1yvw0"), ExtResource("7_rtby0")])
+body_color = Color(0.30797648, 0.4572192, 0.54587555, 1)
+limb_color = Color(0.16107033, 0.26651356, 0.32915118, 1)
+cosmetics = Array[ExtResource("8_d1q0y")]([SubResource("Resource_ywwyx"), SubResource("Resource_65u81"), SubResource("Resource_1ljs8"), SubResource("Resource_7bteg"), SubResource("Resource_djkm2"), SubResource("Resource_5r7s3"), SubResource("Resource_vr72e"), SubResource("Resource_x0cdp")])

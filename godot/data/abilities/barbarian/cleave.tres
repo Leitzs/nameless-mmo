@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_a4k6l"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_v3gku"]
+
+[resource]
+script = ExtResource("1_a4k6l")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2"])
+damage = 13.0
+reach = 2.3
+arc_degrees = 140.0
+hit_all_in_arc = true
+resource_on_hit = 5.0
+id = &"barbarian.cleave"
+display_name = "Cleave"
+description = "Wide axe swings that hit every enemy in front of you. Every hit builds rage."
+color = Color(0.9309246, 0.9063318, 0.88082504, 1)
+cast_time = 0.65
+release_delay = 0.28
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.4

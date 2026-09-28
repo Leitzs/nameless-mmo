@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_y8fyt"]
+
+[resource]
+script = ExtResource("1_y8fyt")
+id = &"stealth"
+display_name = "STEALTH"
+color = Color(0.735357, 0.76737565, 0.85430586, 1)
+harmful = false
+effect = 6
+replace_existing = true
+break_damage_fraction = 0.0

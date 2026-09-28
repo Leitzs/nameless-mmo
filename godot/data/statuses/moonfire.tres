@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_06dyl"]
+
+[resource]
+script = ExtResource("1_06dyl")
+id = &"moonfire"
+display_name = "MOONFIRE"
+color = Color(0.7014107, 0.6651851, 1, 1)
+effect = 10
+damage_type = 4
+replace_existing = true
+overlay_priority = 24
+overlay_intensity = 1.5

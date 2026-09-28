@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_bh1ra"]
+[ext_resource type="Resource" path="res://data/statuses/immune_cc.tres" id="2_roi6y"]
+
+[resource]
+script = ExtResource("1_bh1ra")
+id = &"sleep"
+display_name = "ASLEEP"
+color = Color(0.7014107, 0.735357, 1, 1)
+effect = 1
+diminishing_returns = true
+blocked_by = Array[ExtResource("1_bh1ra")]([ExtResource("2_roi6y")])
+break_damage_fraction = 0.0
+overlay_priority = 65
+overlay_intensity = 1.5

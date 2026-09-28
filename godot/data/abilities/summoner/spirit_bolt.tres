@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_dgrx1"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_2u51r"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_4gkwn"]
+
+[sub_resource type="Resource" id="Resource_m6vt2"]
+script = ExtResource("1_dgrx1")
+direct_damage = 11.0
+
+[resource]
+script = ExtResource("3_4gkwn")
+payload = SubResource("Resource_m6vt2")
+projectile_speed = 34.0
+homing_acceleration = 70.0
+visual_scale = 0.6
+id = &"summoner.spirit_bolt"
+display_name = "Spirit Bolt"
+description = "A bolt of spirit energy. Costs nothing."
+color = Color(0.58383155, 0.9309246, 0.97769153, 1)
+cast_time = 0.55
+max_range = 35.0
+animation = &"attack_3"
+animation_speed = 1.8

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_r2pxq"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_5t0v8"]
+
+[resource]
+script = ExtResource("1_r2pxq")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2", &"attack_3"])
+damage = 9.0
+reach = 1.9
+arc_degrees = 100.0
+id = &"rogue.dagger_slash"
+display_name = "Dagger Slash"
+description = "Quick dagger strikes."
+color = Color(0.9063318, 0.9309246, 0.9546871, 1)
+cast_time = 0.38
+release_delay = 0.12
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 2.0

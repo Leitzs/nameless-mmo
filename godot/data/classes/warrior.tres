@@ -1,0 +1,81 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_nd2va"]
+[ext_resource type="Resource" path="res://data/abilities/warrior/sword_slash.tres" id="2_c63jo"]
+[ext_resource type="Resource" path="res://data/abilities/warrior/charge.tres" id="3_clxre"]
+[ext_resource type="Resource" path="res://data/abilities/warrior/mortal_strike.tres" id="4_oip5p"]
+[ext_resource type="Resource" path="res://data/abilities/warrior/hamstring.tres" id="5_w1bym"]
+[ext_resource type="Resource" path="res://data/abilities/warrior/whirlwind.tres" id="6_bhkx4"]
+[ext_resource type="Resource" path="res://data/abilities/warrior/berserker_rush.tres" id="7_he2rp"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_bkjqd"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="9_a5s2i"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="10_rujjv"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="11_jwgmo"]
+
+[sub_resource type="Resource" id="Resource_2ir2t"]
+script = ExtResource("8_bkjqd")
+part_name = &"Helmet"
+shape = 1
+offset = Vector3(0, 0.12, -0.01)
+size = Vector3(0.29, 0.27, 0.31)
+color = Color(0.58383155, 0.58383155, 0.60124344, 1)
+roughness = 0.4
+
+[sub_resource type="Resource" id="Resource_8ov8c"]
+script = ExtResource("8_bkjqd")
+part_name = &"NoseGuard"
+offset = Vector3(0, 0.06, -0.15)
+size = Vector3(0.03, 0.14, 0.02)
+color = Color(0.58383155, 0.58383155, 0.60124344, 1)
+roughness = 0.4
+
+[sub_resource type="Resource" id="Resource_fwuxe"]
+script = ExtResource("8_bkjqd")
+part_name = &"HornLeft"
+shape = 3
+offset = Vector3(-0.2413065, 0.21956655, -0.068696596)
+direction = Vector3(-0.79504645, 0.49690402, -0.34783283)
+size = Vector3(0.1, 0.32, 0.1)
+color = Color(0.8962439, 0.86504203, 0.7977378, 1)
+
+[sub_resource type="Resource" id="Resource_48voe"]
+script = ExtResource("8_bkjqd")
+part_name = &"HornRight"
+shape = 3
+offset = Vector3(0.2413065, 0.21956655, -0.068696596)
+direction = Vector3(0.79504645, 0.49690402, -0.34783283)
+size = Vector3(0.1, 0.32, 0.1)
+color = Color(0.8962439, 0.86504203, 0.7977378, 1)
+
+[sub_resource type="Resource" id="Resource_8i4hq"]
+script = ExtResource("9_a5s2i")
+blade_length = 1.15
+blade_width = 0.1
+blade_color = Color(0.735357, 0.735357, 0.7483791, 1)
+hilt_color = Color(0.6262097, 0.38109186, 0.3133042, 1)
+part_name = &"Greatsword"
+socket = &"hand_r"
+direction = Vector3(0, 0.6392015, -0.7690393)
+
+[sub_resource type="Resource" id="Resource_erjtx"]
+script = ExtResource("10_rujjv")
+type = 3
+max_value = 100.0
+out_of_combat_decay_per_second = 4.0
+gain_per_damage_dealt = 0.4
+gain_per_damage_taken = 0.3
+starts_full = false
+
+[resource]
+script = ExtResource("11_jwgmo")
+id = &"warrior"
+display_name = "Warrior"
+description = "Greatsword (rage). Charge, Mortal Strike, Hamstring, Whirlwind, Berserker Rush."
+color = Color(0.9546871, 0.58383155, 0.48452926, 1)
+max_health = 450.0
+health_regen = 5.0
+resource = SubResource("Resource_erjtx")
+abilities = Array[ExtResource("1_nd2va")]([ExtResource("2_c63jo"), ExtResource("3_clxre"), ExtResource("4_oip5p"), ExtResource("5_w1bym"), ExtResource("6_bhkx4"), ExtResource("7_he2rp")])
+body_color = Color(0.6004701, 0.40125498, 0.30797648, 1)
+limb_color = Color(0.36772346, 0.22697362, 0.16107033, 1)
+cosmetics = Array[ExtResource("8_bkjqd")]([SubResource("Resource_2ir2t"), SubResource("Resource_8ov8c"), SubResource("Resource_fwuxe"), SubResource("Resource_48voe"), SubResource("Resource_8i4hq")])

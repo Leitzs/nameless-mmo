@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="RainOfArrowsAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/special/rain_of_arrows_ability.gd" id="1_p00a1"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_xdjd2"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="3_di3et"]
+
+[sub_resource type="Resource" id="Resource_h7um5"]
+script = ExtResource("2_xdjd2")
+status = ExtResource("3_di3et")
+duration = 3.0
+magnitude = 0.7
+
+[resource]
+script = ExtResource("1_p00a1")
+slow = SubResource("Resource_h7um5")
+id = &"archer.rain_of_arrows"
+display_name = "Rain of Arrows"
+description = "Marks an area; a moment later arrows rain down on it, damaging and slowing every enemy inside by 30% for 3 seconds."
+color = Color(0.7014107, 0.9309246, 0.6262097, 1)
+resource_cost = 40.0
+cooldown = 18.0
+cast_time = 0.5
+release_delay = 0.25
+max_range = 35.0
+animation = &"charged"
+animation_speed = 1.6

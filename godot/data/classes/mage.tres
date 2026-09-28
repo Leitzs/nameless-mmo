@@ -1,0 +1,87 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_et4w3"]
+[ext_resource type="Resource" path="res://data/abilities/mage/arcane_bolt.tres" id="2_62p5u"]
+[ext_resource type="Resource" path="res://data/abilities/mage/fireball.tres" id="3_wkftd"]
+[ext_resource type="Resource" path="res://data/abilities/mage/frost_nova.tres" id="4_sjuk8"]
+[ext_resource type="Resource" path="res://data/abilities/mage/lightning_strike.tres" id="5_cuoi5"]
+[ext_resource type="Resource" path="res://data/abilities/mage/blink.tres" id="6_ntoji"]
+[ext_resource type="Resource" path="res://data/abilities/mage/arcane_shield.tres" id="7_7i70b"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_b4jg5"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="9_srxku"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="10_wtygw"]
+
+[sub_resource type="Resource" id="Resource_ttxsn"]
+script = ExtResource("8_b4jg5")
+part_name = &"HatBrim"
+shape = 2
+offset = Vector3(0, 0.15, 0.01)
+rotation_degrees = Vector3(8.000001, 0, 0)
+size = Vector3(0.62, 0.025, 0.62)
+color = Color(0.33183005, 0.20598418, 0.50638646, 1)
+roughness = 0.7
+
+[sub_resource type="Resource" id="Resource_4clds"]
+script = ExtResource("8_b4jg5")
+part_name = &"HatBand"
+shape = 2
+offset = Vector3(0, 0.19, 0.02)
+rotation_degrees = Vector3(8.000001, 0, 0)
+size = Vector3(0.43, 0.07, 0.43)
+color = Color(0.76737565, 0.6651851, 0.3133042, 1)
+roughness = 0.35
+
+[sub_resource type="Resource" id="Resource_6eowd"]
+script = ExtResource("8_b4jg5")
+part_name = &"HatCone"
+shape = 3
+offset = Vector3(0, 0.47, 0.06)
+rotation_degrees = Vector3(10.000001, 0, 0)
+size = Vector3(0.42, 0.62, 0.42)
+color = Color(0.33183005, 0.20598418, 0.50638646, 1)
+roughness = 0.7
+
+[sub_resource type="Resource" id="Resource_tm5w4"]
+script = ExtResource("8_b4jg5")
+part_name = &"StaffShaft"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.1, 0)
+rotation_degrees = Vector3(-8.000001, 0, 0)
+size = Vector3(0.06, 1.75, 0.06)
+color = Color(0.38109186, 0.29337206, 0.20598418, 1)
+roughness = 0.75
+
+[sub_resource type="Resource" id="Resource_7pgy1"]
+script = ExtResource("8_b4jg5")
+part_name = &"StaffOrb"
+shape = 1
+socket = &"hand_r"
+offset = Vector3(0, 1.0457059, -0.13291031)
+size = Vector3(0.18, 0.18, 0.18)
+color = Color(0.76737565, 0.58383155, 1, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[sub_resource type="Resource" id="Resource_dfke3"]
+script = ExtResource("9_srxku")
+type = 1
+max_value = 250.0
+regen_per_second = 12.0
+
+[resource]
+script = ExtResource("10_wtygw")
+id = &"mage"
+display_name = "Mage"
+description = "Ranged caster (mana). Fireball, Frost Nova, Lightning Strike, Blink, Arcane Shield."
+color = Color(0.7977378, 0.6262097, 1, 1)
+health_regen = 4.0
+resource = SubResource("Resource_dfke3")
+move_speed = 4.8
+abilities = Array[ExtResource("1_et4w3")]([ExtResource("2_62p5u"), ExtResource("3_wkftd"), ExtResource("4_sjuk8"), ExtResource("5_cuoi5"), ExtResource("6_ntoji"), ExtResource("7_7i70b")])
+body_color = Color(0.4816969, 0.3499023, 0.6561129, 1)
+limb_color = Color(0.28380758, 0.19069183, 0.40703627, 1)
+cosmetics = Array[ExtResource("8_b4jg5")]([SubResource("Resource_ttxsn"), SubResource("Resource_4clds"), SubResource("Resource_6eowd"), SubResource("Resource_tm5w4"), SubResource("Resource_7pgy1")])

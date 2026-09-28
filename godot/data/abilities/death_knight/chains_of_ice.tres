@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_w3wte"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_wvnuk"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="3_c0qfw"]
+
+[sub_resource type="Resource" id="Resource_p14rl"]
+script = ExtResource("2_wvnuk")
+status = ExtResource("3_c0qfw")
+duration = 5.0
+magnitude = 0.3
+
+[resource]
+script = ExtResource("1_w3wte")
+damage = 10.0
+damage_type = 2
+statuses = Array[ExtResource("2_wvnuk")]([SubResource("Resource_p14rl")])
+id = &"death_knight.chains_of_ice"
+display_name = "Chains of Ice"
+description = "Shackles the target in frozen chains: damage and a 70% slow for 5 seconds."
+color = Color(0.7014107, 0.88082504, 1, 1)
+cooldown = 10.0
+cast_time = 0.4
+max_range = 25.0
+slows_while_casting = false
+requires_target = true
+animation = &"attack_1"
+animation_speed = 1.6

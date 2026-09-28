@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_hiyl1"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_xqqbc"]
+
+[resource]
+script = ExtResource("1_hiyl1")
+damage = 26.0
+reach = 1.9
+arc_degrees = 90.0
+behind_damage_multiplier = 2.0
+id = &"rogue.backstab"
+display_name = "Backstab"
+description = "A vicious stab. Deals double damage when you strike the target's back."
+color = Color(0.97769153, 0.58383155, 0.58383155, 1)
+resource_cost = 35.0
+cooldown = 3.0
+max_range = 4.5
+slows_while_casting = false
+animation = &"attack_3"
+animation_speed = 1.8

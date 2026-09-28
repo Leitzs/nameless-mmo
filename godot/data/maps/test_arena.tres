@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MapInfo" format=3]
+
+[ext_resource type="Script" path="res://game/map_info.gd" id="1_6wqll"]
+
+[resource]
+script = ExtResource("1_6wqll")
+id = &"test_arena"
+display_name = "Test Arena"
+description = "Flat grid arena: duel bot with range rings, bot group, cover, range lane."
+scene_path = "res://maps/test_arena/test_arena.tscn"

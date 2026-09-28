@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_hv4io"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_2piw1"]
+[ext_resource type="Resource" path="res://data/statuses/holy_fire.tres" id="3_ff2pm"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="4_yvsb5"]
+
+[sub_resource type="Resource" id="Resource_v0ej2"]
+script = ExtResource("2_2piw1")
+status = ExtResource("3_ff2pm")
+duration = 6.0
+magnitude = 5.0
+
+[sub_resource type="Resource" id="Resource_haa2j"]
+script = ExtResource("1_hv4io")
+direct_damage = 26.0
+damage_type = 6
+statuses = Array[ExtResource("2_2piw1")]([SubResource("Resource_v0ej2")])
+
+[resource]
+script = ExtResource("4_yvsb5")
+payload = SubResource("Resource_haa2j")
+projectile_speed = 30.0
+homing_acceleration = 90.0
+visual_scale = 0.9
+id = &"cleric.holy_fire"
+display_name = "Holy Fire"
+description = "Hurls a ball of holy flame that burns the target for 30 more damage over 6 seconds."
+color = Color(1, 0.9309246, 0.6651851, 1)
+resource_cost = 20.0
+cooldown = 8.0
+cast_time = 0.7
+release_delay = 0.4
+max_range = 40.0
+animation = &"charged"
+animation_speed = 1.4

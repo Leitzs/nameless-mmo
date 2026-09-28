@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_vrwiu"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_josja"]
+
+[resource]
+script = ExtResource("1_vrwiu")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2", &"attack_3"])
+reach = 2.2
+arc_degrees = 120.0
+resource_on_hit = 5.0
+id = &"warrior.sword_slash"
+display_name = "Sword Slash"
+description = "Heavy sword strikes. Every hit builds rage."
+color = Color(0.9309246, 0.9063318, 0.88082504, 1)
+cast_time = 0.6
+release_delay = 0.25
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.4

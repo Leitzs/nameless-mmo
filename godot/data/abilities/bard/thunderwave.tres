@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="NovaAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/nova_ability.gd" id="1_0kpgl"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_qqe3c"]
+
+[resource]
+script = ExtResource("1_0kpgl")
+radius = 5.5
+damage = 18.0
+damage_type = 3
+knockback = 12.0
+id = &"bard.thunderwave"
+display_name = "Thunderwave"
+description = "A wave of thunderous force bursts from you, damaging enemies within 5.5 meters and knocking them back."
+color = Color(0.7977378, 0.85430586, 1, 1)
+resource_cost = 25.0
+cooldown = 14.0
+release_delay = 0.2
+max_range = 5.5
+face_aim = false
+slows_while_casting = false
+animation = &"attack_1"
+animation_speed = 1.6

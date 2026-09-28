@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_0pd34"]
+[ext_resource type="Resource" path="res://data/statuses/barrier.tres" id="2_xarc3"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="3_1pr33"]
+
+[resource]
+script = ExtResource("1_0pd34")
+shield_amount = 80.0
+shield_duration = 10.0
+shield_status = ExtResource("2_xarc3")
+id = &"mage.arcane_shield"
+display_name = "Arcane Shield"
+description = "Surrounds you with a barrier that absorbs incoming damage."
+color = Color(0.7977378, 0.6262097, 1, 1)
+resource_cost = 35.0
+cooldown = 18.0
+cast_time = 0.35
+release_delay = 0.1
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+animation = &"attack_3"
+animation_speed = 1.5

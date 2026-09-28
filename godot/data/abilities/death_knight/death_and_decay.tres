@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="SummonAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_pk41y"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="2_jvw51"]
+[ext_resource type="Script" path="res://abilities/archetypes/summon_ability.gd" id="3_ncu6u"]
+
+[sub_resource type="Resource" id="Resource_i5xfj"]
+script = ExtResource("1_pk41y")
+status = ExtResource("2_jvw51")
+duration = 1.2
+magnitude = 0.75
+
+[resource]
+script = ExtResource("3_ncu6u")
+placement = 1
+lifetime = 8.0
+radius = 4.0
+first_pulse_delay = 0.3
+pulse_damage = 8.0
+damage_type = 5
+pulse_statuses = Array[ExtResource("1_pk41y")]([SubResource("Resource_i5xfj")])
+id = &"death_knight.death_and_decay"
+display_name = "Death and Decay"
+description = "Corrupts the ground at the target for 8 seconds: enemies inside take shadow damage and are slowed by 25%."
+color = Color(0.6262097, 0.9063318, 0.5370987, 1)
+resource_cost = 25.0
+cooldown = 20.0
+release_delay = 0.2
+max_range = 25.0
+animation = &"charged"
+animation_speed = 1.5

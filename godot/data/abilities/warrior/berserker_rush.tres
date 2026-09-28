@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_kk6oa"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_0l5rv"]
+[ext_resource type="Resource" path="res://data/statuses/haste.tres" id="3_pg737"]
+[ext_resource type="Resource" path="res://data/statuses/immune_slow.tres" id="4_4us3b"]
+
+[sub_resource type="Resource" id="Resource_u8est"]
+script = ExtResource("2_0l5rv")
+status = ExtResource("3_pg737")
+duration = 4.0
+magnitude = 1.5
+
+[sub_resource type="Resource" id="Resource_6cets"]
+script = ExtResource("2_0l5rv")
+status = ExtResource("4_4us3b")
+duration = 4.0
+
+[resource]
+script = ExtResource("1_kk6oa")
+remove_effects = Array[int]([4, 5])
+statuses = Array[ExtResource("2_0l5rv")]([SubResource("Resource_u8est"), SubResource("Resource_6cets")])
+id = &"warrior.berserker_rush"
+display_name = "Berserker Rush"
+description = "Break free of roots and slows, then run 50% faster and ignore slows for 4 seconds."
+color = Color(1, 0.58383155, 0.42358288, 1)
+cooldown = 20.0
+cast_time = 0.2
+release_delay = 0.05
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+animation = &"charged"
+animation_speed = 2.0

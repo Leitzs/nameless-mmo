@@ -1,0 +1,61 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_j4qcu"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="2_5bccs"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="3_cqfk0"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="4_1jipy"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="5_libc3"]
+
+[sub_resource type="Resource" id="Resource_cmwjn"]
+script = ExtResource("2_5bccs")
+part_name = &"Helmet"
+shape = 1
+offset = Vector3(0, 0.12, -0.01)
+size = Vector3(0.28, 0.27, 0.3)
+color = Color(0.48452926, 0.48452926, 0.50638646, 1)
+roughness = 0.35
+
+[sub_resource type="Resource" id="Resource_2oa35"]
+script = ExtResource("2_5bccs")
+part_name = &"HornLeft"
+shape = 3
+offset = Vector3(-0.20252475, 0.2393208, -0.0420066)
+direction = Vector3(-0.7502251, 0.63018906, -0.20006002)
+size = Vector3(0.08, 0.22, 0.08)
+color = Color(0.85430586, 0.8209799, 0.7483791, 1)
+
+[sub_resource type="Resource" id="Resource_il1po"]
+script = ExtResource("2_5bccs")
+part_name = &"HornRight"
+shape = 3
+offset = Vector3(0.20252475, 0.2393208, -0.0420066)
+direction = Vector3(0.7502251, 0.63018906, -0.20006002)
+size = Vector3(0.08, 0.22, 0.08)
+color = Color(0.85430586, 0.8209799, 0.7483791, 1)
+
+[sub_resource type="Resource" id="Resource_1b41x"]
+script = ExtResource("3_cqfk0")
+blade_length = 0.9
+blade_color = Color(0.76737565, 0.7735731, 0.7977378, 1)
+hilt_color = Color(0.7014107, 0.60971165, 0.3491902, 1)
+part_name = &"Sword"
+socket = &"hand_r"
+direction = Vector3(0, 0.6392015, -0.7690393)
+
+[sub_resource type="Resource" id="Resource_41ry4"]
+script = ExtResource("4_1jipy")
+
+[resource]
+script = ExtResource("5_libc3")
+id = &"forest_bandit"
+display_name = "Forest Bandit"
+description = "Training enemy: telegraphed melee combo and charge."
+color = Color(0.6262097, 0.2716998, 0.22091636, 1)
+max_health = 500.0
+health_regen = 12.0
+resource = SubResource("Resource_41ry4")
+move_speed = 5.2
+sprint_speed = 5.2
+body_color = Color(0.6561129, 0.3299638, 0.28324306, 1)
+limb_color = Color(0.40703627, 0.17660485, 0.14359564, 1)
+cosmetics = Array[ExtResource("2_5bccs")]([SubResource("Resource_cmwjn"), SubResource("Resource_2oa35"), SubResource("Resource_il1po"), SubResource("Resource_1b41x")])

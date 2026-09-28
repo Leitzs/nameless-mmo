@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_fal05"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_m0lgh"]
+[ext_resource type="Resource" path="res://data/statuses/stun.tres" id="3_3silh"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="4_bwrec"]
+
+[sub_resource type="Resource" id="Resource_cm5gg"]
+script = ExtResource("2_m0lgh")
+status = ExtResource("3_3silh")
+duration = 1.5
+
+[sub_resource type="Resource" id="Resource_4hj5w"]
+script = ExtResource("1_fal05")
+direct_damage = 10.0
+damage_type = 6
+statuses = Array[ExtResource("2_m0lgh")]([SubResource("Resource_cm5gg")])
+
+[resource]
+script = ExtResource("4_bwrec")
+payload = SubResource("Resource_4hj5w")
+projectile_speed = 26.0
+homing_acceleration = 140.0
+visual_scale = 0.9
+id = &"paladin.hammer_of_justice"
+display_name = "Hammer of Justice"
+description = "Throws a hammer of light that stuns the first enemy it hits for 1.5 seconds. Short range."
+color = Color(1, 0.9309246, 0.6651851, 1)
+resource_cost = 25.0
+cooldown = 20.0
+release_delay = 0.2
+max_range = 15.0
+slows_while_casting = false
+animation = &"attack_2"
+animation_speed = 1.4

@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_ajdln"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_ynqm4"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="3_mf26s"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="4_57pao"]
+
+[sub_resource type="Resource" id="Resource_lw0hn"]
+script = ExtResource("2_ynqm4")
+status = ExtResource("3_mf26s")
+duration = 5.0
+magnitude = 0.5
+
+[sub_resource type="Resource" id="Resource_vj4f3"]
+script = ExtResource("1_ajdln")
+direct_damage = 10.0
+damage_type = 0
+statuses = Array[ExtResource("2_ynqm4")]([SubResource("Resource_lw0hn")])
+
+[resource]
+script = ExtResource("4_57pao")
+payload = SubResource("Resource_vj4f3")
+projectile_speed = 50.0
+homing_acceleration = 90.0
+visual_scale = 0.45
+id = &"archer.concussive_shot"
+display_name = "Concussive Shot"
+description = "An arrow that dazes the target, slowing it by 50% for 5 seconds."
+color = Color(0.7014107, 0.85430586, 1, 1)
+resource_cost = 20.0
+cooldown = 12.0
+release_delay = 0.2
+max_range = 40.0
+slows_while_casting = false
+animation = &"attack_2"
+animation_speed = 1.8

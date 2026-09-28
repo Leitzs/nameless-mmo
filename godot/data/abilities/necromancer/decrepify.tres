@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_2jmox"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_u6cry"]
+[ext_resource type="Resource" path="res://data/statuses/slow.tres" id="3_4jswe"]
+[ext_resource type="Resource" path="res://data/statuses/weakened.tres" id="4_d8qjm"]
+
+[sub_resource type="Resource" id="Resource_da4f1"]
+script = ExtResource("2_u6cry")
+status = ExtResource("3_4jswe")
+duration = 6.0
+magnitude = 0.6
+
+[sub_resource type="Resource" id="Resource_hvy3i"]
+script = ExtResource("2_u6cry")
+status = ExtResource("4_d8qjm")
+duration = 6.0
+magnitude = 0.75
+
+[resource]
+script = ExtResource("1_2jmox")
+statuses = Array[ExtResource("2_u6cry")]([SubResource("Resource_da4f1"), SubResource("Resource_hvy3i")])
+id = &"necromancer.decrepify"
+display_name = "Decrepify"
+description = "Curses the target: it moves 40% slower and deals 25% less damage for 6 seconds."
+color = Color(0.6651851, 0.7977378, 0.6262097, 1)
+resource_cost = 25.0
+cooldown = 15.0
+release_delay = 0.2
+max_range = 25.0
+slows_while_casting = false
+requires_target = true
+animation = &"attack_2"
+animation_speed = 1.6

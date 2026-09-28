@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_jrxkm"]
+
+[resource]
+script = ExtResource("1_jrxkm")
+id = &"spirit_ward"
+display_name = "SPIRIT WARD"
+color = Color(0.48452926, 0.9063318, 1, 1)
+harmful = false
+effect = 7
+replace_existing = true
+overlay_priority = 6
+overlay_intensity = 1.4
+overlay_fresnel = 1.0

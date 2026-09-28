@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_e0ljy"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_b7bmq"]
+
+[resource]
+script = ExtResource("1_e0ljy")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2"])
+damage = 14.0
+reach = 2.1
+id = &"paladin.sword_swing"
+display_name = "Sword Swing"
+description = "A two-hit sword combo. Your shield blocks 15% of the damage from attacks in front of you."
+color = Color(0.9309246, 0.9309246, 0.97769153, 1)
+cast_time = 0.6
+release_delay = 0.25
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.4

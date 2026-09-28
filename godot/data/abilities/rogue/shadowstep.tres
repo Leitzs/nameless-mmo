@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="ShadowstepAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_ct6dt"]
+[ext_resource type="Resource" path="res://data/statuses/haste.tres" id="2_4gra5"]
+[ext_resource type="Script" path="res://abilities/special/shadowstep_ability.gd" id="3_gnm2n"]
+
+[sub_resource type="Resource" id="Resource_mo754"]
+script = ExtResource("1_ct6dt")
+status = ExtResource("2_4gra5")
+duration = 2.0
+magnitude = 1.3
+
+[resource]
+script = ExtResource("3_gnm2n")
+haste = SubResource("Resource_mo754")
+id = &"rogue.shadowstep"
+display_name = "Shadowstep"
+description = "Step through the shadows to appear behind the target, moving 30% faster for 2 seconds. Does not break stealth."
+color = Color(0.6262097, 0.58383155, 0.76737565, 1)
+resource_cost = 15.0
+cooldown = 18.0
+cast_time = 0.25
+release_delay = 0.05
+max_range = 25.0
+slows_while_casting = false
+requires_target = true
+breaks_stealth = false
+animation = &"dash"
+animation_speed = 1.6

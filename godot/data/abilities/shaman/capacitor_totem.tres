@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="SummonAbility" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="1_r3wn5"]
+[ext_resource type="Resource" path="res://data/statuses/stun.tres" id="2_x1ngb"]
+[ext_resource type="Script" path="res://abilities/archetypes/summon_ability.gd" id="3_jihos"]
+
+[sub_resource type="Resource" id="Resource_1ou1f"]
+script = ExtResource("1_r3wn5")
+status = ExtResource("2_x1ngb")
+duration = 1.5
+
+[resource]
+script = ExtResource("3_jihos")
+look = 1
+lifetime = 2.3
+radius = 6.0
+first_pulse_delay = 2.0
+pulse_interval = 0.0
+pulse_damage = 10.0
+damage_type = 3
+pulse_statuses = Array[ExtResource("1_r3wn5")]([SubResource("Resource_1ou1f")])
+id = &"shaman.capacitor_totem"
+display_name = "Capacitor Totem"
+description = "Drops a totem that overloads after 2 seconds, damaging and stunning enemies within 6 meters for 1.5 seconds."
+color = Color(0.7014107, 0.85430586, 1, 1)
+resource_cost = 25.0
+cooldown = 25.0
+cast_time = 0.3
+release_delay = 0.1
+max_range = 0.0
+face_aim = false
+animation = &"attack_3"
+animation_speed = 1.5

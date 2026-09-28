@@ -1,0 +1,649 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/game_map.gd" id="1_oeyht"]
+[ext_resource type="Shader" path="res://fx/shaders/grid.gdshader" id="2_8y1nq"]
+[ext_resource type="Script" path="res://characters/bots/bot_spawner.gd" id="3_34mb6"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8psln"]
+sky_top_color = Color(0.32, 0.46, 0.7, 1)
+sky_horizon_color = Color(0.72, 0.76, 0.8, 1)
+ground_bottom_color = Color(0.2, 0.2, 0.2, 1)
+ground_horizon_color = Color(0.6, 0.62, 0.62, 1)
+
+[sub_resource type="Sky" id="Sky_ywt8n"]
+sky_material = SubResource("ProceduralSkyMaterial_8psln")
+
+[sub_resource type="Environment" id="Environment_uwvx7"]
+background_mode = 2
+sky = SubResource("Sky_ywt8n")
+ambient_light_source = 3
+tonemap_mode = 4
+ssao_enabled = true
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.05
+fog_enabled = true
+fog_light_color = Color(0.62, 0.68, 0.75, 1)
+fog_density = 0.0015
+fog_sky_affect = 0.3
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_ydbsg"]
+vertices = PackedVector3Array(-59.25, 0.5, -32.75, -49.5, 0.5, -32.75, -49.5, 0.5, -33.5, -48.75, 0.5, -34, -24.5, 0.5, -42.5, -24.5, 0.5, -79.25, -59.25, 0.5, -79.25, -49, 0.5, -31.5, -59.25, 0.5, 20, -36.5, 0.5, 20.25, -36.25, 0.5, 18.5, -47.75, 0.5, -31.5, -23.75, 0.5, -42, -23.5, 0.5, -40.5, 59.5, 0.5, -79.25, -23.5, 0.5, 18.5, -24.75, 0.5, -39.75, -23.25, 0.5, 20.25, 59.5, 0.5, 20, -32.5, 1.25, 35.5, -27.5, 1.25, 35.5, -27.5, 2.5, 30.75, -32.5, 2.5, 30.75, -35.5, 2.5, 30.5, -24.5, 2.5, 30.5, -24.5, 2.5, 19.5, -35.5, 2.5, 19.5, -59.25, 0.5, 30.25, -36.5, 0.5, 30, -23.25, 0.5, 29.75, 59.5, 0.5, 30, -23.75, 0.5, 31.75, -26.25, 0.5, 31.75, -26.25, 0.5, 37.5, -23.25, 0.5, 31.25, -26.75, 0.5, 79.5, 59.5, 0.5, 79.5, -26.75, 0.75, 37.75, -33.5, 0.5, 37.5, -33.5, 0.5, 31.75, -36.25, 0.5, 31.75, -59.25, 0.5, 79.5, -33, 0.5, 79.5, -33, 0.75, 37.5, -27.5, 0.75, 37.5, -32.5, 0.75, 37.5)
+polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(3, 2, 0), PackedInt32Array(3, 0, 4), PackedInt32Array(4, 0, 5), PackedInt32Array(5, 0, 6), PackedInt32Array(1, 7, 0), PackedInt32Array(0, 7, 8), PackedInt32Array(8, 7, 10), PackedInt32Array(8, 10, 9), PackedInt32Array(10, 7, 11), PackedInt32Array(12, 4, 5), PackedInt32Array(12, 5, 13), PackedInt32Array(13, 5, 14), PackedInt32Array(10, 11, 15), PackedInt32Array(15, 11, 16), PackedInt32Array(16, 13, 15), PackedInt32Array(15, 13, 17), PackedInt32Array(17, 13, 18), PackedInt32Array(18, 13, 14), PackedInt32Array(22, 21, 19), PackedInt32Array(19, 21, 20), PackedInt32Array(22, 23, 21), PackedInt32Array(21, 23, 24), PackedInt32Array(24, 23, 26), PackedInt32Array(24, 26, 25), PackedInt32Array(28, 27, 9), PackedInt32Array(9, 27, 8), PackedInt32Array(17, 18, 29), PackedInt32Array(29, 18, 30), PackedInt32Array(33, 32, 31), PackedInt32Array(31, 34, 33), PackedInt32Array(33, 34, 35), PackedInt32Array(35, 34, 36), PackedInt32Array(36, 34, 30), PackedInt32Array(35, 37, 33), PackedInt32Array(34, 29, 30), PackedInt32Array(40, 39, 38), PackedInt32Array(27, 28, 40), PackedInt32Array(40, 38, 27), PackedInt32Array(27, 38, 42), PackedInt32Array(27, 42, 41), PackedInt32Array(38, 43, 42), PackedInt32Array(45, 19, 44), PackedInt32Array(44, 19, 20), PackedInt32Array(45, 37, 43), PackedInt32Array(43, 37, 35), PackedInt32Array(43, 35, 42), PackedInt32Array(45, 44, 37)]
+geometry_parsed_geometry_type = 1
+geometry_collision_mask = 1
+agent_height = 2.0
+agent_radius = 0.5
+agent_max_climb = 0.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0m77l"]
+render_priority = 0
+shader = ExtResource("2_8y1nq")
+shader_parameter/base_color = Color(0.46, 0.46, 0.47, 1)
+shader_parameter/line_color = Color(0.34, 0.34, 0.36, 1)
+shader_parameter/cell_size = null
+shader_parameter/major_every = null
+shader_parameter/line_width = null
+shader_parameter/roughness = null
+
+[sub_resource type="BoxMesh" id="BoxMesh_rxdgp"]
+size = Vector3(120, 1, 160)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1134d"]
+size = Vector3(120, 1, 160)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ttuax"]
+render_priority = 0
+shader = ExtResource("2_8y1nq")
+shader_parameter/base_color = Color(0.24, 0.24, 0.27, 1)
+shader_parameter/line_color = Color(0.17, 0.17, 0.19, 1)
+shader_parameter/cell_size = null
+shader_parameter/major_every = null
+shader_parameter/line_width = null
+shader_parameter/roughness = null
+
+[sub_resource type="BoxMesh" id="BoxMesh_u2l0l"]
+size = Vector3(122, 4, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ver05"]
+size = Vector3(122, 4, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u2aa1"]
+size = Vector3(122, 4, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2scc8"]
+size = Vector3(122, 4, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jyw07"]
+size = Vector3(1, 4, 162)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y4xgh"]
+size = Vector3(1, 4, 162)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ebjms"]
+size = Vector3(1, 4, 162)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y2uo7"]
+size = Vector3(1, 4, 162)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v3srt"]
+size = Vector3(26, 4, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mai61"]
+size = Vector3(26, 4, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eirf2"]
+size = Vector3(12, 2, 12)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s6w1x"]
+size = Vector3(12, 2, 12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rwy44"]
+size = Vector3(6, 0.3, 8.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3227j"]
+size = Vector3(6, 0.3, 8.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_egm2i"]
+albedo_color = Color(0.24780053, 0.48452926, 0.88082504, 1)
+roughness = 0.8
+emission_enabled = true
+emission = Color(0.24780053, 0.48452926, 0.88082504, 1)
+emission_energy_multiplier = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_gcu6b"]
+top_radius = 2.0
+bottom_radius = 2.0
+height = 0.02
+radial_segments = 48
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g1al3"]
+albedo_color = Color(0.6262097, 0.24780053, 0.22091636, 1)
+roughness = 0.8
+emission_enabled = true
+emission = Color(0.6262097, 0.24780053, 0.22091636, 1)
+emission_energy_multiplier = 0.15
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_iarrm"]
+top_radius = 4.0
+bottom_radius = 4.0
+height = 0.02
+radial_segments = 48
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qq1vg"]
+albedo_color = Color(0.3491902, 0.58383155, 0.9546871, 1)
+roughness = 0.8
+emission_enabled = true
+emission = Color(0.3491902, 0.58383155, 0.9546871, 1)
+emission_energy_multiplier = 0.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_g1nrf"]
+size = Vector3(0.4, 0.02, 14)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0h5xp"]
+albedo_color = Color(0.7977378, 0.7977378, 0.7977378, 1)
+roughness = 0.8
+emission_enabled = true
+emission = Color(0.7977378, 0.7977378, 0.7977378, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_wu8p2"]
+size = Vector3(45, 0.02, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gt7od"]
+size = Vector3(45, 0.02, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q180x"]
+albedo_color = Color(0.88082504, 0.88082504, 0.88082504, 1)
+roughness = 0.8
+emission_enabled = true
+emission = Color(0.88082504, 0.88082504, 0.88082504, 1)
+emission_energy_multiplier = 0.15
+
+[sub_resource type="BoxMesh" id="BoxMesh_mn8s6"]
+size = Vector3(0.12, 0.02, 14)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_icw67"]
+albedo_color = Color(0.9546871, 0.7977378, 0.3491902, 1)
+roughness = 0.8
+emission_enabled = true
+emission = Color(0.9546871, 0.7977378, 0.3491902, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_2njyc"]
+size = Vector3(0.28, 0.02, 14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t71wk"]
+size = Vector3(0.12, 0.02, 14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_my2f4"]
+size = Vector3(0.28, 0.02, 14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0mqgj"]
+size = Vector3(0.12, 0.02, 14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ofhuc"]
+size = Vector3(0.28, 0.02, 14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4v74a"]
+size = Vector3(0.12, 0.02, 14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7ck4l"]
+size = Vector3(0.28, 0.02, 14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nq6r5"]
+size = Vector3(0.12, 0.02, 14)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r335j"]
+albedo_color = Color(0.18974829, 0.18974829, 0.22091636, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_r3dsr"]
+size = Vector3(9, 4.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e8kjp"]
+size = Vector3(9, 4.2, 0.2)
+
+[node name="TestArena" type="Node3D" unique_id=1190427540]
+editor_description = "Flat test map. Spawn at Unreal (-6500, 0) facing the duel bot at the center (patrol, aggro and leash rings on the floor, 27 m of open ground around it). A 2 m platform with a ramp, a 3-bot group behind a line-of-sight wall, a range lane marked every 5 m up to 45 m, and 4 PvP starts outside every bot's aggro ring."
+script = ExtResource("1_oeyht")
+zone_name = "Test Arena"
+
+[node name="Lighting" type="Node3D" parent="." unique_id=2106891129]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting" unique_id=888744695]
+environment = SubResource("Environment_uwvx7")
+
+[node name="Sun" type="DirectionalLight3D" parent="Lighting" unique_id=92474487]
+transform = Transform3D(0.76604444, -0.49240384, 0.4131759, 0, 0.64278764, 0.76604444, -0.6427876, -0.58682406, 0.4924039, 0, 15, 0)
+light_energy = 1.1
+shadow_enabled = true
+directional_shadow_max_distance = 120.0
+
+[node name="Navigation" type="NavigationRegion3D" parent="." unique_id=908117364]
+navigation_mesh = SubResource("NavigationMesh_ydbsg")
+
+[node name="Floor" type="StaticBody3D" parent="Navigation" unique_id=1957905590]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Navigation/Floor" unique_id=33334064]
+material_override = SubResource("ShaderMaterial_0m77l")
+mesh = SubResource("BoxMesh_rxdgp")
+
+[node name="Shape" type="CollisionShape3D" parent="Navigation/Floor" unique_id=1483184315]
+shape = SubResource("BoxShape3D_1134d")
+
+[node name="WallPosX" type="StaticBody3D" parent="Navigation" unique_id=512874277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -80.5)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Navigation/WallPosX" unique_id=491131967]
+material_override = SubResource("ShaderMaterial_ttuax")
+mesh = SubResource("BoxMesh_u2l0l")
+
+[node name="Shape" type="CollisionShape3D" parent="Navigation/WallPosX" unique_id=280001590]
+shape = SubResource("BoxShape3D_ver05")
+
+[node name="WallNegX" type="StaticBody3D" parent="Navigation" unique_id=2079669023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 80.5)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Navigation/WallNegX" unique_id=149492080]
+material_override = SubResource("ShaderMaterial_ttuax")
+mesh = SubResource("BoxMesh_u2aa1")
+
+[node name="Shape" type="CollisionShape3D" parent="Navigation/WallNegX" unique_id=1143250059]
+shape = SubResource("BoxShape3D_2scc8")
+
+[node name="WallPosY" type="StaticBody3D" parent="Navigation" unique_id=2042826496]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60.5, 2, 0)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Navigation/WallPosY" unique_id=2055916438]
+material_override = SubResource("ShaderMaterial_ttuax")
+mesh = SubResource("BoxMesh_jyw07")
+
+[node name="Shape" type="CollisionShape3D" parent="Navigation/WallPosY" unique_id=173870744]
+shape = SubResource("BoxShape3D_y4xgh")
+
+[node name="WallNegY" type="StaticBody3D" parent="Navigation" unique_id=227663029]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60.5, 2, 0)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Navigation/WallNegY" unique_id=476897585]
+material_override = SubResource("ShaderMaterial_ttuax")
+mesh = SubResource("BoxMesh_ebjms")
+
+[node name="Shape" type="CollisionShape3D" parent="Navigation/WallNegY" unique_id=314551849]
+shape = SubResource("BoxShape3D_y2uo7")
+
+[node name="CoverWall" type="StaticBody3D" parent="Navigation" unique_id=1945682485]
+transform = Transform3D(-0.94119465, 0, -0.33786476, 0, 1, 0, 0.33786476, 0, -0.94119465, -36.594166, 2, -36.940884)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Navigation/CoverWall" unique_id=348880418]
+material_override = SubResource("ShaderMaterial_ttuax")
+mesh = SubResource("BoxMesh_v3srt")
+
+[node name="Shape" type="CollisionShape3D" parent="Navigation/CoverWall" unique_id=1738733223]
+shape = SubResource("BoxShape3D_mai61")
+
+[node name="Platform" type="StaticBody3D" parent="Navigation" unique_id=393721806]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1, 25)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Navigation/Platform" unique_id=258197418]
+material_override = SubResource("ShaderMaterial_ttuax")
+mesh = SubResource("BoxMesh_eirf2")
+
+[node name="Shape" type="CollisionShape3D" parent="Navigation/Platform" unique_id=938063714]
+shape = SubResource("BoxShape3D_s6w1x")
+
+[node name="PlatformRamp" type="StaticBody3D" parent="Navigation" unique_id=1922344724]
+transform = Transform3D(1, 0, 0, 0, 0.97012657, -0.24259923, 0, 0.24259923, 0.97012657, -30, 0.85, 35)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Navigation/PlatformRamp" unique_id=1543638630]
+material_override = SubResource("ShaderMaterial_ttuax")
+mesh = SubResource("BoxMesh_rwy44")
+
+[node name="Shape" type="CollisionShape3D" parent="Navigation/PlatformRamp" unique_id=2138001859]
+shape = SubResource("BoxShape3D_3227j")
+
+[node name="Markings" type="Node3D" parent="." unique_id=1902592554]
+
+[node name="SpawnPad" type="MeshInstance3D" parent="Markings" unique_id=49029115]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 65)
+material_override = SubResource("StandardMaterial3D_egm2i")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_gcu6b")
+
+[node name="GroupPad" type="MeshInstance3D" parent="Markings" unique_id=1340764176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42, 0.01, -52)
+material_override = SubResource("StandardMaterial3D_g1al3")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_iarrm")
+
+[node name="RangeFiringLine" type="Node3D" parent="Markings" unique_id=875570450]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeFiringLine" unique_id=294015915]
+material_override = SubResource("StandardMaterial3D_qq1vg")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_g1nrf")
+
+[node name="RangeSideLeft" type="Node3D" parent="Markings" unique_id=2006279779]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.5, 0.01, 72)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeSideLeft" unique_id=1075839413]
+material_override = SubResource("StandardMaterial3D_0h5xp")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_wu8p2")
+
+[node name="RangeSideRight" type="Node3D" parent="Markings" unique_id=374129107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.5, 0.01, 58)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeSideRight" unique_id=2076349214]
+material_override = SubResource("StandardMaterial3D_0h5xp")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_gt7od")
+
+[node name="RangeMark5m" type="Node3D" parent="Markings" unique_id=919214732]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeMark5m" unique_id=1295930084]
+material_override = SubResource("StandardMaterial3D_q180x")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_mn8s6")
+
+[node name="RangeLabel5m" type="Label3D" parent="Markings" unique_id=2124059069]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -9.1, 0.02, 70.4)
+pixel_size = 0.0171875
+modulate = Color(0.92156863, 0.92156863, 0.9019608, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "5 m"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="RangeMark10m" type="Node3D" parent="Markings" unique_id=1469317218]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeMark10m" unique_id=134889293]
+material_override = SubResource("StandardMaterial3D_icw67")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_2njyc")
+
+[node name="RangeLabel10m" type="Label3D" parent="Markings" unique_id=293202139]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -14.1, 0.02, 70.4)
+pixel_size = 0.0171875
+modulate = Color(1, 0.8039216, 0.3529412, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "10 m"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="RangeMark15m" type="Node3D" parent="Markings" unique_id=70504387]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeMark15m" unique_id=395259099]
+material_override = SubResource("StandardMaterial3D_q180x")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_t71wk")
+
+[node name="RangeLabel15m" type="Label3D" parent="Markings" unique_id=1620355223]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -19.1, 0.02, 70.4)
+pixel_size = 0.0171875
+modulate = Color(0.92156863, 0.92156863, 0.9019608, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "15 m"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="RangeMark20m" type="Node3D" parent="Markings" unique_id=503414487]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeMark20m" unique_id=583908941]
+material_override = SubResource("StandardMaterial3D_icw67")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_my2f4")
+
+[node name="RangeLabel20m" type="Label3D" parent="Markings" unique_id=1755427802]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -24.1, 0.02, 70.4)
+pixel_size = 0.0171875
+modulate = Color(1, 0.8039216, 0.3529412, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "20 m"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="RangeMark25m" type="Node3D" parent="Markings" unique_id=1502328341]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeMark25m" unique_id=1497249128]
+material_override = SubResource("StandardMaterial3D_q180x")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_0mqgj")
+
+[node name="RangeLabel25m" type="Label3D" parent="Markings" unique_id=1261487975]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -29.1, 0.02, 70.4)
+pixel_size = 0.0171875
+modulate = Color(0.92156863, 0.92156863, 0.9019608, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "25 m"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="RangeMark30m" type="Node3D" parent="Markings" unique_id=882399882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeMark30m" unique_id=2092551913]
+material_override = SubResource("StandardMaterial3D_icw67")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_ofhuc")
+
+[node name="RangeLabel30m" type="Label3D" parent="Markings" unique_id=1823625205]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -34.1, 0.02, 70.4)
+pixel_size = 0.0171875
+modulate = Color(1, 0.8039216, 0.3529412, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "30 m"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="RangeMark35m" type="Node3D" parent="Markings" unique_id=617685513]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeMark35m" unique_id=1819619595]
+material_override = SubResource("StandardMaterial3D_q180x")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_4v74a")
+
+[node name="RangeLabel35m" type="Label3D" parent="Markings" unique_id=1959305398]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -39.1, 0.02, 70.4)
+pixel_size = 0.0171875
+modulate = Color(0.92156863, 0.92156863, 0.9019608, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "35 m"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="RangeMark40m" type="Node3D" parent="Markings" unique_id=343261132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeMark40m" unique_id=138025287]
+material_override = SubResource("StandardMaterial3D_icw67")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_7ck4l")
+
+[node name="RangeLabel40m" type="Label3D" parent="Markings" unique_id=607993176]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -44.1, 0.02, 70.4)
+pixel_size = 0.0171875
+modulate = Color(1, 0.8039216, 0.3529412, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "40 m"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="RangeMark45m" type="Node3D" parent="Markings" unique_id=991244390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 0.01, 65)
+
+[node name="Mesh" type="MeshInstance3D" parent="Markings/RangeMark45m" unique_id=529863654]
+material_override = SubResource("StandardMaterial3D_q180x")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_nq6r5")
+
+[node name="RangeLabel45m" type="Label3D" parent="Markings" unique_id=179891125]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, -49.1, 0.02, 70.4)
+pixel_size = 0.0171875
+modulate = Color(0.92156863, 0.92156863, 0.9019608, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "45 m"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="Signs" type="Node3D" parent="." unique_id=752128505]
+
+[node name="SignDuel" type="Label3D" parent="Signs" unique_id=2049220775]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.8, 0)
+pixel_size = 0.034375
+modulate = Color(1, 0.8039216, 0.3529412, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "DUEL - 1 BOT"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="SignGroup" type="Label3D" parent="Signs" unique_id=394302057]
+transform = Transform3D(0.94119465, 0, 0.33786476, 0, 1, 0, -0.33786476, 0, 0.94119465, -42, 4.8, -52)
+pixel_size = 0.034375
+modulate = Color(1, 0.8039216, 0.3529412, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "GROUP - 3 BOTS"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="SignCover" type="Label3D" parent="Signs" unique_id=2036068561]
+transform = Transform3D(0.94119465, 0, 0.33786476, 0, 1, 0, -0.33786476, 0, 0.94119465, -36.35766, 3.3, -36.282047)
+pixel_size = 0.0140625
+modulate = Color(0.92156863, 0.92156863, 0.9019608, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "HIDE HERE: NO LINE OF SIGHT"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="SignHighGround" type="Label3D" parent="Signs" unique_id=745405516]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 4.8, 25)
+pixel_size = 0.0203125
+modulate = Color(0.92156863, 0.92156863, 0.9019608, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "HIGH GROUND - 2 M"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="SignRangeLane" type="Label3D" parent="Signs" unique_id=711686676]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -54, 2.6, 65)
+pixel_size = 0.03125
+modulate = Color(1, 0.8039216, 0.3529412, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "RANGE LANE"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="LegendBoard" type="StaticBody3D" parent="Signs" unique_id=1051709516]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3, 53.7)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Signs/LegendBoard" unique_id=500642887]
+material_override = SubResource("StandardMaterial3D_r335j")
+mesh = SubResource("BoxMesh_r3dsr")
+
+[node name="Shape" type="CollisionShape3D" parent="Signs/LegendBoard" unique_id=424803572]
+shape = SubResource("BoxShape3D_e8kjp")
+
+[node name="LegendTitle" type="Label3D" parent="Signs" unique_id=1542813224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 4.5, 54)
+pixel_size = 0.0140625
+modulate = Color(0.92156863, 0.92156863, 0.9019608, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "BOT RANGE RINGS"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="LegendPatrol" type="Label3D" parent="Signs" unique_id=966569904]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 3.6, 54)
+pixel_size = 0.0140625
+modulate = Color(0.23529412, 0.78431374, 0.27450982, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "PATROL"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="LegendAggro" type="Label3D" parent="Signs" unique_id=406453514]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2.7, 54)
+pixel_size = 0.0140625
+modulate = Color(1, 0.627451, 0.078431375, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "AGGRO"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="LegendLeash" type="Label3D" parent="Signs" unique_id=513843034]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.8, 54)
+pixel_size = 0.0140625
+modulate = Color(0.92156863, 0.19607843, 0.15686275, 1)
+outline_modulate = Color(0, 0, 0, 0.8)
+text = "LEASH"
+font_size = 64
+outline_size = 8
+double_sided = false
+
+[node name="Gameplay" type="Node3D" parent="." unique_id=1408680171]
+
+[node name="PlayerStart" type="Marker3D" parent="Gameplay" unique_id=203890789 groups=["player_start"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 65)
+
+[node name="PlayerStartPvP1" type="Marker3D" parent="Gameplay" unique_id=1967165377 groups=["player_start"]]
+transform = Transform3D(0.8221922, 0, 0.56920993, 0, 1, 0, -0.56920993, 0, 0.8221922, 45, 0.1, 65)
+
+[node name="PlayerStartPvP2" type="Marker3D" parent="Gameplay" unique_id=931997372 groups=["player_start"]]
+transform = Transform3D(0.46193436, 0, 0.88691413, 0, 1, 0, -0.88691413, 0, 0.46193436, 48, 0.1, 25)
+
+[node name="PlayerStartPvP3" type="Marker3D" parent="Gameplay" unique_id=395897301 groups=["player_start"]]
+transform = Transform3D(-0.46193433, 0, 0.88691413, 0, 1, 0, -0.88691413, 0, -0.46193433, 48, 0.1, -25)
+
+[node name="PlayerStartPvP4" type="Marker3D" parent="Gameplay" unique_id=764539459 groups=["player_start"]]
+transform = Transform3D(-0.919145, 0, 0.39391938, 0, 1, 0, -0.39391938, 0, -0.919145, 30, 0.1, -70)
+
+[node name="DuelBotSpawner" type="Marker3D" parent="Gameplay" unique_id=1648637330]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 0)
+script = ExtResource("3_34mb6")
+spawn_radius = 0.0
+show_range_rings = true
+
+[node name="GroupBotSpawner" type="Marker3D" parent="Gameplay" unique_id=1822000219]
+transform = Transform3D(-0.94119465, 0, -0.33786476, 0, 1, 0, 0.33786476, 0, -0.94119465, -42, 0, -52)
+script = ExtResource("3_34mb6")
+bot_count = 3
+spawn_radius = 4.0
+
+[node name="Actors" type="Node3D" parent="." unique_id=2088550222]
+
+[node name="ActorSpawner" type="MultiplayerSpawner" parent="." unique_id=2063764890]
+spawn_path = NodePath("../Actors")

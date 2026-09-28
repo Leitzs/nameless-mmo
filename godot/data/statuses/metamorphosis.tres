@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_h5ok6"]
+
+[resource]
+script = ExtResource("1_h5ok6")
+id = &"metamorphosis"
+display_name = "METAMORPHOSIS"
+color = Color(0.7014107, 0.3491902, 0.9546871, 1)
+harmful = false
+effect = 13
+aggregation = 1
+replace_existing = true
+overlay_priority = 12
+overlay_intensity = 2.0
+overlay_fresnel = 0.9

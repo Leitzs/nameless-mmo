@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_y81xn"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_qt2tn"]
+[ext_resource type="Resource" path="res://data/statuses/immune_cc.tres" id="3_adnub"]
+
+[sub_resource type="Resource" id="Resource_7cf3j"]
+script = ExtResource("2_qt2tn")
+status = ExtResource("3_adnub")
+duration = 2.0
+
+[resource]
+script = ExtResource("1_y81xn")
+remove_effects = Array[int]([1, 2, 3, 4, 5])
+statuses = Array[ExtResource("2_qt2tn")]([SubResource("Resource_7cf3j")])
+id = &"paladin.cleanse"
+display_name = "Cleanse"
+description = "Breaks free of every stun, freeze, fear, root and slow, and makes you immune to them for 2 seconds. Works while stunned."
+color = Color(1, 1, 0.9309246, 1)
+resource_cost = 20.0
+cooldown = 25.0
+cast_time = 0.15
+release_delay = 0.0
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+usable_while_incapacitated = true
+animation_speed = 1.5

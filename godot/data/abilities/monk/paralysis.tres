@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="TargetedDebuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/targeted_debuff_ability.gd" id="1_t6agy"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_jtxmt"]
+[ext_resource type="Resource" path="res://data/statuses/paralysis.tres" id="3_ytcaj"]
+
+[sub_resource type="Resource" id="Resource_fhcwf"]
+script = ExtResource("2_jtxmt")
+status = ExtResource("3_ytcaj")
+duration = 4.0
+
+[resource]
+script = ExtResource("1_t6agy")
+statuses = Array[ExtResource("2_jtxmt")]([SubResource("Resource_fhcwf")])
+id = &"monk.paralysis"
+display_name = "Paralysis"
+description = "Strikes a pressure point: the target is paralyzed for 4 seconds. Any damage breaks it."
+color = Color(0.48452926, 1, 0.7977378, 1)
+resource_cost = 20.0
+cooldown = 20.0
+cast_time = 0.4
+max_range = 15.0
+slows_while_casting = false
+requires_target = true
+animation = &"attack_1"
+animation_speed = 1.8

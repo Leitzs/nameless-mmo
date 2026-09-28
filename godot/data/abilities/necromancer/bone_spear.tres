@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_l5fs5"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_l71yx"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_1ygl5"]
+
+[sub_resource type="Resource" id="Resource_qt626"]
+script = ExtResource("1_l5fs5")
+direct_damage = 42.0
+damage_type = 0
+
+[resource]
+script = ExtResource("3_1ygl5")
+payload = SubResource("Resource_qt626")
+projectile_speed = 55.0
+visual_scale = 0.8
+id = &"necromancer.bone_spear"
+display_name = "Bone Spear"
+description = "Conjures a spear of bone and hurls it at great speed."
+color = Color(0.9546871, 0.940525, 0.88082504, 1)
+resource_cost = 25.0
+cooldown = 4.0
+cast_time = 0.9
+release_delay = 0.65
+max_range = 45.0
+animation = &"charged"
+animation_speed = 1.1

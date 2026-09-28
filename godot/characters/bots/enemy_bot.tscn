@@ -1,0 +1,86 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://characters/combat_character.gd" id="1_character"]
+[ext_resource type="Script" path="res://characters/components/health.gd" id="2_health"]
+[ext_resource type="Script" path="res://characters/components/resource_pool.gd" id="3_pool"]
+[ext_resource type="Script" path="res://characters/components/status_effects.gd" id="4_statuses"]
+[ext_resource type="Script" path="res://abilities/ability_caster.gd" id="5_caster"]
+[ext_resource type="PackedScene" path="res://characters/visual/blockout_body.tscn" id="6_body"]
+[ext_resource type="Script" path="res://characters/bots/bot_brain.gd" id="7_brain"]
+[ext_resource type="Resource" path="res://data/classes/forest_bandit.tres" id="8_class"]
+[ext_resource type="Resource" path="res://data/statuses/stun.tres" id="9_stun"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.42
+height = 1.92
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_movement"]
+properties/0/path = NodePath(".:sync_position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:sync_yaw")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:sync_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_server"]
+properties/0/path = NodePath("Health:health")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("Health:max_health")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("Health:shield")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath("Health:death_pose")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath("StatusEffects:active")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
+[node name="EnemyBot" type="CharacterBody3D"]
+script = ExtResource("1_character")
+character_class = ExtResource("8_class")
+team = 1
+turn_rate = 540.0
+corpse_lifetime = 5.0
+
+[node name="CollisionShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.96, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2_health")
+
+[node name="ResourcePool" type="Node" parent="."]
+script = ExtResource("3_pool")
+
+[node name="StatusEffects" type="Node" parent="."]
+script = ExtResource("4_statuses")
+
+[node name="AbilityCaster" type="Node" parent="."]
+script = ExtResource("5_caster")
+
+[node name="Visual" parent="." instance=ExtResource("6_body")]
+
+[node name="BotBrain" type="Node" parent="."]
+script = ExtResource("7_brain")
+charge_stun = ExtResource("9_stun")
+
+[node name="NavigationAgent" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.6
+target_desired_distance = 1.0
+radius = 0.42
+height = 1.92
+
+[node name="MovementSync" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("..")
+replication_config = SubResource("SceneReplicationConfig_movement")
+
+[node name="ServerSync" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("..")
+replication_config = SubResource("SceneReplicationConfig_server")

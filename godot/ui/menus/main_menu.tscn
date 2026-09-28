@@ -1,0 +1,151 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/menus/main_menu.gd" id="1_menu"]
+[ext_resource type="PackedScene" path="res://ui/menus/class_grid.tscn" id="2_grid"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(920, 0)
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "RPG TEST"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_type_variation = &"DimLabel"
+text = "Deathmatch: every other player is an enemy."
+horizontal_alignment = 1
+
+[node name="Columns" type="HBoxContainer" parent="Center/Panel/Content"]
+layout_mode = 2
+theme_override_constants/separation = 28
+
+[node name="Left" type="VBoxContainer" parent="Center/Panel/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="NameHeader" type="Label" parent="Center/Panel/Content/Columns/Left"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "YOUR NAME"
+
+[node name="NameEdit" type="LineEdit" parent="Center/Panel/Content/Columns/Left"]
+unique_name_in_owner = true
+layout_mode = 2
+max_length = 20
+
+[node name="ClassHeader" type="Label" parent="Center/Panel/Content/Columns/Left"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "CLASS"
+
+[node name="ClassGrid" parent="Center/Panel/Content/Columns/Left" instance=ExtResource("2_grid")]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 2
+
+[node name="Right" type="VBoxContainer" parent="Center/Panel/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.2
+theme_override_constants/separation = 6
+
+[node name="MapHeader" type="Label" parent="Center/Panel/Content/Columns/Right"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "MAP"
+
+[node name="MapList" type="VBoxContainer" parent="Center/Panel/Content/Columns/Right"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PlayRow" type="HBoxContainer" parent="Center/Panel/Content/Columns/Right"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PlayButton" type="Button" parent="Center/Panel/Content/Columns/Right/PlayRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "PLAY OFFLINE"
+
+[node name="HostButton" type="Button" parent="Center/Panel/Content/Columns/Right/PlayRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "HOST GAME"
+
+[node name="HostHint" type="Label" parent="Center/Panel/Content/Columns/Right"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_type_variation = &"DimLabel"
+autowrap_mode = 3
+
+[node name="JoinHeader" type="Label" parent="Center/Panel/Content/Columns/Right"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "JOIN A HOST"
+
+[node name="JoinRow" type="HBoxContainer" parent="Center/Panel/Content/Columns/Right"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="AddressEdit" type="LineEdit" parent="Center/Panel/Content/Columns/Right/JoinRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Host IP, e.g. 192.168.1.20"
+
+[node name="JoinButton" type="Button" parent="Center/Panel/Content/Columns/Right/JoinRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "JOIN"
+
+[node name="CancelButton" type="Button" parent="Center/Panel/Content/Columns/Right/JoinRow"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "CANCEL"
+
+[node name="Status" type="Label" parent="Center/Panel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+autowrap_mode = 3

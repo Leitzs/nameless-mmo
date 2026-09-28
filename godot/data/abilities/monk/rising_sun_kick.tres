@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_wpjjt"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_dkbtn"]
+
+[resource]
+script = ExtResource("1_wpjjt")
+damage = 30.0
+reach = 2.1
+arc_degrees = 100.0
+knockback = 3.0
+id = &"monk.rising_sun_kick"
+display_name = "Rising Sun Kick"
+description = "A powerful rising kick that knocks the target back a step."
+color = Color(1, 0.7977378, 0.42358288, 1)
+resource_cost = 35.0
+cooldown = 6.0
+cast_time = 0.5
+release_delay = 0.2
+max_range = 4.5
+slows_while_casting = false
+animation = &"attack_3"
+animation_speed = 1.7

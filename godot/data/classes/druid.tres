@@ -1,0 +1,107 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_pl2tb"]
+[ext_resource type="Resource" path="res://data/abilities/druid/wrath.tres" id="2_vttfb"]
+[ext_resource type="Resource" path="res://data/abilities/druid/moonfire.tres" id="3_dt3c4"]
+[ext_resource type="Resource" path="res://data/abilities/druid/entangling_roots.tres" id="4_hrk42"]
+[ext_resource type="Resource" path="res://data/abilities/druid/rejuvenation.tres" id="5_52k3s"]
+[ext_resource type="Resource" path="res://data/abilities/druid/typhoon.tres" id="6_0c33o"]
+[ext_resource type="Resource" path="res://data/abilities/druid/barkskin.tres" id="7_35ciw"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_g3x4n"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="9_tslkq"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="10_afn7e"]
+
+[sub_resource type="Resource" id="Resource_7lp64"]
+script = ExtResource("8_g3x4n")
+part_name = &"AntlerLeft"
+shape = 3
+offset = Vector3(-0.1, 0.3, 0.02)
+direction = Vector3(-0.45, 0.88, 0.1)
+size = Vector3(0.05, 0.3, 0.05)
+color = Color(0.7014107, 0.60124344, 0.46135613, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_5dshn"]
+script = ExtResource("8_g3x4n")
+part_name = &"AntlerRight"
+shape = 3
+offset = Vector3(0.1, 0.3, 0.02)
+direction = Vector3(0.45, 0.88, 0.1)
+size = Vector3(0.05, 0.3, 0.05)
+color = Color(0.7014107, 0.60124344, 0.46135613, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_23gt4"]
+script = ExtResource("8_g3x4n")
+part_name = &"AntlerTineLeft"
+shape = 3
+offset = Vector3(-0.19, 0.37, -0.03)
+direction = Vector3(-0.1, 0.9, -0.45)
+size = Vector3(0.035, 0.16, 0.035)
+color = Color(0.7014107, 0.60124344, 0.46135613, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_g4g52"]
+script = ExtResource("8_g3x4n")
+part_name = &"AntlerTineRight"
+shape = 3
+offset = Vector3(0.19, 0.37, -0.03)
+direction = Vector3(0.1, 0.9, -0.45)
+size = Vector3(0.035, 0.16, 0.035)
+color = Color(0.7014107, 0.60124344, 0.46135613, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_qlidk"]
+script = ExtResource("8_g3x4n")
+part_name = &"LeafCrown"
+shape = 2
+offset = Vector3(0, 0.2, 0)
+size = Vector3(0.29, 0.04, 0.29)
+color = Color(0.42358288, 0.6651851, 0.3133042, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_bp66r"]
+script = ExtResource("8_g3x4n")
+part_name = &"StaffShaft"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.1, 0)
+rotation_degrees = Vector3(-8, 0, 0)
+size = Vector3(0.06, 1.7, 0.06)
+color = Color(0.48452926, 0.38109186, 0.24780053, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_5tdbl"]
+script = ExtResource("8_g3x4n")
+part_name = &"StaffOrb"
+shape = 1
+socket = &"hand_r"
+offset = Vector3(0, 1.0457059, -0.13291031)
+size = Vector3(0.17, 0.17, 0.17)
+color = Color(0.6262097, 1, 0.58383155, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[sub_resource type="Resource" id="Resource_7wgbf"]
+script = ExtResource("9_tslkq")
+type = 1
+max_value = 250.0
+regen_per_second = 12.0
+
+[resource]
+script = ExtResource("10_afn7e")
+id = &"druid"
+display_name = "Druid"
+description = "Nature caster (mana). Moonfire, Entangling Roots, Rejuvenation, Typhoon, Barkskin."
+color = Color(1, 0.7014107, 0.22091636, 1)
+max_health = 350.0
+health_regen = 5.0
+resource = SubResource("Resource_7wgbf")
+sprint_speed = 7.8
+abilities = Array[ExtResource("1_pl2tb")]([ExtResource("2_vttfb"), ExtResource("3_dt3c4"), ExtResource("4_hrk42"), ExtResource("5_52k3s"), ExtResource("6_0c33o"), ExtResource("7_35ciw")])
+body_color = Color(0.4572192, 0.5257669, 0.3499023, 1)
+limb_color = Color(0.26651356, 0.314944, 0.19069183, 1)
+cosmetics = Array[ExtResource("8_g3x4n")]([SubResource("Resource_7lp64"), SubResource("Resource_5dshn"), SubResource("Resource_23gt4"), SubResource("Resource_g4g52"), SubResource("Resource_qlidk"), SubResource("Resource_bp66r"), SubResource("Resource_5tdbl")])

@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_vgifw"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_wspjl"]
+[ext_resource type="Resource" path="res://data/statuses/song_of_rest.tres" id="3_m8j3d"]
+
+[sub_resource type="Resource" id="Resource_fwpbf"]
+script = ExtResource("2_wspjl")
+status = ExtResource("3_m8j3d")
+duration = 10.0
+magnitude = 8.0
+
+[resource]
+script = ExtResource("1_vgifw")
+statuses = Array[ExtResource("2_wspjl")]([SubResource("Resource_fwpbf")])
+id = &"bard.song_of_rest"
+display_name = "Song of Rest"
+description = "A restful song that heals you for 80 over 10 seconds."
+color = Color(1, 0.7977378, 0.9063318, 1)
+resource_cost = 30.0
+cooldown = 14.0
+cast_time = 0.4
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+animation = &"charged"
+animation_speed = 1.2

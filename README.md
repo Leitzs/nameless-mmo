@@ -2,6 +2,9 @@
 
 Unreal Engine 5.8 C++ + Blueprint RPG project.
 
+> **Godot migration in progress:** a Godot 4.7 version of this game lives in [`godot/`](godot/README.md) and will
+> replace the Unreal project once it reaches parity. It runs all six classes, both maps, bots and the listen server.
+
 ## Requirements
 - Unreal Engine 5.8 (Epic Games Launcher)
 - Visual Studio 2022 with the **Game development with C++** workload (or JetBrains Rider)

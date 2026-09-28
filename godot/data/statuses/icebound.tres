@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_7mghi"]
+
+[resource]
+script = ExtResource("1_7mghi")
+id = &"icebound"
+display_name = "ICEBOUND"
+color = Color(0.6262097, 0.85430586, 1, 1)
+harmful = false
+effect = 12
+replace_existing = true
+overlay_priority = 16
+overlay_intensity = 1.6
+overlay_fresnel = 0.9

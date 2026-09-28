@@ -1,0 +1,190 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/game_map.gd" id="1_axcpw"]
+[ext_resource type="Script" path="res://world/world_generator.gd" id="2_vxkmp"]
+[ext_resource type="Script" path="res://world/clearing.gd" id="3_uhnrr"]
+[ext_resource type="Script" path="res://world/forest_path.gd" id="4_hvfpm"]
+[ext_resource type="Script" path="res://world/medieval_prop.gd" id="5_wx0n2"]
+[ext_resource type="Script" path="res://characters/bots/bot_spawner.gd" id="6_yb7sw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qw3lm"]
+sky_top_color = Color(0.32, 0.46, 0.7, 1)
+sky_horizon_color = Color(0.72, 0.76, 0.8, 1)
+ground_bottom_color = Color(0.2, 0.2, 0.2, 1)
+ground_horizon_color = Color(0.6, 0.62, 0.62, 1)
+
+[sub_resource type="Sky" id="Sky_kbrkl"]
+sky_material = SubResource("ProceduralSkyMaterial_qw3lm")
+
+[sub_resource type="Environment" id="Environment_sosak"]
+background_mode = 2
+sky = SubResource("Sky_kbrkl")
+ambient_light_source = 3
+tonemap_mode = 4
+ssao_enabled = true
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.05
+fog_enabled = true
+fog_light_color = Color(0.62, 0.68, 0.75, 1)
+fog_density = 0.004
+fog_sky_affect = 0.3
+
+[sub_resource type="Resource" id="Resource_rttwq"]
+script = ExtResource("3_uhnrr")
+display_name = "Oakhaven Village"
+center = Vector2(-25, 30)
+radius = 34.0
+dirt_amount = 0.55
+
+[sub_resource type="Resource" id="Resource_6owjm"]
+script = ExtResource("3_uhnrr")
+display_name = "Training Grounds"
+center = Vector2(-6, -24)
+dirt_amount = 0.35
+
+[sub_resource type="Resource" id="Resource_awhsp"]
+script = ExtResource("3_uhnrr")
+display_name = "Old Watchtower Ruins"
+center = Vector2(75, -95)
+radius = 28.0
+height_offset = 4.5
+dirt_amount = 0.15
+
+[sub_resource type="Resource" id="Resource_3ci6f"]
+script = ExtResource("3_uhnrr")
+display_name = "Bandit Camp"
+center = Vector2(-90, -70)
+radius = 22.0
+dirt_amount = 0.4
+
+[sub_resource type="Resource" id="Resource_v3477"]
+script = ExtResource("3_uhnrr")
+display_name = "Mirror Pond"
+center = Vector2(70, 90)
+radius = 26.0
+height_offset = -3.2
+water = true
+water_depth = 2.0
+
+[sub_resource type="Resource" id="Resource_glvac"]
+script = ExtResource("3_uhnrr")
+display_name = "Circle of Elders"
+center = Vector2(-100, 105)
+radius = 16.0
+dirt_amount = 0.1
+
+[sub_resource type="Resource" id="Resource_aycpw"]
+script = ExtResource("3_uhnrr")
+display_name = "Woodcutter's Glade"
+center = Vector2(90, -15)
+radius = 15.0
+dirt_amount = 0.25
+
+[sub_resource type="Resource" id="Resource_c2c0h"]
+script = ExtResource("4_hvfpm")
+points = PackedVector2Array(-175, 15, -90, 25, -25, 30, -15, 5, -6, -24, 26, -48, 56, -72, 75, -95)
+
+[sub_resource type="Resource" id="Resource_jff68"]
+script = ExtResource("4_hvfpm")
+points = PackedVector2Array(-25, 30, 12, 52, 48, 74, 70, 90)
+width = 4.0
+
+[sub_resource type="Resource" id="Resource_xdkjg"]
+script = ExtResource("4_hvfpm")
+points = PackedVector2Array(-6, -24, -42, -40, -72, -58, -90, -70)
+width = 4.0
+
+[sub_resource type="Resource" id="Resource_luauo"]
+script = ExtResource("4_hvfpm")
+points = PackedVector2Array(-25, 30, -65, 65, -100, 105)
+width = 3.2
+
+[sub_resource type="Resource" id="Resource_pdyqf"]
+script = ExtResource("4_hvfpm")
+points = PackedVector2Array(26, -48, 60, -30, 90, -15)
+width = 3.2
+
+[node name="Whisperwood" type="Node3D" unique_id=1317645452]
+editor_description = "The procedural forest: terrain, roads, clearings and vegetation are built at load by the WorldGenerator from its settings (nothing generated is saved). Props keep trees away and sit on the terrain."
+script = ExtResource("1_axcpw")
+
+[node name="Lighting" type="Node3D" parent="." unique_id=2126525185]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Lighting" unique_id=1594765533]
+environment = SubResource("Environment_sosak")
+
+[node name="Sun" type="DirectionalLight3D" parent="Lighting" unique_id=663812531]
+transform = Transform3D(-0.57357645, -0.5043203, 0.6455006, 0, 0.7880108, 0.6156615, -0.819152, 0.35312894, -0.45198444, 0, 15, 0)
+light_energy = 1.1
+shadow_enabled = true
+directional_shadow_max_distance = 120.0
+
+[node name="WorldGenerator" type="Node3D" parent="." unique_id=1842599892]
+script = ExtResource("2_vxkmp")
+clearings = Array[ExtResource("3_uhnrr")]([SubResource("Resource_rttwq"), SubResource("Resource_6owjm"), SubResource("Resource_awhsp"), SubResource("Resource_3ci6f"), SubResource("Resource_v3477"), SubResource("Resource_glvac"), SubResource("Resource_aycpw")])
+paths = Array[ExtResource("4_hvfpm")]([SubResource("Resource_c2c0h"), SubResource("Resource_jff68"), SubResource("Resource_xdkjg"), SubResource("Resource_luauo"), SubResource("Resource_pdyqf")])
+
+[node name="Props" type="Node3D" parent="." unique_id=1042030502]
+
+[node name="VillageCampfire" type="Node3D" parent="Props" unique_id=1323532839]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 0, 34)
+script = ExtResource("5_wx0n2")
+prop_type = 1
+
+[node name="CottageWest" type="Node3D" parent="Props" unique_id=545355849]
+transform = Transform3D(0.49999997, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, 0.49999997, -36, 0, 22)
+script = ExtResource("5_wx0n2")
+
+[node name="CottageNorth" type="Node3D" parent="Props" unique_id=1211371180]
+transform = Transform3D(0.76604444, 0, -0.6427876, 0, 1, 0, 0.6427876, 0, 0.76604444, -12, 0, 22)
+script = ExtResource("5_wx0n2")
+variant = 1
+
+[node name="CottageEast" type="Node3D" parent="Props" unique_id=532433378]
+transform = Transform3D(-0.8660254, 0, 0.50000006, 0, 1, 0, -0.50000006, 0, -0.8660254, -32, 0, 46)
+script = ExtResource("5_wx0n2")
+variant = 2
+
+[node name="VillageFence" type="Node3D" parent="Props" unique_id=2123171424]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -10, 0, 42)
+script = ExtResource("5_wx0n2")
+prop_type = 3
+length = 12.0
+
+[node name="RuinedWatchtower" type="Node3D" parent="Props" unique_id=1283097277]
+transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, 78, 0, -98)
+script = ExtResource("5_wx0n2")
+prop_type = 2
+
+[node name="BanditCampfire" type="Node3D" parent="Props" unique_id=530931289]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -90, 0, -70)
+script = ExtResource("5_wx0n2")
+prop_type = 1
+variant = 1
+
+[node name="Gameplay" type="Node3D" parent="." unique_id=1159432702]
+
+[node name="PlayerStart" type="Marker3D" parent="Gameplay" unique_id=541732448 groups=["player_start"]]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -24, 0, 28)
+
+[node name="PlayerStartVillageEast" type="Marker3D" parent="Gameplay" unique_id=868262571 groups=["player_start"]]
+transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, -14, 0, 34)
+
+[node name="PlayerStartGlade" type="Marker3D" parent="Gameplay" unique_id=1934790603 groups=["player_start"]]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 88, 0, -12)
+
+[node name="PlayerStartPond" type="Marker3D" parent="Gameplay" unique_id=1034414151 groups=["player_start"]]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 52, 0, 72)
+
+[node name="PlayerStartElders" type="Marker3D" parent="Gameplay" unique_id=1563503160 groups=["player_start"]]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -92, 0, 96)
+
+[node name="TrainingBotSpawner" type="Marker3D" parent="Gameplay" unique_id=26577435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -24)
+script = ExtResource("6_yb7sw")
+
+[node name="Actors" type="Node3D" parent="." unique_id=929859177]
+
+[node name="ActorSpawner" type="MultiplayerSpawner" parent="." unique_id=752643648]
+spawn_path = NodePath("../Actors")

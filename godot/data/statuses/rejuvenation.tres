@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_i47dv"]
+
+[resource]
+script = ExtResource("1_i47dv")
+id = &"rejuvenation"
+display_name = "REJUVENATION"
+color = Color(0.6262097, 1, 0.58383155, 1)
+harmful = false
+effect = 11
+replace_existing = true

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_inwa5"]
+
+[resource]
+script = ExtResource("1_inwa5")
+id = &"weakened"
+display_name = "WEAKENED"
+color = Color(0.7014107, 0.6262097, 0.76737565, 1)
+effect = 13
+replace_existing = true

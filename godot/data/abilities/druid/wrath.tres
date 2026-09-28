@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="ProjectileAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_fkd5p"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_6d3f5"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_bscpk"]
+
+[sub_resource type="Resource" id="Resource_n4psr"]
+script = ExtResource("1_fkd5p")
+direct_damage = 11.0
+damage_type = 7
+
+[resource]
+script = ExtResource("3_bscpk")
+payload = SubResource("Resource_n4psr")
+projectile_speed = 33.0
+homing_acceleration = 70.0
+visual_scale = 0.6
+id = &"druid.wrath"
+display_name = "Wrath"
+description = "A quick bolt of nature's wrath. Costs nothing."
+color = Color(0.7014107, 0.97769153, 0.58383155, 1)
+cast_time = 0.55
+max_range = 35.0
+animation = &"attack_3"
+animation_speed = 1.8

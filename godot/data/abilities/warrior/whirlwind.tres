@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="NovaAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/nova_ability.gd" id="1_wfaly"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_e4ix6"]
+
+[resource]
+script = ExtResource("1_wfaly")
+radius = 3.8
+damage = 22.0
+knockback = 2.5
+id = &"warrior.whirlwind"
+display_name = "Whirlwind"
+description = "Spin with your sword, hitting every enemy around you."
+color = Color(0.9309246, 0.9063318, 0.88082504, 1)
+resource_cost = 25.0
+cooldown = 8.0
+cast_time = 0.6
+release_delay = 0.3
+max_range = 3.8
+face_aim = false
+slows_while_casting = false
+animation = &"charged"
+animation_speed = 1.8

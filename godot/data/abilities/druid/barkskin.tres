@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="SelfBuffAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/self_buff_ability.gd" id="1_jyic0"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_hq5da"]
+[ext_resource type="Resource" path="res://data/statuses/barkskin.tres" id="3_ui0j0"]
+
+[sub_resource type="Resource" id="Resource_3y0em"]
+script = ExtResource("2_hq5da")
+status = ExtResource("3_ui0j0")
+duration = 8.0
+magnitude = 0.7
+
+[resource]
+script = ExtResource("1_jyic0")
+statuses = Array[ExtResource("2_hq5da")]([SubResource("Resource_3y0em")])
+id = &"druid.barkskin"
+display_name = "Barkskin"
+description = "Your skin turns to bark: you take 30% less damage for 8 seconds. Usable while stunned."
+color = Color(0.76737565, 0.6651851, 0.48452926, 1)
+cooldown = 40.0
+cast_time = 0.15
+release_delay = 0.0
+max_range = 0.0
+face_aim = false
+slows_while_casting = false
+breaks_stealth = false
+usable_while_incapacitated = true
+animation_speed = 1.5

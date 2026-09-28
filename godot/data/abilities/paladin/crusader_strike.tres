@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="MeleeStrikeAbility" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_sqdvr"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_1vcn0"]
+
+[resource]
+script = ExtResource("1_sqdvr")
+damage = 26.0
+damage_type = 6
+reach = 2.2
+arc_degrees = 100.0
+resource_on_hit = 12.0
+id = &"paladin.crusader_strike"
+display_name = "Crusader Strike"
+description = "A strike infused with holy light. Restores 12 mana when it connects."
+color = Color(1, 0.9309246, 0.6651851, 1)
+cooldown = 5.0
+cast_time = 0.6
+release_delay = 0.25
+max_range = 4.5
+slows_while_casting = false
+animation = &"attack_3"

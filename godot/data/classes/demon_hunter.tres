@@ -1,0 +1,97 @@
+[gd_resource type="Resource" script_class="CharacterClass" format=3]
+
+[ext_resource type="Script" path="res://abilities/ability.gd" id="1_qf7ll"]
+[ext_resource type="Resource" path="res://data/abilities/demon_hunter/demons_bite.tres" id="2_5kdsg"]
+[ext_resource type="Resource" path="res://data/abilities/demon_hunter/fel_rush.tres" id="3_raknu"]
+[ext_resource type="Resource" path="res://data/abilities/demon_hunter/chaos_strike.tres" id="4_vy3vv"]
+[ext_resource type="Resource" path="res://data/abilities/demon_hunter/eye_beam.tres" id="5_ejbck"]
+[ext_resource type="Resource" path="res://data/abilities/demon_hunter/chaos_nova.tres" id="6_dsben"]
+[ext_resource type="Resource" path="res://data/abilities/demon_hunter/metamorphosis.tres" id="7_8dqpj"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_pbp88"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="9_4l0s0"]
+[ext_resource type="Script" path="res://characters/resource_config.gd" id="10_8s55r"]
+[ext_resource type="Script" path="res://characters/character_class.gd" id="11_vix6k"]
+
+[sub_resource type="Resource" id="Resource_ojigf"]
+script = ExtResource("8_pbp88")
+part_name = &"Blindfold"
+shape = 2
+offset = Vector3(0, 0.14, 0)
+size = Vector3(0.275, 0.055, 0.275)
+color = Color(0.18974829, 0.18974829, 0.18974829, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_clfb6"]
+script = ExtResource("8_pbp88")
+part_name = &"FelSight"
+offset = Vector3(0, 0.14, -0.14)
+size = Vector3(0.14, 0.03, 0.01)
+color = Color(0.6262097, 1, 0.5370987, 1)
+roughness = 0.3
+emissive = 4.0
+cast_shadow = false
+
+[sub_resource type="Resource" id="Resource_mlt7u"]
+script = ExtResource("8_pbp88")
+part_name = &"HornLeft"
+shape = 3
+offset = Vector3(-0.1, 0.25, 0.06)
+direction = Vector3(-0.3, 0.7, 0.65)
+size = Vector3(0.06, 0.28, 0.06)
+color = Color(0.38109186, 0.3491902, 0.33183005, 1)
+roughness = 0.5
+
+[sub_resource type="Resource" id="Resource_ngjim"]
+script = ExtResource("8_pbp88")
+part_name = &"HornRight"
+shape = 3
+offset = Vector3(0.1, 0.25, 0.06)
+direction = Vector3(0.3, 0.7, 0.65)
+size = Vector3(0.06, 0.28, 0.06)
+color = Color(0.38109186, 0.3491902, 0.33183005, 1)
+roughness = 0.5
+
+[sub_resource type="Resource" id="Resource_w6aij"]
+script = ExtResource("9_4l0s0")
+blade_length = 0.6
+blade_width = 0.12
+blade_color = Color(0.6262097, 0.9546871, 0.5370987, 1)
+hilt_color = Color(0.3491902, 0.3491902, 0.3491902, 1)
+part_name = &"WarglaiveRight"
+socket = &"hand_r"
+direction = Vector3(0, 0.5070201, -0.86193424)
+
+[sub_resource type="Resource" id="Resource_hntet"]
+script = ExtResource("9_4l0s0")
+blade_length = 0.6
+blade_width = 0.12
+blade_color = Color(0.6262097, 0.9546871, 0.5370987, 1)
+hilt_color = Color(0.3491902, 0.3491902, 0.3491902, 1)
+part_name = &"WarglaiveLeft"
+socket = &"hand_l"
+direction = Vector3(0, 0.5070201, -0.86193424)
+
+[sub_resource type="Resource" id="Resource_j0dlt"]
+script = ExtResource("10_8s55r")
+type = 4
+max_value = 100.0
+out_of_combat_decay_per_second = 4.0
+gain_per_damage_dealt = 0.25
+gain_per_damage_taken = 0.1
+starts_full = false
+
+[resource]
+script = ExtResource("11_vix6k")
+id = &"demon_hunter"
+display_name = "Demon Hunter"
+description = "Twin warglaives (fury). Fel Rush, Chaos Strike, Eye Beam, Chaos Nova, Metamorphosis."
+color = Color(0.8209799, 0.47312066, 0.9013065, 1)
+max_health = 380.0
+health_regen = 4.0
+resource = SubResource("Resource_j0dlt")
+move_speed = 5.4
+sprint_speed = 8.2
+abilities = Array[ExtResource("1_qf7ll")]([ExtResource("2_5kdsg"), ExtResource("3_raknu"), ExtResource("4_vy3vv"), ExtResource("5_ejbck"), ExtResource("6_dsben"), ExtResource("7_8dqpj")])
+body_color = Color(0.36823985, 0.25456843, 0.43060452, 1)
+limb_color = Color(0.20364772, 0.12333638, 0.2477097, 1)
+cosmetics = Array[ExtResource("8_pbp88")]([SubResource("Resource_ojigf"), SubResource("Resource_clfb6"), SubResource("Resource_mlt7u"), SubResource("Resource_ngjim"), SubResource("Resource_w6aij"), SubResource("Resource_hntet")])
