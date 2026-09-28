@@ -7,7 +7,7 @@ State after v0.1 (first playable) and what is left from the original plan.
 | Area | Where | Notes |
 | --- | --- | --- |
 | Free third-person camera, WASD, sprint, jump, zoom | `Characters/MageCharacter`, `Core/RPGPlayerController` | Enhanced Input actions/mapping are built in code (no input assets). |
-| 5 classes, basic attack (LMB) + 5 abilities each | `Characters/*Character`, `Spells/*Spells` | Mage, Warlock, Paladin, Rogue, Warrior (see README). Added after v0.1. |
+| 6 classes, basic attack (LMB) + 5 abilities each | `Characters/*Character`, `Spells/*Spells` | Mage, Warlock, Paladin, Rogue, Warrior, Archer (see README). Added after v0.1. |
 | Gameplay Ability System | `Abilities/` | Predicted abilities, attributes (health, mana/energy/rage, shield), data-driven statuses with immunities and diminishing returns. Replaced the v0.1 spellbook / attribute / status components. |
 | Enemy bot | `Characters/EnemyBotCharacter`, `AI/RPGBotAIController`, `AI/RPGBotSpawner` | Melee combo + telegraphed charge, patrol, chase, leash, respawn. |
 | HUD | `UI/RPGHUD` | Canvas-drawn: bars, spell bar with cooldowns, crosshair, enemy bars, damage numbers, zone banner, F1 help. |
@@ -57,6 +57,8 @@ Debug console commands (open the console with `` ` `` during play): `RpgGod`, `R
 
 ### Classes (added after v0.1)
 - [x] Warlock, Paladin, Rogue, Warrior with a basic attack and 5 abilities each; `RpgSelfTest All` passes 30/30 as host and as a remote client.
+- [x] Archer (energy, longbow): `RpgSelfTest Archer` passes 6/6 as a remote client. Disengage plays no cast animation because the dash/attack animations' forward root motion overrides its backwards leap.
+- [ ] Archer bow/quiver/cap cosmetic offsets are guesses; check them in a viewport.
 - [ ] Play-test PvP balance: every number is a first guess (HP 300-450, damage, cooldowns, stun/fear durations, rage and energy rates, Divine Shield 45 s, Charge 15 s...).
 - [ ] Check in a real viewport what headless tests cannot: stealth hiding/shimmer, overlays, weapon/shield/hood cosmetics (offsets are guesses, like the v0.1 ones), feared players running.
 - [ ] Weapon animation sets (sword and shield, daggers, greatsword); melee classes currently reuse the unarmed attacks, which have root motion (each swing steps forward).

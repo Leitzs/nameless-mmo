@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-RPGTest is an Unreal Engine 5.8 C++ project: a PvP deathmatch RPG prototype (listen server, join by IP) with five
+RPGTest is an Unreal Engine 5.8 C++ project: a PvP deathmatch RPG prototype (listen server, join by IP) with six
 classes built on the Gameplay Ability System. `README.md` has the player-facing details (controls, class kits, PvP
 rules, maps) and the "how to add an ability / status / class" recipe; read it before changing gameplay.
 
@@ -67,7 +67,7 @@ Gameplay tags are native (`RPGGameplayTags`), not ini/DataTable-defined.
 Keep new abilities on these shared archetypes; the old spellbook/status components were removed in the GAS migration
 and should not come back.
 
-**Classes.** `ARPGCharacterBase` → `ARPGPlayerCharacter` (abstract) → `Mage/Warlock/Paladin/Rogue/WarriorCharacter`;
+**Classes.** `ARPGCharacterBase` → `ARPGPlayerCharacter` (abstract) → `Mage/Warlock/Paladin/Rogue/Warrior/ArcherCharacter`;
 `AEnemyBotCharacter` + `ARPGBotAIController`/`ARPGBotSpawner` for bots (which attack everyone). A class is configured
 entirely in its constructor (`SetClassStats`, `AbilityClasses` with slot 0 = LMB, `PassiveTags`, cosmetic parts) and
 registered in `URPGGameInstance::CharacterClasses`.

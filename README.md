@@ -30,7 +30,7 @@ Networking uses Unreal's built-in replication over UDP (`IpNetDriver`), with a l
 the others join by IP. Settings (port 7777, 60 Hz server tick, timeouts, push-model replication) are in `Config/DefaultEngine.ini`.
 
 1. Both players open the game (packaged build, or *Standalone Game* from the editor). The main menu shows up.
-2. Each one types a name and picks a class (Mage, Warlock, Paladin, Rogue, Warrior).
+2. Each one types a name and picks a class (Mage, Warlock, Paladin, Rogue, Warrior, Archer).
 3. The host picks a map and presses **HOST GAME**. The menu shows the host's LAN IP.
 4. The other player types that IP (e.g. `192.168.1.20` or `192.168.1.20:7777`) and presses **JOIN**.
    - Same network: use the LAN IP. Internet: the host's public IP, with UDP port 7777 forwarded to the host PC.
@@ -61,6 +61,7 @@ Controls: **left mouse** is the class's basic attack (hold to keep attacking), *
 | Paladin | Mana | Sword Swing (shield blocks 15% frontal damage) / Crusader Strike, Hammer of Justice (stun), Flash of Light, Cleanse (usable while stunned), Divine Shield |
 | Rogue | Energy | Dagger Slash / Stealth, Backstab (x2 from behind), Throwing Knife (poison + slow), Kidney Shot, Shadowstep |
 | Warrior | Rage | Sword Slash / Charge, Mortal Strike (halves healing), Hamstring, Whirlwind, Berserker Rush |
+| Archer | Energy | Quick Shot / Aimed Shot, Multi-Shot, Concussive Shot (slow), Disengage (leap back), Rain of Arrows |
 
 PvP rules shared by everyone: stuns, freezes, fears and roots have diminishing returns (full, half, quarter, then
 immune for 15 s); fear breaks after 15% max health in damage; stealth breaks on attacking or taking damage and enemies

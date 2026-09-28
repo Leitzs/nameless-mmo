@@ -1,6 +1,7 @@
 #include "Core/RPGGameInstance.h"
 
 #include "AbilitySystemGlobals.h"
+#include "Characters/ArcherCharacter.h"
 #include "Characters/MageCharacter.h"
 #include "Characters/PaladinCharacter.h"
 #include "Characters/RogueCharacter.h"
@@ -49,6 +50,9 @@ URPGGameInstance::URPGGameInstance()
 	AddClass(TEXT("Warrior"), LOCTEXT("WarriorClass", "Warrior"),
 		LOCTEXT("WarriorClassDescription", "Greatsword (rage). Charge, Mortal Strike, Hamstring, Whirlwind, Berserker Rush."),
 		FLinearColor(0.9f, 0.3f, 0.2f), AWarriorCharacter::StaticClass());
+	AddClass(TEXT("Archer"), LOCTEXT("ArcherClass", "Archer"),
+		LOCTEXT("ArcherClassDescription", "Longbow (energy). Aimed Shot, Multi-Shot, Concussive Shot, Disengage, Rain of Arrows."),
+		FLinearColor(0.3f, 0.75f, 0.55f), AArcherCharacter::StaticClass());
 }
 
 void URPGGameInstance::Init()
