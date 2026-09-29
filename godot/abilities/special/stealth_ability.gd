@@ -21,3 +21,9 @@ func execute(ctx: SpellContext) -> void:
 		ctx.caster.statuses.remove_effects([StatusEffect.Effect.STEALTH])
 		return
 	super.execute(ctx)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := super.describe(text)
+	lines.append("Use again to reveal yourself. Not usable while taking damage over time; enemies within %s see you" % AbilityText.meters(CombatCharacter.STEALTH_REVEAL_DISTANCE))
+	return lines

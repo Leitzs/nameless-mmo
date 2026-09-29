@@ -52,6 +52,9 @@ properties/6/replication_mode = 2
 properties/7/path = NodePath("AbilityCaster:cooldowns")
 properties/7/spawn = true
 properties/7/replication_mode = 2
+properties/8/path = NodePath(".:weapon_id")
+properties/8/spawn = true
+properties/8/replication_mode = 2
 
 [node name="PlayerCharacter" type="CharacterBody3D" groups=["players"]]
 script = ExtResource("1_character")

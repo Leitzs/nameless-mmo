@@ -6,12 +6,55 @@
 [ext_resource type="PackedScene" path="res://ui/menus/class_picker.tscn" id="4_class_picker"]
 [ext_resource type="PackedScene" path="res://ui/menus/map_selector.tscn" id="5_map_selector"]
 [ext_resource type="PackedScene" path="res://ui/console/dev_console.tscn" id="6_console"]
+[ext_resource type="PackedScene" path="res://ui/panels/tool_bar.tscn" id="7_tool_bar"]
+[ext_resource type="PackedScene" path="res://ui/panels/spellbook_panel.tscn" id="8_spellbook"]
+[ext_resource type="PackedScene" path="res://ui/panels/inventory_panel.tscn" id="9_inventory"]
+[ext_resource type="PackedScene" path="res://ui/panels/balance_panel.tscn" id="10_balance"]
 
 [node name="UI" type="CanvasLayer"]
 process_mode = 3
 script = ExtResource("1_ui")
 
 [node name="HUD" parent="." instance=ExtResource("2_hud")]
+
+[node name="Panels" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ToolBar" parent="Panels" instance=ExtResource("7_tool_bar")]
+layout_mode = 1
+
+[node name="InventoryPanel" parent="Panels" instance=ExtResource("9_inventory")]
+visible = false
+layout_mode = 1
+
+[node name="RightDock" type="VBoxContainer" parent="Panels"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -604.0
+offset_top = 60.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="SpellbookPanel" parent="Panels/RightDock" instance=ExtResource("8_spellbook")]
+visible = false
+layout_mode = 2
+
+[node name="BalancePanel" parent="Panels/RightDock" instance=ExtResource("10_balance")]
+visible = false
+layout_mode = 2
 
 [node name="MainMenu" parent="." instance=ExtResource("3_main_menu")]
 visible = false

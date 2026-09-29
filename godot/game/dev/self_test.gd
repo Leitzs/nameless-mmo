@@ -1,19 +1,32 @@
 class_name SelfTest
 extends Node
 ## Uses every hotbar slot of a class on the most isolated bot (the test arena's duel bot) and logs what each did:
-## keys 1-5, then the basic attack. The abilities are used from this machine, so on a client the whole networked path
-## is exercised; the host sets each step up (placement, refills, bots standing still). "All" tests every class in turn.
-## With --quit-after-self-test the game quits when done, with exit code 0 only if every ability activated.
+## keys 1-5 and the basic attack with the class's first weapon, then the basic attack with each of its other weapons
+## (equipped from the inventory). The abilities are used from this machine, so on a client the whole networked path is
+## exercised; the host sets each step up (weapon, placement, refills, bots standing still). "All" tests every class in
+## turn. With --quit-after-self-test the game quits when done, with exit code 0 only if every ability activated.
 
 const STEP_INTERVAL := 0.6
 const STEPS_PER_CHECK := 6
 const SLOT_ORDER: Array[int] = [1, 2, 3, 4, 5, 0]
+
+
+## One use to test: a hotbar slot with one of the class's weapons equipped (null: keep the current one).
+class Check:
+	var slot := 0
+	var weapon: Weapon
+
+	func _init(check_slot: int, check_weapon: Weapon) -> void:
+		slot = check_slot
+		weapon = check_weapon
 
 @onready var _commands: DevCommands = get_parent() as DevCommands
 
 var _class_queue: Array[StringName] = []
 var _class_switches := 0
 var _bot: CombatCharacter
+var _checks: Array[Check] = []
+var _check_ability: Ability
 var _step := 0
 var _passed := 0
 var _total_passed := 0
@@ -79,8 +92,18 @@ func _start_next() -> void:
 		RPGLog.warn("SelfTest: needs a living player and a living bot.")
 		_finish_all()
 		return
+	_plan_checks(Game.local_character.character_class)
 	RPGLog.info("SelfTest: testing %s against %s (%s)" % [_current_class_id(), _bot.name, "host" if multiplayer.is_server() else "remote client"])
 	_timer.start()
+
+
+func _plan_checks(character_class: CharacterClass) -> void:
+	_checks.clear()
+	var weapons: Array[Weapon] = character_class.weapons if character_class != null else ([] as Array[Weapon])
+	for slot in SLOT_ORDER:
+		_checks.append(Check.new(slot, weapons[0] if not weapons.is_empty() else null))
+	for index in range(1, weapons.size()):
+		_checks.append(Check.new(0, weapons[index]))
 
 
 ## The bot farthest from every other bot, so the others do not get in the way of aim and area effects.
@@ -115,21 +138,26 @@ func _run_step() -> void:
 	@warning_ignore("integer_division")
 	var check := step / STEPS_PER_CHECK
 	var phase := step % STEPS_PER_CHECK
-	if check >= SLOT_ORDER.size():
+	if check >= _checks.size():
 		_timer.stop()
 		_request_finish()
-		RPGLog.info("SelfTest: %s finished, %d/%d abilities activated." % [_current_class_id(), _passed, SLOT_ORDER.size()])
+		RPGLog.info("SelfTest: %s finished, %d/%d abilities activated." % [_current_class_id(), _passed, _checks.size()])
 		_total_passed += _passed
-		_total_checks += SLOT_ORDER.size()
+		_total_checks += _checks.size()
 		if not _class_queue.is_empty():
 			_start_next()
 		else:
 			_finish_all()
 		return
 
-	var slot := SLOT_ORDER[check]
-	var ability := character.abilities.get_ability(slot)
+	var slot := _checks[check].slot
+	var weapon := _checks[check].weapon
+	if phase == 0:
+		_check_ability = character.character_class.get_basic_attack(weapon) if slot == 0 else character.abilities.get_ability(slot)
+	var ability := _check_ability
 	var ability_name := ability.display_name if ability != null else "(empty slot)"
+	if weapon != null:
+		ability_name += " [%s]" % weapon.display_name
 	var camera := character.aim_source
 
 	match phase:
@@ -138,7 +166,7 @@ func _run_step() -> void:
 			var ability_range := ability.max_range if ability != null else 0.0
 			var distance := 1.8 if ability_range <= 5.0 else minf(10.0, ability_range * 0.6)
 			# Crowd-control breakers are tested while stunned.
-			_request_setup(distance, ability != null and ability.usable_while_incapacitated)
+			_request_setup(distance, ability != null and ability.usable_while_incapacitated, weapon.id if weapon != null else &"")
 		1:
 			if camera != null:
 				camera.yaw = Teleport.yaw_towards(Combat.flat(_bot.global_position - character.global_position))
@@ -175,11 +203,11 @@ func _finish_all() -> void:
 # ---------------------------------------------------------------------------------------------------------------------
 # Server side of each step
 
-func _request_setup(distance: float, stun_player: bool) -> void:
+func _request_setup(distance: float, stun_player: bool, weapon_id: StringName) -> void:
 	if multiplayer.is_server():
-		_setup(multiplayer.get_unique_id(), _bot.name, distance, stun_player)
+		_setup(multiplayer.get_unique_id(), _bot.name, distance, stun_player, weapon_id)
 	else:
-		_rpc_setup.rpc_id(1, _bot.name, distance, stun_player)
+		_rpc_setup.rpc_id(1, _bot.name, distance, stun_player, weapon_id)
 
 
 func _request_finish() -> void:
@@ -190,9 +218,9 @@ func _request_finish() -> void:
 
 
 @rpc("any_peer", "call_remote", "reliable")
-func _rpc_setup(bot_name: StringName, distance: float, stun_player: bool) -> void:
+func _rpc_setup(bot_name: StringName, distance: float, stun_player: bool, weapon_id: StringName) -> void:
 	if multiplayer.is_server():
-		_setup(multiplayer.get_remote_sender_id(), bot_name, distance, stun_player)
+		_setup(multiplayer.get_remote_sender_id(), bot_name, distance, stun_player, weapon_id)
 
 
 @rpc("any_peer", "call_remote", "reliable")
@@ -201,13 +229,17 @@ func _rpc_finish() -> void:
 		_finish(multiplayer.get_remote_sender_id())
 
 
-## Fresh start for both sides: nothing running, full health and resource, no statuses or diminishing returns, every
-## bot standing still (their AI would attack, break stealth, interrupt dashes...).
-func _setup(peer_id: int, bot_name: StringName, distance: float, stun_player: bool) -> void:
+## Fresh start for both sides: the weapon to test in hand, nothing running, full health and resource, no statuses or
+## diminishing returns, every bot standing still (their AI would attack, break stealth, interrupt dashes...).
+func _setup(peer_id: int, bot_name: StringName, distance: float, stun_player: bool, weapon_id: StringName) -> void:
 	var character := Game.main.match_rules.get_character(peer_id)
 	var bot := Game.find_character(bot_name)
 	if character == null or bot == null:
 		return
+	if weapon_id != &"" and character.weapon_id != weapon_id:
+		var error := Game.main.inventory.equip_by_id(peer_id, weapon_id)
+		if not error.is_empty():
+			RPGLog.warn("SelfTest: could not equip %s: %s" % [weapon_id, error])
 	character.abilities.cancel_all()
 	character.health.invulnerable = true
 	_commands.refill(character)
@@ -225,6 +257,10 @@ func _finish(peer_id: int) -> void:
 	var character := Game.main.match_rules.get_character(peer_id)
 	if character != null:
 		character.health.invulnerable = false
+		# Back to the class's first weapon.
+		var weapons := character.character_class.weapons if character.character_class != null else ([] as Array[Weapon])
+		if not weapons.is_empty() and character.weapon != weapons[0]:
+			Game.main.inventory.equip_by_id(peer_id, weapons[0].id)
 	for other in _commands.get_bots():
 		var brain := other.get_node_or_null(^"BotBrain") as BotBrain
 		if brain != null:

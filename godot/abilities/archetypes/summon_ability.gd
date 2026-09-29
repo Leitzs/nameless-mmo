@@ -64,5 +64,25 @@ func execute(ctx: SpellContext) -> void:
 			location -= approach.normalized() * (CombatCharacter.CAPSULE_RADIUS * 2.0 + 0.3)
 	var summon := Game.current_map.spawn_actor(Summon.make_spawn_data(self, location, caster)) as Summon
 	if summon != null:
-		summon.arm(self, caster)
+		summon.arm(self, caster, ctx.damage_multiplier)
 	AbilityFX.spawn_burst(location + Vector3.UP * (2.0 if follow_caster else 0.6), color, 1.6)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	var what := "a totem" if look == Summon.Look.PILLAR else "a spirit" if look == Summon.Look.ORB else "hallowed ground"
+	lines.append("Summons %s for %s%s (using it again replaces it)" % [what, AbilityText.seconds(lifetime), " that follows you" if follow_caster else ""])
+	if radius > 0.0:
+		var every := "every %s" % AbilityText.seconds(pulse_interval) if pulse_interval > 0.0 else "once"
+		if pulse_damage > 0.0:
+			lines.append("Pulses %s after %s: %s to enemies within %s" % [every, AbilityText.seconds(first_pulse_delay),
+				text.damage(pulse_damage, damage_type), AbilityText.meters(radius)])
+		elif not pulse_statuses.is_empty():
+			lines.append("Pulses %s after %s on enemies within %s" % [every, AbilityText.seconds(first_pulse_delay), AbilityText.meters(radius)])
+		lines.append_array(text.statuses(pulse_statuses))
+		if caster_heal > 0.0:
+			lines.append("Each pulse heals you for %s while you stand within %s" % [text.heal(caster_heal), AbilityText.meters(radius)])
+	if projectile != null:
+		lines.append("Shoots the nearest enemy within %s every %s" % [AbilityText.meters(attack_range), AbilityText.seconds(attack_interval)])
+		lines.append_array(text.payload(projectile))
+	return lines

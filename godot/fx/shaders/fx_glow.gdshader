@@ -1,10 +1,10 @@
-// Additive, unlit glow shared by spell effects, status overlays and shield bubbles (Unreal's M_RPG_FX).
+// Additive, unlit glow shared by spell effects, status overlays and shield bubbles.
 // The look is set per instance (GeometryInstance3D.set_instance_shader_parameter, see Materials.set_fx_look),
 // so every glowing thing in the game shares this one material.
 shader_type spatial;
 render_mode blend_add, unshaded, depth_draw_never, cull_back, shadows_disabled;
 
-// Maps the Unreal-era intensity values (2..40) to a range that works with Godot's tonemapper and glow.
+// Maps the intensity values used in code (2..40) to a range that works with Godot's tonemapper and glow.
 const float INTENSITY_SCALE = 0.2;
 
 instance uniform vec4 glow_color : source_color = vec4(1.0);

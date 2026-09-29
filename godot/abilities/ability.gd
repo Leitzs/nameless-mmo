@@ -44,7 +44,7 @@ extends Resource
 @export var breaks_stealth := true
 ## Can be used (and keeps running) while stunned, frozen or feared: crowd-control breakers.
 @export var usable_while_incapacitated := false
-## Damage multiplier when the ability was started from stealth (see get_stealth_multiplier).
+## Damage multiplier when the ability was started from stealth (see get_damage_multiplier).
 @export_range(1.0, 5.0) var stealth_damage_multiplier := 1.5
 ## Action animation of the character body (attack_1, attack_2, attack_3, charged, dash; empty = none).
 @export var animation: StringName
@@ -96,12 +96,23 @@ func on_end(_ctx: SpellContext, _cancelled: bool) -> void:
 	pass
 
 
+## Lines explaining what the ability does with its current numbers (spellbook, Balance panel). text formats them with
+## the multipliers of whoever uses it.
+func describe(_text: AbilityText) -> PackedStringArray:
+	return PackedStringArray()
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # Helpers for subclasses
 
 ## Multiplier for damage dealt by an ability started from stealth.
 func get_stealth_multiplier(ctx: SpellContext) -> float:
 	return stealth_damage_multiplier if ctx.from_stealth else 1.0
+
+
+## Multiplier for the damage of this use: the caster's weapon (ctx.damage_multiplier) and the stealth bonus.
+func get_damage_multiplier(ctx: SpellContext) -> float:
+	return ctx.damage_multiplier * get_stealth_multiplier(ctx)
 
 
 ## Where a ground spell lands: the soft-locked target's feet or the aimed point, pulled back within max_range.

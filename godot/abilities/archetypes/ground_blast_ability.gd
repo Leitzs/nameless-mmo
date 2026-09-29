@@ -21,5 +21,15 @@ func execute(ctx: SpellContext) -> void:
 	var data := DelayedBlast.make_spawn_data(get_ground_target(ctx), delay, radius, color, tracked)
 	var blast := Game.current_map.spawn_actor(data) as DelayedBlast
 	if blast != null:
-		blast.arm(damage, damage_type, status, ctx.caster)
+		blast.arm(damage * ctx.damage_multiplier, damage_type, status, ctx.caster)
 	spawn_cast_flash(ctx)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Marks the ground under the target; after %s it strikes for %s within %s" % [AbilityText.seconds(delay),
+		text.damage(damage, damage_type), AbilityText.meters(radius)])
+	lines.append("The mark follows the target" if track_target else "The mark stays put, so it can be dodged")
+	if status != null and status.status != null:
+		lines.append(text.status(status))
+	return lines

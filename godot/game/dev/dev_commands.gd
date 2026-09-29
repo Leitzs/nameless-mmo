@@ -5,11 +5,13 @@ extends Node
 ##   cast <0-5>           uses a hotbar slot as if its key had been pressed (0 = basic attack)
 ##   refill               restores health and resource, clears statuses and cooldowns
 ##   gotobot              teleports in front of the nearest living bot
-##   status               logs the state of the player and every bot
-##   selftest [Class|All] uses every ability of a class on the most isolated bot and logs what each did
+##   status               logs the state of the player (weapon included) and every bot
+##   selftest [Class|All] uses every ability of a class (and each weapon's basic attack) on the most isolated bot and
+##                        logs what each did
 ##   map <n>              plays map n of the map selector list
 ## Commands that change the game only work offline or on the host; the self test also runs on a client, asking the host
-## to set each step up, so it exercises the networked path. The Unreal names (RpgGod, RpgSelfTest...) work too.
+## to set each step up, so it exercises the networked path. Commands also accept an "Rpg" prefix (RpgGod,
+## RpgSelfTest...).
 
 @onready var self_test: SelfTest = $SelfTest
 
@@ -94,10 +96,10 @@ func _status() -> String:
 	var lines: PackedStringArray = []
 	var character := Game.local_character
 	if character != null:
-		lines.append("Player %s: HP %.0f/%.0f %s %.0f/%.0f Shield %.0f statuses [%s] at %s" % [character.get_combat_name(),
+		lines.append("Player %s: HP %.0f/%.0f %s %.0f/%.0f Shield %.0f weapon %s statuses [%s] at %s" % [character.get_combat_name(),
 			character.health.health, character.health.max_health, character.resources.config.get_display_name(),
-			character.resources.value, character.resources.max_value, character.health.shield, describe_statuses(character),
-			character.global_position])
+			character.resources.value, character.resources.max_value, character.health.shield,
+			character.weapon.display_name if character.weapon != null else "none", describe_statuses(character), character.global_position])
 	for bot in get_bots():
 		lines.append("Bot %s: HP %.0f/%.0f statuses [%s] at %s" % [bot.name, bot.health.health, bot.health.max_health,
 			describe_statuses(bot), bot.global_position])

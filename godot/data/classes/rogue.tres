@@ -8,9 +8,12 @@
 [ext_resource type="Resource" path="res://data/abilities/rogue/kidney_shot.tres" id="6_4qwqn"]
 [ext_resource type="Resource" path="res://data/abilities/rogue/shadowstep.tres" id="7_5m8ep"]
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_pehxp"]
-[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="9_g0b3c"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="10_3pdey"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="11_oe6dt"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_v7efc"]
+[ext_resource type="Resource" path="res://data/weapons/rogue/twin_daggers.tres" id="12_ypi2k"]
+[ext_resource type="Resource" path="res://data/weapons/rogue/envenomed_daggers.tres" id="13_4qwqn"]
+[ext_resource type="Resource" path="res://data/weapons/rogue/assassins_kris.tres" id="14_5m8ep"]
 
 [sub_resource type="Resource" id="Resource_ikqum"]
 script = ExtResource("8_pehxp")
@@ -30,26 +33,6 @@ size = Vector3(0.17, 0.08, 0.04)
 color = Color(0.5370987, 0.24780053, 0.24780053, 1)
 roughness = 0.8
 
-[sub_resource type="Resource" id="Resource_cd0hf"]
-script = ExtResource("9_g0b3c")
-blade_length = 0.32
-blade_width = 0.045
-blade_color = Color(0.85430586, 0.86504203, 0.88082504, 1)
-hilt_color = Color(0.5370987, 0.48452926, 0.42358288, 1)
-part_name = &"DaggerRight"
-socket = &"hand_r"
-direction = Vector3(0, 0.5070201, -0.86193424)
-
-[sub_resource type="Resource" id="Resource_0he5m"]
-script = ExtResource("9_g0b3c")
-blade_length = 0.32
-blade_width = 0.045
-blade_color = Color(0.85430586, 0.86504203, 0.88082504, 1)
-hilt_color = Color(0.5370987, 0.48452926, 0.42358288, 1)
-part_name = &"DaggerLeft"
-socket = &"hand_l"
-direction = Vector3(0, 0.5070201, -0.86193424)
-
 [sub_resource type="Resource" id="Resource_pcq5u"]
 script = ExtResource("10_3pdey")
 type = 2
@@ -68,6 +51,7 @@ resource = SubResource("Resource_pcq5u")
 move_speed = 5.2
 sprint_speed = 8.0
 abilities = Array[ExtResource("1_k3tcr")]([ExtResource("2_5ea5m"), ExtResource("3_deoox"), ExtResource("4_v7efc"), ExtResource("5_ypi2k"), ExtResource("6_4qwqn"), ExtResource("7_5m8ep")])
+weapons = Array[ExtResource("11_v7efc")]([ExtResource("12_ypi2k"), ExtResource("13_4qwqn"), ExtResource("14_5m8ep")])
 body_color = Color(0.30797648, 0.30797648, 0.3299638, 1)
 limb_color = Color(0.16107033, 0.16107033, 0.17660485, 1)
-cosmetics = Array[ExtResource("8_pehxp")]([SubResource("Resource_ikqum"), SubResource("Resource_0emij"), SubResource("Resource_cd0hf"), SubResource("Resource_0he5m")])
+cosmetics = Array[ExtResource("8_pehxp")]([SubResource("Resource_ikqum"), SubResource("Resource_0emij")])

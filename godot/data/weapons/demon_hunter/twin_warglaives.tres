@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_7o7yi"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="2_mb2ma"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="3_ujvg1"]
+
+[sub_resource type="Resource" id="Resource_yyapw"]
+script = ExtResource("2_mb2ma")
+blade_length = 0.6
+blade_width = 0.12
+blade_color = Color(0.6262097, 0.9546871, 0.5370987, 1)
+hilt_color = Color(0.3491902, 0.3491902, 0.3491902, 1)
+part_name = &"WarglaiveRight"
+socket = &"hand_r"
+direction = Vector3(0, 0.5070201, -0.86193424)
+
+[sub_resource type="Resource" id="Resource_pb8m4"]
+script = ExtResource("2_mb2ma")
+blade_length = 0.6
+blade_width = 0.12
+blade_color = Color(0.6262097, 0.9546871, 0.5370987, 1)
+hilt_color = Color(0.3491902, 0.3491902, 0.3491902, 1)
+part_name = &"WarglaiveLeft"
+socket = &"hand_l"
+direction = Vector3(0, 0.5070201, -0.86193424)
+
+[resource]
+script = ExtResource("3_ujvg1")
+weapon_type = "Warglaives"
+cosmetics = Array[ExtResource("1_7o7yi")]([SubResource("Resource_yyapw"), SubResource("Resource_pb8m4")])
+id = &"demon_hunter.twin_warglaives"
+display_name = "Twin Warglaives"
+description = "A pair of fel-forged warglaives: the demon hunter's baseline, with no bonuses or penalties."
+color = Color(0.63, 0.95, 0.54, 1)

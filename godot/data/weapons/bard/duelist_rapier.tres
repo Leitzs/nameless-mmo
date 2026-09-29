@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_nmk4v"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_jagbi"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="3_j2pcr"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="4_4qwsi"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="5_faj6c"]
+
+[sub_resource type="Resource" id="Resource_wyhbd"]
+script = ExtResource("1_nmk4v")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2", &"attack_3"])
+damage = 11.0
+reach = 2.3
+arc_degrees = 90.0
+id = &"bard.flourish"
+display_name = "Flourish"
+description = "Quick rapier thrusts at close range."
+color = Color(1, 0.8, 0.9, 1)
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.8
+
+[sub_resource type="Resource" id="Resource_6m2b1"]
+script = ExtResource("4_4qwsi")
+blade_length = 0.95
+blade_width = 0.03
+blade_color = Color(0.85, 0.86, 0.9, 1)
+hilt_color = Color(0.8808, 0.7674, 0.3811, 1)
+part_name = &"Rapier"
+socket = &"hand_r"
+direction = Vector3(0, 0.50702, -0.861934)
+
+[sub_resource type="Resource" id="Resource_cjj0k"]
+script = ExtResource("3_j2pcr")
+part_name = &"SongNote"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.06, -0.1)
+color = Color(1, 0.7, 0.88, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("5_faj6c")
+weapon_type = "Rapier"
+basic_attack = SubResource("Resource_wyhbd")
+ability_damage_multiplier = 0.9
+bonus_health = 30.0
+cosmetics = Array[ExtResource("3_j2pcr")]([SubResource("Resource_6m2b1"), SubResource("Resource_cjj0k")])
+id = &"bard.duelist_rapier"
+display_name = "Duelist's Rapier"
+description = "Swordplay instead of song: quick rapier thrusts at close range. Adds 30 health; spells deal 10% less damage."
+color = Color(0.85, 0.85, 0.95, 1)

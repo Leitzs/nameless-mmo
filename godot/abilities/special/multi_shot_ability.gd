@@ -18,3 +18,10 @@ func execute(ctx: SpellContext) -> void:
 			arrow = ctx.with_aim(ctx.origin + aim_offset.rotated(Vector3.UP, deg_to_rad(angle)), null)
 		spawn_projectile(arrow, arrow_payload, projectile_speed, homing_acceleration, visual_scale)
 	spawn_cast_flash(ctx, 0.9 * visual_scale)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Fires %d arrows %s° apart; the middle one homes on the target" % [arrow_count, AbilityText.number(spread_degrees)])
+	lines.append_array(text.payload(payload))
+	return lines

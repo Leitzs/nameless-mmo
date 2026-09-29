@@ -1,7 +1,7 @@
 class_name CharacterVisual
 extends Node3D
-## The character's look: a body scene with an AnimationTree, sockets for cosmetic parts, status overlays and the
-## shield bubble. Gameplay only talks to it through the methods below, so a rigged model can replace the blockout
+## The character's look: a body scene with an AnimationTree, sockets for cosmetic parts (the class's worn parts and the
+## equipped weapon's), status overlays and the shield bubble. Gameplay only talks to it through the methods below, so a rigged model can replace the blockout
 ## body later: it needs the same animation names (idle, walk, run, fall, attack_1..3, charged, dash, death_1..3),
 ## the same AnimationTree parameters and %-unique socket nodes (head, spine_03, hand_l, hand_r, lowerarm_l).
 
@@ -15,7 +15,11 @@ const SOCKETS: Array[StringName] = [&"head", &"spine_03", &"hand_l", &"hand_r", 
 
 var _body_meshes: Array[MeshInstance3D] = []
 var _lights: Array[OmniLight3D] = []
-var _spell_origin: Node3D
+var _class_spell_origin: Node3D
+var _weapon_spell_origin: Node3D
+## Meshes and lights of the equipped weapon.
+var _weapon_nodes: Array[Node3D] = []
+var _lights_shown := true
 var _overlay_on := false
 var _dead := false
 
@@ -43,7 +47,29 @@ func apply_class(character_class: CharacterClass) -> void:
 	for entry in character_class.cosmetics:
 		if entry != null:
 			for part in entry.build_parts():
-				_add_cosmetic(part)
+				var nodes := _add_cosmetic(part)
+				if part.spell_origin and not nodes.is_empty():
+					_class_spell_origin = nodes[0]
+
+
+## Replaces the weapon parts in the hands (null: empty hands). Spells leave from the weapon's spell origin part if it
+## has one.
+func set_weapon(weapon: Weapon) -> void:
+	for node in _weapon_nodes:
+		_lights.erase(node as OmniLight3D)
+		node.queue_free()
+	_weapon_nodes.clear()
+	_weapon_spell_origin = null
+	if weapon == null:
+		return
+	for entry in weapon.cosmetics:
+		if entry == null:
+			continue
+		for part in entry.build_parts():
+			var nodes := _add_cosmetic(part)
+			_weapon_nodes.append_array(nodes)
+			if part.spell_origin and not nodes.is_empty():
+				_weapon_spell_origin = nodes[0]
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -113,24 +139,28 @@ func set_shield(shown: bool, intensity := 1.0) -> void:
 
 
 func set_lights_visible(shown: bool) -> void:
+	_lights_shown = shown
 	for light in _lights:
 		light.visible = shown and not _dead
 
 
-## Where spells leave the character when a cosmetic part marks it (staff orb); null otherwise.
+## Where spells leave the character when a cosmetic part marks it (the weapon's staff orb first); null otherwise.
 func get_spell_origin() -> Node3D:
-	return _spell_origin if _spell_origin != null and is_visible_in_tree() else null
+	var origin := _weapon_spell_origin if _weapon_spell_origin != null else _class_spell_origin
+	return origin if origin != null and is_visible_in_tree() else null
 
 
 func get_socket(socket: StringName) -> Node3D:
 	return get_node_or_null(NodePath("%" + String(socket))) as Node3D
 
 
-func _add_cosmetic(part: CosmeticPart) -> void:
+## Builds a part on its socket. Returns its mesh, then its light if it has one.
+func _add_cosmetic(part: CosmeticPart) -> Array[Node3D]:
+	var nodes: Array[Node3D] = []
 	var socket := get_socket(part.socket)
 	if socket == null:
 		push_warning("Cosmetic part %s uses unknown socket %s" % [part.part_name, part.socket])
-		return
+		return nodes
 
 	# Parts are placed in character space in the idle pose, then kept relative to their socket as it animates.
 	var socket_rest := _transform_in_body(socket)
@@ -145,9 +175,8 @@ func _add_cosmetic(part: CosmeticPart) -> void:
 	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if part.cast_shadow else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mesh.transform = local
 	socket.add_child(mesh)
+	nodes.append(mesh)
 
-	if part.spell_origin:
-		_spell_origin = mesh
 	if part.light_energy > 0.0:
 		var light := OmniLight3D.new()
 		light.light_color = part.color
@@ -155,8 +184,11 @@ func _add_cosmetic(part: CosmeticPart) -> void:
 		light.omni_range = part.light_range
 		light.shadow_enabled = false
 		light.position = local.origin
+		light.visible = _lights_shown and not _dead
 		socket.add_child(light)
 		_lights.append(light)
+		nodes.append(light)
+	return nodes
 
 
 func _transform_in_body(node: Node3D) -> Transform3D:

@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_e0xme"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_sl4cw"]
+
+[sub_resource type="Resource" id="Resource_iwtti"]
+script = ExtResource("1_e0xme")
+part_name = &"FelOrb"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.08, -0.12)
+size = Vector3(0.16, 0.16, 0.16)
+color = Color(0.6262097, 1, 0.48452926, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_sl4cw")
+weapon_type = "Orb"
+cosmetics = Array[ExtResource("1_e0xme")]([SubResource("Resource_iwtti")])
+id = &"warlock.fel_orb"
+display_name = "Fel Orb"
+description = "A sphere of captive fel fire: the warlock's baseline, with no bonuses or penalties."
+color = Color(0.63, 1, 0.48, 1)

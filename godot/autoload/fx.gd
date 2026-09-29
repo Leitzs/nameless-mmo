@@ -1,5 +1,5 @@
 extends Node
-## Transient visual effects (Unreal's ARPGTransientFX::Spawn / SpawnForAll).
+## Transient visual effects.
 ##   spawn():         this machine only (trails, local feedback).
 ##   spawn_for_all(): call it from server gameplay code (spell effects, explosions): the server sends it to every
 ##                    client with an unreliable RPC and shows it itself.

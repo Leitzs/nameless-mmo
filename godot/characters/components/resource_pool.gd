@@ -35,6 +35,16 @@ func setup(resource_config: ResourceConfig, health: Health) -> void:
 		restore()
 
 
+## Server: changes the maximum (class, weapon and balance changes), keeping the same fraction.
+func set_max_value(new_max: float) -> void:
+	new_max = maxf(0.0, new_max)
+	if is_equal_approx(new_max, max_value):
+		return
+	var fraction := value / max_value if max_value > 0.0 else (1.0 if config.starts_full else 0.0)
+	max_value = new_max
+	value = clampf(new_max * fraction, 0.0, new_max)
+
+
 ## Server: full (mana, energy) or empty (rage).
 func restore() -> void:
 	value = max_value if config.starts_full else 0.0
@@ -72,7 +82,7 @@ func _physics_process(delta: float) -> void:
 	_accumulator += delta
 	if _accumulator < UPDATE_INTERVAL:
 		return
-	var change := config.regen_per_second * _accumulator
+	var change := config.regen_per_second * Tuning.balance.resource_regen_multiplier * _accumulator
 	if not is_in_combat():
 		change -= config.out_of_combat_decay_per_second * _accumulator
 	_accumulator = 0.0

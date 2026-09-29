@@ -29,6 +29,7 @@ var selected_class_id: StringName
 var last_join_address := ""
 
 var _statuses_by_id: Dictionary[StringName, StatusEffect] = {}
+var _items_by_id: Dictionary[StringName, Item] = {}
 
 
 func _ready() -> void:
@@ -39,6 +40,10 @@ func _ready() -> void:
 		data = GameData.new()
 	for status in data.statuses:
 		_statuses_by_id[status.id] = status
+	for character_class in data.classes:
+		for weapon in character_class.weapons:
+			if weapon != null:
+				_items_by_id[weapon.id] = weapon
 	_load_profile()
 
 
@@ -69,6 +74,10 @@ func get_default_class_id() -> StringName:
 
 func find_status(status_id: StringName) -> StatusEffect:
 	return _statuses_by_id.get(status_id)
+
+
+func find_item(item_id: StringName) -> Item:
+	return _items_by_id.get(item_id)
 
 
 func get_map_info(map_index: int) -> MapInfo:

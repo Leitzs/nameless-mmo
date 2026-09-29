@@ -1,6 +1,6 @@
 class_name RPGLog
 extends RefCounted
-## The game's log channel (Unreal's LogRPG). Lines start with "[RPG]" and the machine's role, so the logs of a
+## The game's log channel. Lines start with "[RPG]" and the machine's role, so the logs of a
 ## host and its clients can be told apart. Verbose lines (every ability release and hit on the server) are shown
 ## with the --log-verbose command line argument.
 

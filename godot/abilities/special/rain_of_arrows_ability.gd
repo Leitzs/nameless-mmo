@@ -21,5 +21,14 @@ func execute(ctx: SpellContext) -> void:
 
 	var blast := Game.current_map.spawn_actor(DelayedBlast.make_spawn_data(location, delay, radius, color, null)) as DelayedBlast
 	if blast != null:
-		blast.arm(damage, RPG.DamageType.PHYSICAL, slow, caster)
+		blast.arm(damage * ctx.damage_multiplier, RPG.DamageType.PHYSICAL, slow, caster)
 	spawn_cast_flash(ctx)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Arrows rain where the target stands after %s: %s within %s (it can be dodged)" % [AbilityText.seconds(delay),
+		text.damage(damage, RPG.DamageType.PHYSICAL), AbilityText.meters(radius)])
+	if slow != null and slow.status != null:
+		lines.append(text.status(slow))
+	return lines

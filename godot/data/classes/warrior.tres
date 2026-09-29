@@ -8,9 +8,12 @@
 [ext_resource type="Resource" path="res://data/abilities/warrior/whirlwind.tres" id="6_bhkx4"]
 [ext_resource type="Resource" path="res://data/abilities/warrior/berserker_rush.tres" id="7_he2rp"]
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_bkjqd"]
-[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="9_a5s2i"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="10_rujjv"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="11_jwgmo"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_oip5p"]
+[ext_resource type="Resource" path="res://data/weapons/warrior/greatsword.tres" id="12_w1bym"]
+[ext_resource type="Resource" path="res://data/weapons/warrior/sword_and_board.tres" id="13_bhkx4"]
+[ext_resource type="Resource" path="res://data/weapons/warrior/dual_axes.tres" id="14_he2rp"]
 
 [sub_resource type="Resource" id="Resource_2ir2t"]
 script = ExtResource("8_bkjqd")
@@ -47,16 +50,6 @@ direction = Vector3(0.79504645, 0.49690402, -0.34783283)
 size = Vector3(0.1, 0.32, 0.1)
 color = Color(0.8962439, 0.86504203, 0.7977378, 1)
 
-[sub_resource type="Resource" id="Resource_8i4hq"]
-script = ExtResource("9_a5s2i")
-blade_length = 1.15
-blade_width = 0.1
-blade_color = Color(0.735357, 0.735357, 0.7483791, 1)
-hilt_color = Color(0.6262097, 0.38109186, 0.3133042, 1)
-part_name = &"Greatsword"
-socket = &"hand_r"
-direction = Vector3(0, 0.6392015, -0.7690393)
-
 [sub_resource type="Resource" id="Resource_erjtx"]
 script = ExtResource("10_rujjv")
 type = 3
@@ -76,6 +69,7 @@ max_health = 450.0
 health_regen = 5.0
 resource = SubResource("Resource_erjtx")
 abilities = Array[ExtResource("1_nd2va")]([ExtResource("2_c63jo"), ExtResource("3_clxre"), ExtResource("4_oip5p"), ExtResource("5_w1bym"), ExtResource("6_bhkx4"), ExtResource("7_he2rp")])
+weapons = Array[ExtResource("11_oip5p")]([ExtResource("12_w1bym"), ExtResource("13_bhkx4"), ExtResource("14_he2rp")])
 body_color = Color(0.6004701, 0.40125498, 0.30797648, 1)
 limb_color = Color(0.36772346, 0.22697362, 0.16107033, 1)
-cosmetics = Array[ExtResource("8_bkjqd")]([SubResource("Resource_2ir2t"), SubResource("Resource_8ov8c"), SubResource("Resource_fwuxe"), SubResource("Resource_48voe"), SubResource("Resource_8i4hq")])
+cosmetics = Array[ExtResource("8_bkjqd")]([SubResource("Resource_2ir2t"), SubResource("Resource_8ov8c"), SubResource("Resource_fwuxe"), SubResource("Resource_48voe")])

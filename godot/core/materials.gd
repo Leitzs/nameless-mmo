@@ -1,6 +1,6 @@
 class_name Materials
 extends RefCounted
-## Central place for the materials the prototype builds its visuals from (Unreal's RPGAssets). Everything is
+## Central place for the materials the prototype builds its visuals from. Everything is
 ## primitive shapes plus a few shared materials, so swapping in real art later only means changing the scenes that
 ## use them.
 ##
@@ -42,7 +42,7 @@ static func surface(color: Color, roughness := 0.8, emissive := 0.0) -> Standard
 
 
 ## Material for MultiMesh instances (use_colors and use_custom_data on). The instance color is the LINEAR albedo;
-## custom data holds (roughness, emissive, 0, 0), like the per-instance data of Unreal's M_RPG_Surface.
+## custom data holds (roughness, emissive, 0, 0).
 static func instanced_surface() -> ShaderMaterial:
 	return INSTANCED_SURFACE
 
@@ -79,7 +79,7 @@ static func set_fx_intensity(instance: GeometryInstance3D, intensity: float) -> 
 	instance.set_instance_shader_parameter(&"intensity", intensity)
 
 
-## A world-space grid material for blockout geometry (replaces Unreal's LevelPrototyping grid).
+## A world-space grid material for blockout geometry.
 static func grid(base_color: Color, line_color: Color) -> ShaderMaterial:
 	var material := ShaderMaterial.new()
 	material.shader = GRID_SHADER

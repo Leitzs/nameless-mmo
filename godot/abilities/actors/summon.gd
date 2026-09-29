@@ -34,6 +34,8 @@ var body_scale := 1.0
 
 var _ability: SummonAbility
 var _caster: CombatCharacter
+## The caster's weapon multiplier when it was summoned.
+var _damage_multiplier := 1.0
 ## Seconds since spawned: _age drives the visuals (every machine), _elapsed the pulses and attacks (server).
 var _age := 0.0
 var _elapsed := 0.0
@@ -85,10 +87,11 @@ func configure_spawn(data: Dictionary) -> void:
 	body_scale = data["scale"]
 
 
-## Server: what the summon does, and who called it.
-func arm(ability: SummonAbility, caster: CombatCharacter) -> void:
+## Server: what the summon does, who called it, and how hard it hits for that caster.
+func arm(ability: SummonAbility, caster: CombatCharacter, damage_multiplier := 1.0) -> void:
 	_ability = ability
 	_caster = caster
+	_damage_multiplier = damage_multiplier
 	_next_pulse = ability.first_pulse_delay if ability.radius > 0.0 else -1.0
 	_next_attack = ability.attack_interval * 0.5
 
@@ -187,7 +190,7 @@ func _pulse(caster: CombatCharacter) -> void:
 	# Grounded summons reach body height; orbs pulse around themselves.
 	var center := global_position if look == Look.ORB else global_position + Vector3.UP * CombatCharacter.CENTER_HEIGHT
 	for target in Combat.get_hostiles_in_radius(self, self, center, radius):
-		if _ability.pulse_damage > 0.0 and not Combat.apply_damage(self, target, _ability.pulse_damage, _ability.damage_type):
+		if _ability.pulse_damage > 0.0 and not Combat.apply_damage(self, target, _ability.pulse_damage * _damage_multiplier, _ability.damage_type):
 			continue
 		Combat.apply_statuses(self, target, _ability.pulse_statuses)
 	var to_caster := caster.global_position - global_position
@@ -214,7 +217,7 @@ func _attack() -> bool:
 		_ability.projectile_scale, target, _ability.projectile_homing)
 	var projectile := Game.current_map.spawn_actor(data) as Projectile
 	if projectile != null:
-		projectile.arm(_ability.projectile, get_instigator())
+		projectile.arm(_ability.projectile.with_damage_multiplier(_damage_multiplier), get_instigator())
 	return true
 
 

@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_g5p2n"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="2_xmgsg"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="3_tylwo"]
+
+[sub_resource type="Resource" id="Resource_d26ff"]
+script = ExtResource("2_xmgsg")
+blade_length = 0.8
+blade_color = Color(0.7354, 0.7354, 0.7484, 1)
+hilt_color = Color(0.6262, 0.3811, 0.3133, 1)
+part_name = &"ArmingSword"
+socket = &"hand_r"
+direction = Vector3(0, 0.639202, -0.769039)
+
+[sub_resource type="Resource" id="Resource_083ox"]
+script = ExtResource("1_g5p2n")
+part_name = &"RoundShield"
+shape = 2
+socket = &"lowerarm_l"
+offset = Vector3(-0.12, 0, -0.06)
+rotation_degrees = Vector3(0, 0, 90)
+size = Vector3(0.66, 0.06, 0.66)
+color = Color(0.55, 0.33, 0.22, 1)
+
+[sub_resource type="Resource" id="Resource_0oi0w"]
+script = ExtResource("1_g5p2n")
+part_name = &"ShieldBoss"
+shape = 1
+socket = &"lowerarm_l"
+offset = Vector3(-0.16, 0, -0.06)
+size = Vector3(0.1, 0.16, 0.16)
+color = Color(0.38, 0.38, 0.42, 1)
+roughness = 0.35
+
+[resource]
+script = ExtResource("3_tylwo")
+weapon_type = "Sword and shield"
+attack_damage_multiplier = 0.8
+ability_damage_multiplier = 0.9
+bonus_health = 50.0
+frontal_block = 0.2
+cosmetics = Array[ExtResource("1_g5p2n")]([SubResource("Resource_d26ff"), SubResource("Resource_083ox"), SubResource("Resource_0oi0w")])
+id = &"warrior.sword_and_board"
+display_name = "Sword & Board"
+description = "A one-handed sword and a round shield: blocks 20% of frontal damage and adds 50 health, but your hits deal 20% less and abilities 10% less damage."
+color = Color(0.6, 0.45, 0.35, 1)

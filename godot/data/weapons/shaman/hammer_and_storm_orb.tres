@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_jftik"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_8ndnf"]
+
+[sub_resource type="Resource" id="Resource_6uinu"]
+script = ExtResource("1_jftik")
+part_name = &"HammerHandle"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.12784031, -0.15380786)
+direction = Vector3(0, 0.6392015, -0.7690393)
+size = Vector3(0.04, 0.55, 0.04)
+color = Color(0.5370987, 0.42358288, 0.29337206, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_ncgec"]
+script = ExtResource("1_jftik")
+part_name = &"HammerHead"
+socket = &"hand_r"
+offset = Vector3(0, 0.31960076, -0.38451964)
+direction = Vector3(0, 0.6392015, -0.7690393)
+size = Vector3(0.22, 0.11, 0.11)
+color = Color(0.58383155, 0.58383155, 0.60971165, 1)
+
+[sub_resource type="Resource" id="Resource_wluth"]
+script = ExtResource("1_jftik")
+part_name = &"StormOrb"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.06, -0.1)
+size = Vector3(0.13, 0.13, 0.13)
+color = Color(0.6651851, 0.85430586, 1, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_8ndnf")
+weapon_type = "Hammer and orb"
+cosmetics = Array[ExtResource("1_jftik")]([SubResource("Resource_6uinu"), SubResource("Resource_ncgec"), SubResource("Resource_wluth")])
+id = &"shaman.hammer_and_storm_orb"
+display_name = "Hammer & Storm Orb"
+description = "A stone hammer and a crackling storm orb: the shaman's baseline, with no bonuses or penalties."
+color = Color(0.67, 0.85, 1, 1)

@@ -1,5 +1,5 @@
 // World-space blockout grid: a line every meter and a stronger one every five, projected on the axis the surface
-// faces, so scaled boxes keep 1 m cells. Replaces Unreal's LevelPrototyping grid materials.
+// faces, so scaled boxes keep 1 m cells.
 shader_type spatial;
 
 uniform vec4 base_color : source_color = vec4(0.5, 0.5, 0.5, 1.0);

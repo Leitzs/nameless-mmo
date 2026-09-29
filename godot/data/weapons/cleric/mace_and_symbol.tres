@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_qmkxn"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_wswdq"]
+
+[sub_resource type="Resource" id="Resource_srkaq"]
+script = ExtResource("1_qmkxn")
+part_name = &"MaceHandle"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.11505628, -0.13842708)
+direction = Vector3(0, 0.6392015, -0.7690393)
+size = Vector3(0.04, 0.5, 0.04)
+color = Color(0.48452926, 0.38109186, 0.24780053, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_tc6tm"]
+script = ExtResource("1_qmkxn")
+part_name = &"MaceHead"
+shape = 1
+socket = &"hand_r"
+offset = Vector3(0, 0.2940327, -0.35375807)
+size = Vector3(0.14, 0.14, 0.14)
+color = Color(0.88082504, 0.76737565, 0.38109186, 1)
+roughness = 0.3
+
+[sub_resource type="Resource" id="Resource_5p43d"]
+script = ExtResource("1_qmkxn")
+part_name = &"HolySymbol"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.06, -0.1)
+size = Vector3(0.12, 0.12, 0.12)
+color = Color(1, 0.9309246, 0.6651851, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_wswdq")
+weapon_type = "Mace and symbol"
+cosmetics = Array[ExtResource("1_qmkxn")]([SubResource("Resource_srkaq"), SubResource("Resource_tc6tm"), SubResource("Resource_5p43d")])
+id = &"cleric.mace_and_symbol"
+display_name = "Mace & Holy Symbol"
+description = "A blessed mace and a glowing holy symbol: the cleric's baseline, with no bonuses or penalties."
+color = Color(1, 0.93, 0.67, 1)

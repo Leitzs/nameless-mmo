@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_oloay"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_hocka"]
+
+[sub_resource type="Resource" id="Resource_6hgk8"]
+script = ExtResource("1_oloay")
+part_name = &"StaffShaft"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.1, 0)
+rotation_degrees = Vector3(-8, 0, 0)
+size = Vector3(0.06, 1.7, 0.06)
+color = Color(0.22, 0.18, 0.2, 1)
+
+[sub_resource type="Resource" id="Resource_2lfgc"]
+script = ExtResource("1_oloay")
+part_name = &"Skull"
+shape = 1
+socket = &"hand_r"
+offset = Vector3(0, 0.98, -0.12)
+size = Vector3(0.2, 0.2, 0.22)
+color = Color(0.9063, 0.886, 0.8095, 1)
+roughness = 0.7
+
+[sub_resource type="Resource" id="Resource_6grpc"]
+script = ExtResource("1_oloay")
+part_name = &"SkullFlame"
+shape = 1
+socket = &"hand_r"
+offset = Vector3(0, 1, -0.23)
+size = Vector3(0.09, 0.09, 0.09)
+color = Color(0.63, 1, 0.48, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_hocka")
+weapon_type = "Staff"
+ability_damage_multiplier = 1.15
+cooldown_multiplier = 0.9
+bonus_health = -40.0
+cosmetics = Array[ExtResource("1_oloay")]([SubResource("Resource_6hgk8"), SubResource("Resource_2lfgc"), SubResource("Resource_6grpc")])
+id = &"warlock.skull_staff"
+display_name = "Skull Staff"
+description = "Cursed power at a price: abilities deal 15% more damage and recover 10% faster, but you have 40 less health."
+color = Color(0.8, 0.95, 0.6, 1)

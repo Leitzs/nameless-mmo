@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_fh65c"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_2ho33"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="3_naiu6"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="4_2i1sg"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="5_pa14f"]
+
+[sub_resource type="Resource" id="Resource_n5iji"]
+script = ExtResource("1_fh65c")
+combo_animations = Array[StringName]([&"attack_2", &"attack_3"])
+damage = 9.0
+reach = 2.3
+arc_degrees = 360.0
+hit_all_in_arc = true
+resource_on_hit = 8.0
+id = &"demon_hunter.glaive_spin"
+display_name = "Glaive Spin"
+description = "Spinning glaive slashes that hit every enemy around you. Every hit builds fury."
+color = Color(0.63, 0.95, 0.54, 1)
+cast_time = 0.55
+release_delay = 0.2
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.6
+
+[sub_resource type="Resource" id="Resource_7xxad"]
+script = ExtResource("3_naiu6")
+part_name = &"GlaiveGrip"
+shape = 2
+socket = &"hand_r"
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.04, 0.3, 0.04)
+color = Color(0.25, 0.25, 0.25, 1)
+
+[sub_resource type="Resource" id="Resource_5hd30"]
+script = ExtResource("4_2i1sg")
+blade_length = 0.6
+blade_width = 0.12
+blade_color = Color(0.5, 1, 0.4, 1)
+hilt_color = Color(0.25, 0.25, 0.25, 1)
+part_name = &"GlaiveUpper"
+socket = &"hand_r"
+offset = Vector3(0, 0.0639202, -0.0769039)
+direction = Vector3(0, 0.639202, -0.769039)
+
+[sub_resource type="Resource" id="Resource_bgb4e"]
+script = ExtResource("4_2i1sg")
+blade_length = 0.6
+blade_width = 0.12
+blade_color = Color(0.5, 1, 0.4, 1)
+hilt_color = Color(0.25, 0.25, 0.25, 1)
+part_name = &"GlaiveLower"
+socket = &"hand_r"
+offset = Vector3(0, -0.0639202, 0.0769039)
+direction = Vector3(0, -0.639202, 0.769039)
+
+[resource]
+script = ExtResource("5_pa14f")
+weapon_type = "Glaive"
+basic_attack = SubResource("Resource_n5iji")
+cosmetics = Array[ExtResource("3_naiu6")]([SubResource("Resource_7xxad"), SubResource("Resource_5hd30"), SubResource("Resource_bgb4e")])
+id = &"demon_hunter.fel_glaive"
+display_name = "Fel Glaive"
+description = "A double-bladed glaive: every swing spins around you, hitting all nearby enemies."
+color = Color(0.5, 1, 0.4, 1)

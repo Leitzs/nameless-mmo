@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_q0anm"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_vfkwv"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="3_bxw3c"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="4_3neix"]
+
+[sub_resource type="Resource" id="Resource_302r2"]
+script = ExtResource("1_q0anm")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2"])
+damage = 12.0
+damage_type = 5
+reach = 2.6
+arc_degrees = 160.0
+hit_all_in_arc = true
+heal_fraction = 0.3
+id = &"necromancer.reap"
+display_name = "Reap"
+description = "Wide scythe sweeps that hit every enemy in front of you and heal you for part of the damage."
+color = Color(0.67, 1, 0.74, 1)
+cast_time = 0.7
+release_delay = 0.28
+max_range = 4.5
+slows_while_casting = false
+
+[sub_resource type="Resource" id="Resource_nikyj"]
+script = ExtResource("3_bxw3c")
+part_name = &"ScytheShaft"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.1, 0)
+rotation_degrees = Vector3(-8, 0, 0)
+size = Vector3(0.05, 1.65, 0.05)
+color = Color(0.25, 0.22, 0.22, 1)
+
+[sub_resource type="Resource" id="Resource_h1y7j"]
+script = ExtResource("3_bxw3c")
+part_name = &"ScytheBlade"
+socket = &"hand_r"
+offset = Vector3(0, 0.88, -0.42)
+rotation_degrees = Vector3(-20, 0, 0)
+size = Vector3(0.02, 0.1, 0.62)
+color = Color(0.75, 0.9, 0.8, 1)
+roughness = 0.25
+
+[resource]
+script = ExtResource("4_3neix")
+weapon_type = "Scythe"
+basic_attack = SubResource("Resource_302r2")
+ability_damage_multiplier = 0.9
+bonus_health = 30.0
+cosmetics = Array[ExtResource("3_bxw3c")]([SubResource("Resource_nikyj"), SubResource("Resource_h1y7j")])
+id = &"necromancer.reaping_scythe"
+display_name = "Reaping Scythe"
+description = "A scythe that sweeps every enemy in front of you and heals you for 30% of the damage. Adds 30 health; spells deal 10% less damage."
+color = Color(0.55, 0.9, 0.65, 1)

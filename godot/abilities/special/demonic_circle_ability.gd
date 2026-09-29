@@ -43,3 +43,10 @@ func execute(ctx: SpellContext) -> void:
 		circle.queue_free()
 	Game.current_map.spawn_actor(DemonicCircle.make_spawn_data(caster.global_position + Vector3.UP * 0.03, caster))
 	AbilityFX.spawn_ground_ring(caster, color, 1.5)
+
+
+func describe(_text: AbilityText) -> PackedStringArray:
+	return PackedStringArray([
+		"First use leaves a circle at your feet (%s cooldown)" % AbilityText.seconds(place_cooldown),
+		"Next use teleports you back to it if it is within %s (%s cooldown)" % [AbilityText.meters(max_return_distance), AbilityText.seconds(return_cooldown)],
+	])

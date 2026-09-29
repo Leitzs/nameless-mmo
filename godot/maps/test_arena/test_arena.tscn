@@ -205,7 +205,7 @@ size = Vector3(9, 4.2, 0.2)
 size = Vector3(9, 4.2, 0.2)
 
 [node name="TestArena" type="Node3D" unique_id=1190427540]
-editor_description = "Flat test map. Spawn at Unreal (-6500, 0) facing the duel bot at the center (patrol, aggro and leash rings on the floor, 27 m of open ground around it). A 2 m platform with a ramp, a 3-bot group behind a line-of-sight wall, a range lane marked every 5 m up to 45 m, and 4 PvP starts outside every bot's aggro ring."
+editor_description = "Flat test map. Spawn 65 m from the center, facing the duel bot there (patrol, aggro and leash rings on the floor, 27 m of open ground around it). A 2 m platform with a ramp, a 3-bot group behind a line-of-sight wall, a range lane marked every 5 m up to 45 m, and 4 PvP starts outside every bot's aggro ring."
 script = ExtResource("1_oeyht")
 zone_name = "Test Arena"
 

@@ -18,7 +18,7 @@ func execute(ctx: SpellContext) -> void:
 	var caster := ctx.caster
 	AbilityFX.spawn_ground_ring(caster, color, radius)
 	for target in Combat.get_hostiles_in_radius(caster, caster, caster.get_center(), radius):
-		if damage > 0.0 and not Combat.apply_damage(caster, target, damage * get_stealth_multiplier(ctx), damage_type):
+		if damage > 0.0 and not Combat.apply_damage(caster, target, damage * get_damage_multiplier(ctx), damage_type):
 			continue
 		Combat.apply_statuses(caster, target, statuses)
 		if knockback > 0.0:
@@ -29,3 +29,15 @@ func execute(ctx: SpellContext) -> void:
 ## Server: called for every enemy the nova hit.
 func _on_nova_hit(_ctx: SpellContext, _target: CombatCharacter) -> void:
 	pass
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	if damage > 0.0:
+		lines.append("Burst around you: %s to every enemy within %s" % [text.damage(damage, damage_type), AbilityText.meters(radius)])
+	else:
+		lines.append("Affects every enemy within %s" % AbilityText.meters(radius))
+	if knockback > 0.0:
+		lines.append("Knocks enemies back (%s m/s)" % AbilityText.number(knockback))
+	lines.append_array(text.statuses(statuses))
+	return lines

@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_jmja2"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_3qoca"]
+
+[sub_resource type="Resource" id="Resource_4sq4l"]
+script = ExtResource("1_jmja2")
+part_name = &"MaceHandle"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.115056366, -0.13842702)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.04, 0.5, 0.04)
+color = Color(0.34, 0.25, 0.17, 1)
+
+[sub_resource type="Resource" id="Resource_02u43"]
+script = ExtResource("1_jmja2")
+part_name = &"MaceHead"
+shape = 1
+socket = &"hand_r"
+offset = Vector3(0, 0.29403293, -0.35375795)
+size = Vector3(0.15, 0.15, 0.15)
+color = Color(0.7354, 0.7354, 0.7484, 1)
+roughness = 0.35
+
+[sub_resource type="Resource" id="Resource_mhgck"]
+script = ExtResource("1_jmja2")
+part_name = &"TowerShield"
+socket = &"lowerarm_l"
+offset = Vector3(-0.13, 0, -0.06)
+size = Vector3(0.05, 0.9, 0.52)
+color = Color(0.3811, 0.4614, 0.7014, 1)
+roughness = 0.45
+
+[sub_resource type="Resource" id="Resource_13hu4"]
+script = ExtResource("1_jmja2")
+part_name = &"TowerShieldCross"
+socket = &"lowerarm_l"
+offset = Vector3(-0.16, 0.08, -0.06)
+size = Vector3(0.03, 0.5, 0.1)
+color = Color(0.8808, 0.7674, 0.3811, 1)
+roughness = 0.3
+emissive = 0.2
+
+[sub_resource type="Resource" id="Resource_ulgnv"]
+script = ExtResource("1_jmja2")
+part_name = &"TowerShieldBar"
+socket = &"lowerarm_l"
+offset = Vector3(-0.16, 0.16, -0.06)
+size = Vector3(0.03, 0.1, 0.34)
+color = Color(0.8808, 0.7674, 0.3811, 1)
+roughness = 0.3
+emissive = 0.2
+
+[resource]
+script = ExtResource("2_3qoca")
+weapon_type = "Mace and shield"
+attack_damage_multiplier = 0.85
+bonus_health = 40.0
+move_speed_multiplier = 0.92
+frontal_block = 0.3
+cosmetics = Array[ExtResource("1_jmja2")]([SubResource("Resource_4sq4l"), SubResource("Resource_02u43"), SubResource("Resource_mhgck"), SubResource("Resource_13hu4"), SubResource("Resource_ulgnv")])
+id = &"paladin.tower_shield"
+display_name = "Mace & Tower Shield"
+description = "A tower shield blocks 30% of frontal damage and adds 40 health, but it slows you by 8% and the mace hits 15% softer."
+color = Color(0.5, 0.62, 0.9, 1)

@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_1tmc3"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_qlump"]
+
+[sub_resource type="Resource" id="Resource_j50wc"]
+script = ExtResource("1_1tmc3")
+part_name = &"ShortbowGrip"
+shape = 2
+socket = &"hand_l"
+size = Vector3(0.05, 0.14, 0.05)
+color = Color(0.5371, 0.3133, 0.2478, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_k0df4"]
+script = ExtResource("1_1tmc3")
+part_name = &"ShortbowUpperLimb"
+shape = 2
+socket = &"hand_l"
+offset = Vector3(0, 0.24, 0.05)
+rotation_degrees = Vector3(18, 0, 0)
+size = Vector3(0.03, 0.4, 0.03)
+color = Color(0.8, 0.62, 0.4, 1)
+
+[sub_resource type="Resource" id="Resource_d6si5"]
+script = ExtResource("1_1tmc3")
+part_name = &"ShortbowLowerLimb"
+shape = 2
+socket = &"hand_l"
+offset = Vector3(0, -0.24, 0.05)
+rotation_degrees = Vector3(-18, 0, 0)
+size = Vector3(0.03, 0.4, 0.03)
+color = Color(0.8, 0.62, 0.4, 1)
+
+[sub_resource type="Resource" id="Resource_vkjt1"]
+script = ExtResource("1_1tmc3")
+part_name = &"ShortbowString"
+shape = 2
+socket = &"hand_l"
+offset = Vector3(0, 0, 0.12)
+size = Vector3(0.006, 0.84, 0.006)
+color = Color(0.93, 0.92, 0.85, 1)
+roughness = 0.5
+
+[resource]
+script = ExtResource("2_qlump")
+weapon_type = "Bow"
+attack_damage_multiplier = 0.75
+attack_speed_multiplier = 1.4
+move_speed_multiplier = 1.08
+cosmetics = Array[ExtResource("1_1tmc3")]([SubResource("Resource_j50wc"), SubResource("Resource_k0df4"), SubResource("Resource_d6si5"), SubResource("Resource_vkjt1")])
+id = &"archer.shortbow"
+display_name = "Shortbow"
+description = "A light skirmishing bow: shots come 40% faster but deal 25% less damage, and you move 8% faster."
+color = Color(0.8, 0.65, 0.45, 1)

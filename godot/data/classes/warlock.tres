@@ -10,6 +10,10 @@
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_nwqdf"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="9_xtj3b"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="10_xgpoa"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_86lxv"]
+[ext_resource type="Resource" path="res://data/weapons/warlock/fel_orb.tres" id="12_dc7pg"]
+[ext_resource type="Resource" path="res://data/weapons/warlock/sacrificial_dagger.tres" id="13_dumyp"]
+[ext_resource type="Resource" path="res://data/weapons/warlock/skull_staff.tres" id="14_nwqdf"]
 
 [sub_resource type="Resource" id="Resource_beke2"]
 script = ExtResource("8_nwqdf")
@@ -31,20 +35,6 @@ size = Vector3(0.07, 0.28, 0.07)
 color = Color(0.38109186, 0.3491902, 0.33183005, 1)
 roughness = 0.5
 
-[sub_resource type="Resource" id="Resource_rsj2r"]
-script = ExtResource("8_nwqdf")
-part_name = &"FelOrb"
-shape = 1
-socket = &"hand_l"
-offset = Vector3(0, 0.08, -0.12)
-size = Vector3(0.16, 0.16, 0.16)
-color = Color(0.6262097, 1, 0.48452926, 1)
-roughness = 0.2
-emissive = 3.0
-cast_shadow = false
-spell_origin = true
-light_energy = 0.6
-
 [sub_resource type="Resource" id="Resource_djtpa"]
 script = ExtResource("9_xtj3b")
 type = 1
@@ -62,6 +52,7 @@ health_regen = 4.0
 resource = SubResource("Resource_djtpa")
 move_speed = 4.7
 abilities = Array[ExtResource("1_ykqqk")]([ExtResource("2_47u6a"), ExtResource("3_fm5jb"), ExtResource("4_f31if"), ExtResource("5_86lxv"), ExtResource("6_dc7pg"), ExtResource("7_dumyp")])
+weapons = Array[ExtResource("11_86lxv")]([ExtResource("12_dc7pg"), ExtResource("13_dumyp"), ExtResource("14_nwqdf")])
 body_color = Color(0.3499023, 0.4816969, 0.3299638, 1)
 limb_color = Color(0.19069183, 0.28380758, 0.17660485, 1)
-cosmetics = Array[ExtResource("8_nwqdf")]([SubResource("Resource_beke2"), SubResource("Resource_omafj"), SubResource("Resource_rsj2r")])
+cosmetics = Array[ExtResource("8_nwqdf")]([SubResource("Resource_beke2"), SubResource("Resource_omafj")])

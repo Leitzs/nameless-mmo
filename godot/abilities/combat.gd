@@ -2,7 +2,8 @@ class_name Combat
 extends RefCounted
 ## Stateless combat rules shared by abilities, projectiles and bots. apply_damage / apply_heal / apply_status are how
 ## gameplay code deals damage, heals and applies statuses, so every rule that depends on both sides (hostility,
-## invulnerability, frontal blocking, weakened attackers) lives in one place. Call them on the server.
+## invulnerability, frontal blocking, weakened attackers, weapons, the balance multipliers) lives in one place. Call them
+## on the server.
 
 ## Height difference beyond which melee swings miss.
 const MELEE_MAX_HEIGHT_DIFFERENCE := 1.5
@@ -41,7 +42,8 @@ static func _can_affect(source: Object, target: CombatCharacter) -> bool:
 	return source_character == null or source_character == target or are_hostile(source_character, target)
 
 
-## Deals damage. periodic is true for damage over time, which the frontal block never stops.
+## Deals damage. periodic is true for damage over time, which the frontal block never stops. Direct damage already
+## carries the attacker's weapon multiplier (SpellContext.damage_multiplier); damage over time gets it here.
 static func apply_damage(source: Object, target: CombatCharacter, amount: float, damage_type: RPG.DamageType, periodic := false) -> bool:
 	if amount <= 0.0 or not _can_affect(source, target):
 		return false
@@ -51,9 +53,11 @@ static func apply_damage(source: Object, target: CombatCharacter, amount: float,
 		return true
 
 	var source_character := get_responsible_character(source)
-	var damage := amount * target.statuses.get_damage_taken_multiplier()
+	var damage := amount * target.statuses.get_damage_taken_multiplier() * Tuning.balance.damage_multiplier
 	if source_character != null:
 		damage *= source_character.statuses.get_damage_dealt_multiplier()
+		if periodic:
+			damage *= source_character.get_periodic_damage_multiplier()
 
 	# Shield bearers block part of the damage of direct attacks coming from their front.
 	if not periodic and source_character != null and source_character != target and target.frontal_block > 0.0:
@@ -65,10 +69,15 @@ static func apply_damage(source: Object, target: CombatCharacter, amount: float,
 	return true
 
 
-static func apply_heal(_source: Object, target: CombatCharacter, amount: float) -> bool:
+## Heals, scaled by the healer's weapon and the balance multiplier.
+static func apply_heal(source: Object, target: CombatCharacter, amount: float) -> bool:
 	if amount <= 0.0 or target == null or not is_instance_valid(target) or not target.is_alive() or not target.multiplayer.is_server():
 		return false
-	target.health.heal(amount)
+	var healing := amount * Tuning.balance.healing_multiplier
+	var source_character := get_responsible_character(source)
+	if source_character != null:
+		healing *= source_character.get_healing_multiplier()
+	target.health.heal(healing)
 	return true
 
 

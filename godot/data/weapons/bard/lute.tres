@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_gse1a"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_ucqxc"]
+
+[sub_resource type="Resource" id="Resource_kvjfk"]
+script = ExtResource("1_gse1a")
+part_name = &"LuteBody"
+shape = 1
+socket = &"spine_03"
+offset = Vector3(0.03, -0.05, 0.22)
+rotation_degrees = Vector3(0, 0, -20)
+size = Vector3(0.34, 0.42, 0.13)
+color = Color(0.7014107, 0.5370987, 0.3133042, 1)
+roughness = 0.5
+
+[sub_resource type="Resource" id="Resource_nn853"]
+script = ExtResource("1_gse1a")
+part_name = &"LuteNeck"
+shape = 2
+socket = &"spine_03"
+offset = Vector3(-0.1, 0.28, 0.22)
+direction = Vector3(-0.34, 0.94, 0)
+size = Vector3(0.045, 0.45, 0.03)
+color = Color(0.48452926, 0.3491902, 0.22091636, 1)
+
+[sub_resource type="Resource" id="Resource_kmg64"]
+script = ExtResource("1_gse1a")
+part_name = &"SongNote"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.06, -0.1)
+color = Color(1, 0.7014107, 0.88082504, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_ucqxc")
+weapon_type = "Instrument"
+cosmetics = Array[ExtResource("1_gse1a")]([SubResource("Resource_kvjfk"), SubResource("Resource_nn853"), SubResource("Resource_kmg64")])
+id = &"bard.lute"
+display_name = "Lute"
+description = "A well-worn lute: the bard's baseline, with no bonuses or penalties."
+color = Color(1, 0.7, 0.88, 1)

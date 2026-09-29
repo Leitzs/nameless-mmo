@@ -125,9 +125,27 @@ func _strike(ctx: SpellContext, start: Vector3, end: Vector3) -> void:
 
 func _hit(ctx: SpellContext, target: CombatCharacter, amount: float, from: Vector3) -> void:
 	var caster := ctx.caster
-	if amount > 0.0 and not Combat.apply_damage(caster, target, amount * get_stealth_multiplier(ctx), damage_type):
+	if amount > 0.0 and not Combat.apply_damage(caster, target, amount * get_damage_multiplier(ctx), damage_type):
 		return
 	Combat.apply_statuses(caster, target, statuses)
 	if knockback > 0.0:
 		target.apply_knockback(target.global_position - from, knockback, 1.0)
 	AbilityFX.spawn_burst(target.get_target_point(), color, 0.8)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	var move := "Leaps" if leap_height > 0.0 else "Dashes"
+	if destination == Destination.AIM_POINT:
+		lines.append("%s to the target or the aimed point, up to %s away" % [move, AbilityText.meters(max_range)])
+	else:
+		lines.append("%s %s towards the crosshair" % [move, AbilityText.meters(distance)])
+	if path_damage > 0.0:
+		lines.append("%s to enemies along the way" % text.damage(path_damage, damage_type))
+	if landing_damage > 0.0 and landing_radius > 0.0:
+		lines.append("%s to enemies within %s of the landing" % [text.damage(landing_damage, damage_type), AbilityText.meters(landing_radius)])
+	if knockback > 0.0:
+		lines.append("Knocks enemies back (%s m/s)" % AbilityText.number(knockback))
+	lines.append_array(text.statuses(statuses))
+	lines.append_array(text.statuses(caster_statuses, "You gain "))
+	return lines

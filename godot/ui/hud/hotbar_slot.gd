@@ -13,6 +13,7 @@ var ability: Ability
 var cooldown_remaining := 0.0
 var cooldown_duration := 0.0
 var has_resource := true
+var cost := 0.0
 var label := ""
 var cost_color := Color.WHITE
 
@@ -29,7 +30,8 @@ func update_from(character: CombatCharacter) -> void:
 		return
 	cooldown_remaining = character.abilities.get_cooldown_remaining(slot)
 	cooldown_duration = character.abilities.get_cooldown_duration(slot)
-	has_resource = character.resources.can_afford(ability.resource_cost)
+	cost = character.abilities.get_cost(slot)
+	has_resource = character.resources.can_afford(cost)
 	label = ability.get_slot_label(character)
 	cost_color = character.resources.config.get_color().lerp(Color.WHITE, 0.35)
 	queue_redraw()
@@ -57,8 +59,8 @@ func _draw() -> void:
 
 	draw_rect(box, ability.color if off_cooldown and has_resource else Color(ability.color, 0.35), false, 2.0)
 	draw_string(font, Vector2(5.0, 17.0), KEY_LABELS[slot], HORIZONTAL_ALIGNMENT_LEFT, -1, 13 if slot == 0 else 17, GOLD)
-	if ability.resource_cost > 0.0:
-		draw_string(font, Vector2(0.0, 16.0), str(roundi(ability.resource_cost)), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 5.0, 13, cost_color)
+	if cost > 0.0:
+		draw_string(font, Vector2(0.0, 16.0), str(roundi(cost)), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 5.0, 13, cost_color)
 
 	# Long names shrink to fit the slot.
 	var name_size := 13

@@ -35,3 +35,7 @@ func execute(ctx: SpellContext) -> void:
 	arrive.light_energy = 3.3
 	arrive.light_range = 6.0
 	FX.spawn_for_all(destination + Vector3.UP * CombatCharacter.CENTER_HEIGHT, arrive)
+
+
+func describe(_text: AbilityText) -> PackedStringArray:
+	return PackedStringArray(["Teleports %s the way you are moving (or aiming when standing still), stopping short of walls" % AbilityText.meters(distance)])

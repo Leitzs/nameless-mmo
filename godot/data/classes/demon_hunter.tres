@@ -8,9 +8,12 @@
 [ext_resource type="Resource" path="res://data/abilities/demon_hunter/chaos_nova.tres" id="6_dsben"]
 [ext_resource type="Resource" path="res://data/abilities/demon_hunter/metamorphosis.tres" id="7_8dqpj"]
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_pbp88"]
-[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="9_4l0s0"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="10_8s55r"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="11_vix6k"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_vy3vv"]
+[ext_resource type="Resource" path="res://data/weapons/demon_hunter/twin_warglaives.tres" id="12_ejbck"]
+[ext_resource type="Resource" path="res://data/weapons/demon_hunter/fel_glaive.tres" id="13_dsben"]
+[ext_resource type="Resource" path="res://data/weapons/demon_hunter/demonic_claws.tres" id="14_8dqpj"]
 
 [sub_resource type="Resource" id="Resource_ojigf"]
 script = ExtResource("8_pbp88")
@@ -51,26 +54,6 @@ size = Vector3(0.06, 0.28, 0.06)
 color = Color(0.38109186, 0.3491902, 0.33183005, 1)
 roughness = 0.5
 
-[sub_resource type="Resource" id="Resource_w6aij"]
-script = ExtResource("9_4l0s0")
-blade_length = 0.6
-blade_width = 0.12
-blade_color = Color(0.6262097, 0.9546871, 0.5370987, 1)
-hilt_color = Color(0.3491902, 0.3491902, 0.3491902, 1)
-part_name = &"WarglaiveRight"
-socket = &"hand_r"
-direction = Vector3(0, 0.5070201, -0.86193424)
-
-[sub_resource type="Resource" id="Resource_hntet"]
-script = ExtResource("9_4l0s0")
-blade_length = 0.6
-blade_width = 0.12
-blade_color = Color(0.6262097, 0.9546871, 0.5370987, 1)
-hilt_color = Color(0.3491902, 0.3491902, 0.3491902, 1)
-part_name = &"WarglaiveLeft"
-socket = &"hand_l"
-direction = Vector3(0, 0.5070201, -0.86193424)
-
 [sub_resource type="Resource" id="Resource_j0dlt"]
 script = ExtResource("10_8s55r")
 type = 4
@@ -92,6 +75,7 @@ resource = SubResource("Resource_j0dlt")
 move_speed = 5.4
 sprint_speed = 8.2
 abilities = Array[ExtResource("1_qf7ll")]([ExtResource("2_5kdsg"), ExtResource("3_raknu"), ExtResource("4_vy3vv"), ExtResource("5_ejbck"), ExtResource("6_dsben"), ExtResource("7_8dqpj")])
+weapons = Array[ExtResource("11_vy3vv")]([ExtResource("12_ejbck"), ExtResource("13_dsben"), ExtResource("14_8dqpj")])
 body_color = Color(0.36823985, 0.25456843, 0.43060452, 1)
 limb_color = Color(0.20364772, 0.12333638, 0.2477097, 1)
-cosmetics = Array[ExtResource("8_pbp88")]([SubResource("Resource_ojigf"), SubResource("Resource_clfb6"), SubResource("Resource_mlt7u"), SubResource("Resource_ngjim"), SubResource("Resource_w6aij"), SubResource("Resource_hntet")])
+cosmetics = Array[ExtResource("8_pbp88")]([SubResource("Resource_ojigf"), SubResource("Resource_clfb6"), SubResource("Resource_mlt7u"), SubResource("Resource_ngjim")])

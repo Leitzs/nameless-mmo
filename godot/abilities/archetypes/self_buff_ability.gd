@@ -26,3 +26,18 @@ func execute(ctx: SpellContext) -> void:
 	if shield_amount > 0.0:
 		caster.health.add_shield(shield_amount, shield_duration, shield_status, caster)
 	AbilityFX.spawn_burst(caster.get_center(), color, 3.0, caster)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	if not remove_effects.is_empty():
+		var names := PackedStringArray()
+		for effect in remove_effects:
+			names.append(AbilityText.effect_name(effect))
+		lines.append("Removes %s effects from you" % ", ".join(names))
+	if heal_amount > 0.0:
+		lines.append("Heals you for %s" % text.heal(heal_amount))
+	if shield_amount > 0.0:
+		lines.append("Shield absorbing %s damage for %s" % [AbilityText.number(shield_amount), AbilityText.seconds(shield_duration)])
+	lines.append_array(text.statuses(statuses, "You gain "))
+	return lines

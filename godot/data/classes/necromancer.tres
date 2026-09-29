@@ -10,6 +10,10 @@
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_dkt6l"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="9_lv82e"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="10_b52oy"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_8vol1"]
+[ext_resource type="Resource" path="res://data/weapons/necromancer/bone_staff.tres" id="12_3ert1"]
+[ext_resource type="Resource" path="res://data/weapons/necromancer/reaping_scythe.tres" id="13_v28w8"]
+[ext_resource type="Resource" path="res://data/weapons/necromancer/soul_phylactery.tres" id="14_dkt6l"]
 
 [sub_resource type="Resource" id="Resource_d3iv4"]
 script = ExtResource("8_dkt6l")
@@ -50,41 +54,6 @@ roughness = 0.3
 emissive = 4.0
 cast_shadow = false
 
-[sub_resource type="Resource" id="Resource_shqlb"]
-script = ExtResource("8_dkt6l")
-part_name = &"StaffShaft"
-shape = 2
-socket = &"hand_r"
-offset = Vector3(0, 0.1, 0)
-rotation_degrees = Vector3(-8, 0, 0)
-size = Vector3(0.06, 1.7, 0.06)
-color = Color(0.9063318, 0.886004, 0.80946815, 1)
-roughness = 0.8
-
-[sub_resource type="Resource" id="Resource_0kveo"]
-script = ExtResource("8_dkt6l")
-part_name = &"StaffCross"
-socket = &"hand_r"
-offset = Vector3(0, 0.9, -0.115)
-rotation_degrees = Vector3(-8, 0, 0)
-size = Vector3(0.3, 0.04, 0.04)
-color = Color(0.9063318, 0.886004, 0.80946815, 1)
-roughness = 0.7
-
-[sub_resource type="Resource" id="Resource_skq7x"]
-script = ExtResource("8_dkt6l")
-part_name = &"StaffOrb"
-shape = 1
-socket = &"hand_r"
-offset = Vector3(0, 1.0457059, -0.13291031)
-size = Vector3(0.16, 0.16, 0.16)
-color = Color(0.6651851, 1, 0.735357, 1)
-roughness = 0.2
-emissive = 3.0
-cast_shadow = false
-spell_origin = true
-light_energy = 0.6
-
 [sub_resource type="Resource" id="Resource_yf5dm"]
 script = ExtResource("9_lv82e")
 type = 1
@@ -102,6 +71,7 @@ health_regen = 4.0
 resource = SubResource("Resource_yf5dm")
 move_speed = 4.7
 abilities = Array[ExtResource("1_16cry")]([ExtResource("2_sidh4"), ExtResource("3_4e0b5"), ExtResource("4_flhay"), ExtResource("5_8vol1"), ExtResource("6_3ert1"), ExtResource("7_v28w8")])
+weapons = Array[ExtResource("11_8vol1")]([ExtResource("12_3ert1"), ExtResource("13_v28w8"), ExtResource("14_dkt6l")])
 body_color = Color(0.30797648, 0.28324306, 0.3499023, 1)
 limb_color = Color(0.16107033, 0.14359564, 0.19069183, 1)
-cosmetics = Array[ExtResource("8_dkt6l")]([SubResource("Resource_d3iv4"), SubResource("Resource_hfb54"), SubResource("Resource_8n2jl"), SubResource("Resource_m4hu3"), SubResource("Resource_shqlb"), SubResource("Resource_0kveo"), SubResource("Resource_skq7x")])
+cosmetics = Array[ExtResource("8_dkt6l")]([SubResource("Resource_d3iv4"), SubResource("Resource_hfb54"), SubResource("Resource_8n2jl"), SubResource("Resource_m4hu3")])

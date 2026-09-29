@@ -10,6 +10,10 @@
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_s3i1p"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="9_eags2"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="10_qkf7h"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_uquk7"]
+[ext_resource type="Resource" path="res://data/weapons/barbarian/great_axe.tres" id="12_nvkxc"]
+[ext_resource type="Resource" path="res://data/weapons/barbarian/crushing_maul.tres" id="13_7ngjc"]
+[ext_resource type="Resource" path="res://data/weapons/barbarian/throwing_axes.tres" id="14_s3i1p"]
 
 [sub_resource type="Resource" id="Resource_7qf1d"]
 script = ExtResource("8_s3i1p")
@@ -39,27 +43,6 @@ size = Vector3(0.16, 0.12, 0.06)
 color = Color(0.5370987, 0.38109186, 0.22091636, 1)
 roughness = 0.9
 
-[sub_resource type="Resource" id="Resource_ys45q"]
-script = ExtResource("8_s3i1p")
-part_name = &"AxeHandle"
-shape = 2
-socket = &"hand_r"
-offset = Vector3(0, 0.19176047, -0.23071179)
-direction = Vector3(0, 0.6392015, -0.7690393)
-size = Vector3(0.05, 0.9, 0.05)
-color = Color(0.5370987, 0.4100209, 0.2716998, 1)
-roughness = 0.8
-
-[sub_resource type="Resource" id="Resource_u3nsu"]
-script = ExtResource("8_s3i1p")
-part_name = &"AxeHead"
-socket = &"hand_r"
-offset = Vector3(0, 0.39630494, -0.47680435)
-direction = Vector3(0, 0.6392015, -0.7690393)
-size = Vector3(0.03, 0.22, 0.42)
-color = Color(0.735357, 0.735357, 0.7483791, 1)
-roughness = 0.35
-
 [sub_resource type="Resource" id="Resource_2aja4"]
 script = ExtResource("9_eags2")
 type = 3
@@ -80,6 +63,7 @@ health_regen = 5.0
 resource = SubResource("Resource_2aja4")
 sprint_speed = 7.8
 abilities = Array[ExtResource("1_a1b0v")]([ExtResource("2_cqd7s"), ExtResource("3_aqlis"), ExtResource("4_0hwuv"), ExtResource("5_uquk7"), ExtResource("6_nvkxc"), ExtResource("7_7ngjc")])
+weapons = Array[ExtResource("11_uquk7")]([ExtResource("12_nvkxc"), ExtResource("13_7ngjc"), ExtResource("14_s3i1p")])
 body_color = Color(0.72529787, 0.54587555, 0.43060452, 1)
 limb_color = Color(0.45591694, 0.32915118, 0.2477097, 1)
-cosmetics = Array[ExtResource("8_s3i1p")]([SubResource("Resource_7qf1d"), SubResource("Resource_yfklo"), SubResource("Resource_hh704"), SubResource("Resource_ys45q"), SubResource("Resource_u3nsu")])
+cosmetics = Array[ExtResource("8_s3i1p")]([SubResource("Resource_7qf1d"), SubResource("Resource_yfklo"), SubResource("Resource_hh704")])

@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_hgssm"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_ef0cq"]
+
+[sub_resource type="Resource" id="Resource_q5yep"]
+script = ExtResource("1_hgssm")
+part_name = &"PhylacterySkull"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.1, -0.1)
+size = Vector3(0.16, 0.16, 0.18)
+color = Color(0.9063, 0.886, 0.8095, 1)
+roughness = 0.7
+
+[sub_resource type="Resource" id="Resource_1q2y4"]
+script = ExtResource("1_hgssm")
+part_name = &"PhylacterySoul"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.12, -0.19)
+size = Vector3(0.07, 0.07, 0.07)
+color = Color(0.5, 1, 0.6, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_ef0cq")
+weapon_type = "Phylactery"
+ability_damage_multiplier = 1.2
+bonus_health = -40.0
+cosmetics = Array[ExtResource("1_hgssm")]([SubResource("Resource_q5yep"), SubResource("Resource_1q2y4")])
+id = &"necromancer.soul_phylactery"
+display_name = "Soul Phylactery"
+description = "A skull full of trapped souls: abilities deal 20% more damage, but you have 40 less health."
+color = Color(0.5, 1, 0.6, 1)

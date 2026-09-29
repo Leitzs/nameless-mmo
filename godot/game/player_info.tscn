@@ -18,6 +18,12 @@ properties/3/replication_mode = 2
 properties/4/path = NodePath(".:respawn_time")
 properties/4/spawn = true
 properties/4/replication_mode = 2
+properties/5/path = NodePath(".:items")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath(".:equipped_slot")
+properties/6/spawn = true
+properties/6/replication_mode = 2
 
 [node name="PlayerInfo" type="Node"]
 script = ExtResource("1_script")

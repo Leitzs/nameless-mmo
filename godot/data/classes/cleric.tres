@@ -10,6 +10,10 @@
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_qtf1i"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="9_2w516"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="10_t7hp3"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_qkyia"]
+[ext_resource type="Resource" path="res://data/weapons/cleric/mace_and_symbol.tres" id="12_gqg7p"]
+[ext_resource type="Resource" path="res://data/weapons/cleric/sacred_tome.tres" id="13_r4cnf"]
+[ext_resource type="Resource" path="res://data/weapons/cleric/consecrated_hammer.tres" id="14_qtf1i"]
 
 [sub_resource type="Resource" id="Resource_6oo2a"]
 script = ExtResource("8_qtf1i")
@@ -28,41 +32,6 @@ size = Vector3(0.28, 0.06, 0.28)
 color = Color(0.88082504, 0.76737565, 0.38109186, 1)
 roughness = 0.35
 
-[sub_resource type="Resource" id="Resource_tassc"]
-script = ExtResource("8_qtf1i")
-part_name = &"MaceHandle"
-shape = 2
-socket = &"hand_r"
-offset = Vector3(0, 0.11505628, -0.13842708)
-direction = Vector3(0, 0.6392015, -0.7690393)
-size = Vector3(0.04, 0.5, 0.04)
-color = Color(0.48452926, 0.38109186, 0.24780053, 1)
-roughness = 0.8
-
-[sub_resource type="Resource" id="Resource_3dxyf"]
-script = ExtResource("8_qtf1i")
-part_name = &"MaceHead"
-shape = 1
-socket = &"hand_r"
-offset = Vector3(0, 0.2940327, -0.35375807)
-size = Vector3(0.14, 0.14, 0.14)
-color = Color(0.88082504, 0.76737565, 0.38109186, 1)
-roughness = 0.3
-
-[sub_resource type="Resource" id="Resource_vuqvf"]
-script = ExtResource("8_qtf1i")
-part_name = &"HolySymbol"
-shape = 1
-socket = &"hand_l"
-offset = Vector3(0, 0.06, -0.1)
-size = Vector3(0.12, 0.12, 0.12)
-color = Color(1, 0.9309246, 0.6651851, 1)
-roughness = 0.2
-emissive = 3.0
-cast_shadow = false
-spell_origin = true
-light_energy = 0.6
-
 [sub_resource type="Resource" id="Resource_esjsf"]
 script = ExtResource("9_2w516")
 type = 1
@@ -80,6 +49,7 @@ health_regen = 5.0
 resource = SubResource("Resource_esjsf")
 move_speed = 4.8
 abilities = Array[ExtResource("1_ismnt")]([ExtResource("2_ieupu"), ExtResource("3_eeqf8"), ExtResource("4_6lvtq"), ExtResource("5_qkyia"), ExtResource("6_gqg7p"), ExtResource("7_r4cnf")])
+weapons = Array[ExtResource("11_qkyia")]([ExtResource("12_gqg7p"), ExtResource("13_r4cnf"), ExtResource("14_qtf1i")])
 body_color = Color(0.8247107, 0.81391877, 0.75652844, 1)
 limb_color = Color(0.5261543, 0.51852953, 0.477982, 1)
-cosmetics = Array[ExtResource("8_qtf1i")]([SubResource("Resource_6oo2a"), SubResource("Resource_023sm"), SubResource("Resource_tassc"), SubResource("Resource_3dxyf"), SubResource("Resource_vuqvf")])
+cosmetics = Array[ExtResource("8_qtf1i")]([SubResource("Resource_6oo2a"), SubResource("Resource_023sm")])

@@ -1,0 +1,135 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/panels/inventory_panel.gd" id="1_inventory"]
+
+[node name="InventoryPanel" type="PanelContainer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -470.0
+offset_right = 524.0
+offset_bottom = -56.0
+grow_vertical = 0
+theme_type_variation = &"ToolPanel"
+script = ExtResource("1_inventory")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Header" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Content/Header"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+theme_override_font_sizes/font_size = 22
+text = "INVENTORY"
+
+[node name="Count" type="Label" parent="Content/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"DimLabel"
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 2
+
+[node name="Close" type="Button" parent="Content/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SmallButton"
+tooltip_text = "Close (I)"
+text = "×"
+
+[node name="Equipped" type="Label" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+autowrap_mode = 3
+
+[node name="Grid" type="GridContainer" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 5
+
+[node name="Details" type="VBoxContainer" parent="Content"]
+custom_minimum_size = Vector2(0, 118)
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="ItemName" type="Label" parent="Content/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+theme_override_font_sizes/font_size = 18
+
+[node name="ItemKind" type="Label" parent="Content/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DimLabel"
+
+[node name="ItemDescription" type="Label" parent="Content/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+autowrap_mode = 3
+
+[node name="ItemStats" type="Label" parent="Content/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.955, 1, 1)
+theme_override_font_sizes/font_size = 14
+autowrap_mode = 3
+
+[node name="Buttons" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Equip" type="Button" parent="Content/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SmallButton"
+text = "Equip"
+
+[node name="Drop" type="Button" parent="Content/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SmallButton"
+text = "Drop"
+
+[node name="AddRow" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="AddOption" type="OptionButton" parent="Content/AddRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SmallButton"
+tooltip_text = "A weapon of your class to put in the inventory (weapons of other classes cannot be carried)"
+
+[node name="Add" type="Button" parent="Content/AddRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SmallButton"
+text = "Add"
+
+[node name="Status" type="Label" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+autowrap_mode = 3
+
+[node name="Hint" type="Label" parent="Content"]
+layout_mode = 2
+theme_type_variation = &"DimLabel"
+theme_override_font_sizes/font_size = 13
+text = "Click: select  ·  double-click: equip / unequip  ·  hover: details"
+autowrap_mode = 3

@@ -32,13 +32,16 @@ const TEXT_COLOR := Color(0.978, 0.964, 0.931)
 @onready var _help_lines: VBoxContainer = $Help/Lines
 
 var scoreboard_held := false
+## Hidden while the Balance panel covers its corner (holding Tab still shows it).
+var scoreboard_suppressed := false
 
 var _slots: Array[HotbarSlot] = []
 var _resource_fill := StyleBoxFlat.new()
 var _message_tween: Tween
 var _zone := ""
 var _zone_time := 0.0
-var _help_class: CharacterClass
+## Class and weapon the help panel lists the abilities of.
+var _help_signature := "-"
 var _score_signature := ""
 var _monospace := SystemFont.new()
 
@@ -67,13 +70,19 @@ func _process(delta: float) -> void:
 	_update_death_screen(character, alive)
 	_update_scoreboard(delta)
 	_update_network_status()
-	var character_class := character.character_class if character != null else null
-	if character_class != _help_class:
-		_rebuild_help(character_class)
+	var help_signature := "%s|%s" % [character.character_class.id if character != null and character.character_class != null else &"",
+		character.weapon_id if character != null else &""]
+	if help_signature != _help_signature:
+		_help_signature = help_signature
+		_rebuild_help(character)
 
 
 func toggle_help() -> void:
 	_help.visible = not _help.visible
+
+
+func is_help_visible() -> bool:
+	return _help.visible
 
 
 ## A short centered message ("Not enough mana").
@@ -157,7 +166,7 @@ func _update_death_screen(character: CombatCharacter, alive: bool) -> void:
 
 
 func _update_scoreboard(_delta: float) -> void:
-	_scoreboard.visible = Session.is_online() or scoreboard_held
+	_scoreboard.visible = (Session.is_online() and not scoreboard_suppressed) or scoreboard_held
 	if not _scoreboard.visible:
 		return
 	_scoreboard.pivot_offset = Vector2(_scoreboard.size.x, 0.0)
@@ -201,8 +210,8 @@ func _update_network_status() -> void:
 		_network_status.text = "Hosting on %s   %d player(s)   F10 leave" % ["this PC" if address.is_empty() else address, Game.get_player_infos().size()]
 
 
-func _rebuild_help(character_class: CharacterClass) -> void:
-	_help_class = character_class
+## Lists the controls and the character's hotbar (the weapon's basic attack included).
+func _rebuild_help(character: CombatCharacter) -> void:
 	for child in _help_lines.get_children():
 		if child.name != &"Title":
 			child.queue_free()
@@ -215,18 +224,23 @@ func _rebuild_help(character_class: CharacterClass) -> void:
 		["Space", "Jump", TEXT_COLOR],
 		["Left Shift", "Sprint", TEXT_COLOR],
 	]
-	if character_class != null:
-		for slot in character_class.abilities.size():
-			var ability := character_class.abilities[slot]
+	if character != null:
+		for slot in RPG.NUM_SLOTS:
+			var ability := character.abilities.get_ability(slot)
 			if ability != null:
 				lines.append([HotbarSlot.KEY_LABELS[slot], ability.display_name, ability.color.lerp(Color.WHITE, 0.5)])
 	lines.append_array([
+		["P", "Spellbook", TEXT_COLOR],
+		["I", "Inventory (weapons)", TEXT_COLOR],
+		["F4", "Balance (tweak numbers)", TEXT_COLOR],
+		["F6", "Show / hide tool bar", TEXT_COLOR],
 		["F2", "Change map", TEXT_COLOR],
 		["F3", "Change class", TEXT_COLOR],
 		["Tab", "Scoreboard", TEXT_COLOR],
 		["F10", "Main menu / leave", TEXT_COLOR],
 		["`", "Console", TEXT_COLOR],
 		["Esc", "Free the mouse", TEXT_COLOR],
+		["Click", "Back to playing", TEXT_COLOR],
 		["F1", "Hide this panel", TEXT_COLOR],
 	])
 	for line in lines:

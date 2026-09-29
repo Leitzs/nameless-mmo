@@ -5,7 +5,8 @@ extends CharacterBody3D
 ##   Visual                                              the body (CharacterVisual)
 ##   PlayerInput + PlayerCamera                          player control (only on the controlling machine)
 ##   BotBrain                                            AI (server only)
-## This script moves the body, applies statuses to movement, dies, and shows combat feedback.
+## This script moves the body, applies statuses to movement, dies, and shows combat feedback. Its stats come from the
+## class, the equipped weapon (players) and the balance settings (Tuning), and follow them when they change.
 ##
 ## Networking ("owner moves, server rules"): the server owns the node and all gameplay state. Movement is simulated by
 ## the machine that controls the character (owner_peer: the player's machine, or the server for bots) and sent to
@@ -26,7 +27,6 @@ const TARGET_HEIGHT := 1.36
 ## Enemies closer than this see a stealthed character (as a shimmer).
 const STEALTH_REVEAL_DISTANCE := 3.5
 const FEAR_SPEED_MULTIPLIER := 0.85
-const JUMP_VELOCITY := 5.2
 const ACCELERATION := 20.5
 const BRAKING := 20.0
 const AIR_CONTROL := 0.35
@@ -62,8 +62,20 @@ var sync_position := Vector3.ZERO
 var sync_yaw := 0.0
 var sync_velocity := Vector3.ZERO
 
-## Fraction of frontal damage blocked (from the class).
+## Fraction of frontal damage blocked (class and weapon).
 var frontal_block := 0.0
+
+## The weapon in the character's hands (players equip it from their inventory; null = none).
+var weapon: Weapon
+## Replicated by ServerSync: the id of weapon. Change it on the server with equip_weapon().
+var weapon_id: StringName:
+	set(value):
+		if value == weapon_id:
+			return
+		weapon_id = value
+		weapon = Game.find_item(value) as Weapon
+		if is_node_ready():
+			_apply_weapon()
 
 @onready var health: Health = $Health
 @onready var resources: ResourcePool = $ResourcePool
@@ -82,6 +94,7 @@ var _fear_timer := 0.0
 var _hit_flash := 0.0
 var _telegraph := 0.0
 var _hidden_by_stealth := false
+var _fallback_class: CharacterClass
 
 
 ## Called by the map's spawner before the character enters the tree (same data on every machine).
@@ -92,6 +105,7 @@ func configure_spawn(data: Dictionary) -> void:
 	if class_id != &"":
 		character_class = Game.find_class(class_id)
 	owner_peer = data.get("peer", 1)
+	weapon_id = data.get("weapon", &"")
 	position = data.get("position", Vector3.ZERO)
 	rotation.y = data.get("yaw", 0.0)
 	sync_position = position
@@ -105,13 +119,14 @@ func _ready() -> void:
 	collision_mask = RPG.LAYER_WORLD | RPG.LAYER_CHARACTERS | RPG.LAYER_BOUNDS
 	floor_snap_length = 0.3
 
-	var character := character_class if character_class != null else CharacterClass.new()
-	frontal_block = character.frontal_block
+	var character := _get_class()
 	statuses.setup(self)
 	health.setup(character.max_health, character.health_regen, statuses)
 	resources.setup(character.resource, health)
 	abilities.setup(self, character.abilities)
 	visual.apply_class(character)
+	_apply_weapon()
+	Tuning.changed.connect(_on_tuning_changed)
 
 	health.damaged.connect(_on_damaged)
 	health.healed.connect(_on_healed)
@@ -218,7 +233,7 @@ func compute_aim(max_range: float) -> AimResult:
 	return AimResult.new(get_target_point() + get_forward() * max_range)
 
 
-## Current maximum ground speed: class speed, sprint, casting, statuses and death applied.
+## Current maximum ground speed: class speed, sprint, weapon, balance, casting, statuses and death applied.
 func get_move_speed() -> float:
 	if not is_alive() or statuses.has_effect(StatusEffect.Effect.STUN) or statuses.has_effect(StatusEffect.Effect.FREEZE):
 		return 0.0
@@ -227,8 +242,12 @@ func get_move_speed() -> float:
 		speed = character_class.move_speed if character_class != null else 5.0
 		if wants_sprint and character_class != null:
 			speed = character_class.sprint_speed
+		if weapon != null:
+			speed *= weapon.move_speed_multiplier
+		if is_player():
+			speed *= Tuning.balance.player_speed_multiplier
 		if abilities.is_cast_slowed():
-			speed *= 0.4
+			speed *= Tuning.balance.casting_speed_fraction
 	speed *= statuses.get_move_speed_multiplier()
 	if statuses.has_effect(StatusEffect.Effect.FEAR):
 		speed *= FEAR_SPEED_MULTIPLIER
@@ -236,11 +255,92 @@ func get_move_speed() -> float:
 
 
 # ---------------------------------------------------------------------------------------------------------------------
+# Weapon and stats
+
+## Weapon multiplier on the direct damage of the ability in slot (slot 0 is the basic attack).
+func get_damage_multiplier(slot: int) -> float:
+	if weapon == null:
+		return 1.0
+	return weapon.attack_damage_multiplier if slot == 0 else weapon.ability_damage_multiplier
+
+
+## Weapon multiplier on the damage over time this character's abilities deal.
+func get_periodic_damage_multiplier() -> float:
+	return weapon.ability_damage_multiplier if weapon != null else 1.0
+
+
+## Weapon multiplier on the healing this character does.
+func get_healing_multiplier() -> float:
+	return weapon.healing_multiplier if weapon != null else 1.0
+
+
+## How fast the ability in slot winds up and recovers: the weapon's attack speed for the basic attack.
+func get_attack_speed(slot: int) -> float:
+	return maxf(0.1, weapon.attack_speed_multiplier) if slot == 0 and weapon != null else 1.0
+
+
+## Multiplier on the cooldown of the ability in slot: attack speed or the weapon, and the balance for players.
+func get_cooldown_multiplier(slot: int) -> float:
+	var multiplier := 1.0 / get_attack_speed(slot) if slot == 0 else (weapon.cooldown_multiplier if weapon != null else 1.0)
+	if is_player():
+		multiplier *= Tuning.balance.cooldown_multiplier
+	return multiplier
+
+
+## Multiplier on the resource cost of the ability in slot: the weapon (abilities 1-5) and the balance for players.
+func get_cost_multiplier(slot: int) -> float:
+	var multiplier := weapon.cost_multiplier if weapon != null and slot != 0 else 1.0
+	if is_player():
+		multiplier *= Tuning.balance.cost_multiplier
+	return multiplier
+
+
+## Server: puts a weapon in the character's hands (null: none). Every machine follows through weapon_id.
+func equip_weapon(new_weapon: Weapon) -> void:
+	if multiplayer.is_server():
+		weapon_id = new_weapon.id if new_weapon != null else &""
+
+
+## Applies the class, weapon and balance numbers: max health and resource (server; both keep their fraction), health
+## regeneration and frontal block.
+func refresh_stats() -> void:
+	var character := _get_class()
+	frontal_block = clampf(character.frontal_block + (weapon.frontal_block if weapon != null else 0.0), 0.0, 0.95)
+	health.regen = character.health_regen
+	if multiplayer.is_server():
+		health.set_max_health(character.max_health + (weapon.bonus_health if weapon != null else 0.0))
+		var base_resource := character.resource.max_value if character.resource != null else 0.0
+		resources.set_max_value(base_resource + (weapon.bonus_resource if weapon != null else 0.0))
+
+
+func _apply_weapon() -> void:
+	abilities.set_ability(0, _get_class().get_basic_attack(weapon))
+	visual.set_weapon(weapon)
+	refresh_stats()
+
+
+func _on_tuning_changed(target: String, _key: String) -> void:
+	# Leaving a server resets the values after the world was unloaded.
+	if not is_inside_tree():
+		return
+	if target == Tuning.GLOBAL or target == Tuning.target_of(character_class) or (weapon != null and target == Tuning.target_of(weapon)):
+		refresh_stats()
+
+
+func _get_class() -> CharacterClass:
+	if character_class != null:
+		return character_class
+	if _fallback_class == null:
+		_fallback_class = CharacterClass.new()
+	return _fallback_class
+
+
+# ---------------------------------------------------------------------------------------------------------------------
 # Movement
 
 func jump() -> void:
 	if is_locally_controlled() and is_on_floor() and can_act() and _dash_time_left <= 0.0:
-		velocity.y = JUMP_VELOCITY
+		velocity.y = Tuning.balance.jump_velocity
 
 
 ## Turns towards a point, at once or over the next frames.

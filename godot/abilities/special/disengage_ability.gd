@@ -30,3 +30,7 @@ func execute(ctx: SpellContext) -> void:
 		ctx.hold()
 		await ctx.wait(leap_duration + 0.05)
 		ctx.finish_hold()
+
+
+func describe(_text: AbilityText) -> PackedStringArray:
+	return PackedStringArray(["Leaps %s backwards, away from the crosshair, in %s" % [AbilityText.meters(leap_distance), AbilityText.seconds(leap_duration)]])

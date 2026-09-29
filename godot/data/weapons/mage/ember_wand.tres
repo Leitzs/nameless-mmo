@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_sklx4"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_1mc5t"]
+
+[sub_resource type="Resource" id="Resource_3x28y"]
+script = ExtResource("1_sklx4")
+part_name = &"WandShaft"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.08309626, -0.099975064)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.03, 0.42, 0.03)
+color = Color(0.34, 0.25, 0.17, 1)
+
+[sub_resource type="Resource" id="Resource_p7g4x"]
+script = ExtResource("1_sklx4")
+part_name = &"WandTip"
+shape = 1
+socket = &"hand_r"
+offset = Vector3(0, 0.23011273, -0.27685404)
+size = Vector3(0.08, 0.08, 0.08)
+color = Color(1, 0.62, 0.3, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_1mc5t")
+weapon_type = "Wand"
+attack_damage_multiplier = 0.7
+attack_speed_multiplier = 1.5
+ability_damage_multiplier = 0.9
+cost_multiplier = 0.85
+cosmetics = Array[ExtResource("1_sklx4")]([SubResource("Resource_3x28y"), SubResource("Resource_p7g4x")])
+id = &"mage.ember_wand"
+display_name = "Ember Wand"
+description = "A light wand that flicks out Arcane Bolts half again as fast, each one weaker. Spells cost 15% less mana and deal 10% less damage."
+color = Color(1, 0.6, 0.3, 1)

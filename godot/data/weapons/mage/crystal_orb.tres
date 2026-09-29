@@ -1,0 +1,65 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_godvh"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_sv78m"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_p57ct"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="4_1wnkk"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="5_5ujsj"]
+
+[sub_resource type="Resource" id="Resource_hhyh6"]
+script = ExtResource("1_godvh")
+direct_damage = 15.0
+splash_damage = 7.0
+splash_radius = 2.2
+
+[sub_resource type="Resource" id="Resource_raned"]
+script = ExtResource("3_p57ct")
+payload = SubResource("Resource_hhyh6")
+projectile_speed = 26.0
+homing_acceleration = 50.0
+visual_scale = 0.9
+id = &"mage.orb_pulse"
+display_name = "Orb Pulse"
+description = "A slow pulse of focused arcane power that bursts around its target."
+color = Color(0.85, 0.7, 1, 1)
+cast_time = 0.85
+release_delay = 0.3
+max_range = 35.0
+animation = &"attack_1"
+animation_speed = 1.4
+
+[sub_resource type="Resource" id="Resource_f767k"]
+script = ExtResource("4_1wnkk")
+part_name = &"OrbCradle"
+shape = 2
+socket = &"hand_l"
+offset = Vector3(0, 0.03, -0.1)
+size = Vector3(0.12, 0.05, 0.12)
+color = Color(0.8808, 0.7674, 0.3811, 1)
+roughness = 0.35
+
+[sub_resource type="Resource" id="Resource_u4b3n"]
+script = ExtResource("4_1wnkk")
+part_name = &"Orb"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.15, -0.1)
+size = Vector3(0.22, 0.22, 0.22)
+color = Color(0.75, 0.88, 1, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.8
+
+[resource]
+script = ExtResource("5_5ujsj")
+weapon_type = "Orb"
+basic_attack = SubResource("Resource_raned")
+ability_damage_multiplier = 1.2
+cost_multiplier = 1.2
+cosmetics = Array[ExtResource("4_1wnkk")]([SubResource("Resource_f767k"), SubResource("Resource_u4b3n")])
+id = &"mage.crystal_orb"
+display_name = "Crystal Orb"
+description = "A focusing orb held in the off hand. Spells deal 20% more damage but cost 20% more mana, and the basic attack becomes a slow pulse that bursts around its target."
+color = Color(0.7, 0.85, 1, 1)

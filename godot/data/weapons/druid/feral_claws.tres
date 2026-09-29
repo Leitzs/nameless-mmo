@@ -1,0 +1,108 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_qwyt5"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_2ubtc"]
+[ext_resource type="Resource" path="res://data/statuses/bleed.tres" id="3_e6k8g"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="4_pd38j"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="5_utnfm"]
+
+[sub_resource type="Resource" id="Resource_cxugd"]
+script = ExtResource("2_2ubtc")
+status = ExtResource("3_e6k8g")
+duration = 4.0
+magnitude = 2.0
+
+[sub_resource type="Resource" id="Resource_02gxc"]
+script = ExtResource("1_qwyt5")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2", &"attack_3"])
+damage = 8.0
+reach = 1.9
+arc_degrees = 100.0
+statuses = Array[ExtResource("2_2ubtc")]([SubResource("Resource_cxugd")])
+id = &"druid.rake"
+display_name = "Rake"
+description = "Fast raking claws that make the target bleed."
+color = Color(0.95, 0.55, 0.45, 1)
+cast_time = 0.4
+release_delay = 0.13
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 2.0
+
+[sub_resource type="Resource" id="Resource_pee0k"]
+script = ExtResource("4_pd38j")
+part_name = &"ClawRight0"
+shape = 3
+socket = &"hand_r"
+offset = Vector3(-0.035, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.9, 0.86, 0.75, 1)
+roughness = 0.3
+
+[sub_resource type="Resource" id="Resource_di3q1"]
+script = ExtResource("4_pd38j")
+part_name = &"ClawRight1"
+shape = 3
+socket = &"hand_r"
+offset = Vector3(0, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.9, 0.86, 0.75, 1)
+roughness = 0.3
+
+[sub_resource type="Resource" id="Resource_g451v"]
+script = ExtResource("4_pd38j")
+part_name = &"ClawRight2"
+shape = 3
+socket = &"hand_r"
+offset = Vector3(0.035, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.9, 0.86, 0.75, 1)
+roughness = 0.3
+
+[sub_resource type="Resource" id="Resource_7klj0"]
+script = ExtResource("4_pd38j")
+part_name = &"ClawLeft0"
+shape = 3
+socket = &"hand_l"
+offset = Vector3(-0.035, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.9, 0.86, 0.75, 1)
+roughness = 0.3
+
+[sub_resource type="Resource" id="Resource_lbp8a"]
+script = ExtResource("4_pd38j")
+part_name = &"ClawLeft1"
+shape = 3
+socket = &"hand_l"
+offset = Vector3(0, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.9, 0.86, 0.75, 1)
+roughness = 0.3
+
+[sub_resource type="Resource" id="Resource_tb3uq"]
+script = ExtResource("4_pd38j")
+part_name = &"ClawLeft2"
+shape = 3
+socket = &"hand_l"
+offset = Vector3(0.035, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.9, 0.86, 0.75, 1)
+roughness = 0.3
+
+[resource]
+script = ExtResource("5_utnfm")
+weapon_type = "Claws"
+basic_attack = SubResource("Resource_02gxc")
+ability_damage_multiplier = 0.85
+move_speed_multiplier = 1.08
+cosmetics = Array[ExtResource("4_pd38j")]([SubResource("Resource_pee0k"), SubResource("Resource_di3q1"), SubResource("Resource_g451v"), SubResource("Resource_7klj0"), SubResource("Resource_lbp8a"), SubResource("Resource_tb3uq")])
+id = &"druid.feral_claws"
+display_name = "Feral Claws"
+description = "Fight like a beast: fast raking claws make the target bleed and you move 8% faster, but spells deal 15% less damage."
+color = Color(0.95, 0.55, 0.45, 1)

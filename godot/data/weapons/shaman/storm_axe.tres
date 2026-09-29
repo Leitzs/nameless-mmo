@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_yv43b"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_ey672"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="3_ahqsm"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="4_dyc6w"]
+
+[sub_resource type="Resource" id="Resource_btfrb"]
+script = ExtResource("1_yv43b")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2"])
+damage = 13.0
+damage_type = 3
+reach = 2.1
+resource_on_hit = 4.0
+id = &"shaman.stormstrike"
+display_name = "Stormstrike"
+description = "Crackling axe strikes that restore mana on every hit."
+color = Color(0.67, 0.85, 1, 1)
+cast_time = 0.55
+release_delay = 0.2
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.5
+
+[sub_resource type="Resource" id="Resource_3oi6n"]
+script = ExtResource("3_ahqsm")
+part_name = &"AxeHandle"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.1278404, -0.1538078)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.045, 0.6, 0.045)
+color = Color(0.4845, 0.3811, 0.2478, 1)
+
+[sub_resource type="Resource" id="Resource_swcm0"]
+script = ExtResource("3_ahqsm")
+part_name = &"AxeHead"
+socket = &"hand_r"
+offset = Vector3(0, 0.28124887, -0.41837716)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.03, 0.2, 0.3)
+color = Color(0.6, 0.8, 1, 1)
+roughness = 0.3
+emissive = 0.8
+
+[resource]
+script = ExtResource("4_dyc6w")
+weapon_type = "Axe"
+basic_attack = SubResource("Resource_btfrb")
+bonus_health = 30.0
+cosmetics = Array[ExtResource("3_ahqsm")]([SubResource("Resource_3oi6n"), SubResource("Resource_swcm0")])
+id = &"shaman.storm_axe"
+display_name = "Storm Axe"
+description = "Trade Lightning Bolt for crackling axe strikes that restore 4 mana on every hit. Adds 30 health."
+color = Color(0.6, 0.8, 1, 1)

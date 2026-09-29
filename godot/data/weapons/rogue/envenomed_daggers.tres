@@ -1,0 +1,61 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_8cx61"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_o6dbg"]
+[ext_resource type="Resource" path="res://data/statuses/venom.tres" id="3_ejk8v"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="4_25hv1"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="5_n04bg"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="6_um3bl"]
+
+[sub_resource type="Resource" id="Resource_g8gem"]
+script = ExtResource("2_o6dbg")
+status = ExtResource("3_ejk8v")
+duration = 4.0
+magnitude = 3.0
+
+[sub_resource type="Resource" id="Resource_35w2f"]
+script = ExtResource("1_8cx61")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2", &"attack_3"])
+damage = 7.0
+reach = 1.9
+arc_degrees = 100.0
+statuses = Array[ExtResource("2_o6dbg")]([SubResource("Resource_g8gem")])
+id = &"rogue.venom_slash"
+display_name = "Venom Slash"
+description = "Quick poisoned slashes. Each one envenoms the target: nature damage every second for a few seconds."
+color = Color(0.6, 1, 0.4, 1)
+cast_time = 0.38
+release_delay = 0.12
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 2.0
+
+[sub_resource type="Resource" id="Resource_r034u"]
+script = ExtResource("5_n04bg")
+blade_length = 0.32
+blade_width = 0.045
+blade_color = Color(0.55, 0.9, 0.4, 1)
+hilt_color = Color(0.3, 0.35, 0.25, 1)
+part_name = &"VenomDaggerRight"
+socket = &"hand_r"
+direction = Vector3(0, 0.50702, -0.861934)
+
+[sub_resource type="Resource" id="Resource_fdmxr"]
+script = ExtResource("5_n04bg")
+blade_length = 0.32
+blade_width = 0.045
+blade_color = Color(0.55, 0.9, 0.4, 1)
+hilt_color = Color(0.3, 0.35, 0.25, 1)
+part_name = &"VenomDaggerLeft"
+socket = &"hand_l"
+direction = Vector3(0, 0.50702, -0.861934)
+
+[resource]
+script = ExtResource("6_um3bl")
+weapon_type = "Daggers"
+basic_attack = SubResource("Resource_35w2f")
+cosmetics = Array[ExtResource("4_25hv1")]([SubResource("Resource_r034u"), SubResource("Resource_fdmxr")])
+id = &"rogue.envenomed_daggers"
+display_name = "Envenomed Daggers"
+description = "Poison-coated blades: the basic attack deals less up front but envenoms the target for 3 damage per second over 4 seconds."
+color = Color(0.6, 1, 0.4, 1)

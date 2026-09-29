@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_58dme"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_yk3lg"]
+
+[sub_resource type="Resource" id="Resource_whtbm"]
+script = ExtResource("1_58dme")
+part_name = &"WrapRight"
+socket = &"hand_r"
+offset = Vector3(0, 0.02, 0)
+size = Vector3(0.1, 0.12, 0.1)
+color = Color(0.9309246, 0.91627353, 0.88082504, 1)
+roughness = 0.9
+
+[sub_resource type="Resource" id="Resource_bevdy"]
+script = ExtResource("1_58dme")
+part_name = &"WrapLeft"
+socket = &"hand_l"
+offset = Vector3(0, 0.02, 0)
+size = Vector3(0.1, 0.12, 0.1)
+color = Color(0.9309246, 0.91627353, 0.88082504, 1)
+roughness = 0.9
+
+[resource]
+script = ExtResource("2_yk3lg")
+weapon_type = "Wraps"
+cosmetics = Array[ExtResource("1_58dme")]([SubResource("Resource_whtbm"), SubResource("Resource_bevdy")])
+id = &"monk.hand_wraps"
+display_name = "Hand Wraps"
+description = "Plain cloth wraps: the monk's baseline, with no bonuses or penalties."
+color = Color(0.93, 0.92, 0.88, 1)

@@ -1,0 +1,63 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_sfe2k"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_incel"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="3_l1ifb"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="4_ck8on"]
+
+[sub_resource type="Resource" id="Resource_5evkk"]
+script = ExtResource("1_sfe2k")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2", &"attack_3"])
+damage = 9.0
+reach = 2.6
+arc_degrees = 200.0
+hit_all_in_arc = true
+id = &"monk.staff_sweep"
+display_name = "Staff Sweep"
+description = "Wide quarterstaff sweeps that hit every enemy around your front."
+color = Color(0.9, 0.8, 0.6, 1)
+cast_time = 0.5
+release_delay = 0.18
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.7
+
+[sub_resource type="Resource" id="Resource_lo43l"]
+script = ExtResource("3_l1ifb")
+part_name = &"Quarterstaff"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.05, 0)
+rotation_degrees = Vector3(-8, 0, 0)
+size = Vector3(0.05, 1.8, 0.05)
+color = Color(0.6, 0.45, 0.28, 1)
+
+[sub_resource type="Resource" id="Resource_kvvvs"]
+script = ExtResource("3_l1ifb")
+part_name = &"StaffCapTop"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.93, -0.125)
+rotation_degrees = Vector3(-8, 0, 0)
+size = Vector3(0.06, 0.1, 0.06)
+color = Color(0.38, 0.38, 0.42, 1)
+
+[sub_resource type="Resource" id="Resource_ok244"]
+script = ExtResource("3_l1ifb")
+part_name = &"StaffCapBottom"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, -0.83, 0.12)
+rotation_degrees = Vector3(-8, 0, 0)
+size = Vector3(0.06, 0.1, 0.06)
+color = Color(0.38, 0.38, 0.42, 1)
+
+[resource]
+script = ExtResource("4_ck8on")
+weapon_type = "Staff"
+basic_attack = SubResource("Resource_5evkk")
+cosmetics = Array[ExtResource("3_l1ifb")]([SubResource("Resource_lo43l"), SubResource("Resource_kvvvs"), SubResource("Resource_ok244")])
+id = &"monk.quarterstaff"
+display_name = "Quarterstaff"
+description = "A long staff: the basic attack sweeps every enemy around your front with a 2.6 m reach, but each hit deals less damage."
+color = Color(0.8, 0.65, 0.4, 1)

@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_36a0w"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="2_v0q84"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="3_061mx"]
+
+[sub_resource type="Resource" id="Resource_66xna"]
+script = ExtResource("2_v0q84")
+blade_length = 0.32
+blade_width = 0.045
+blade_color = Color(0.85430586, 0.86504203, 0.88082504, 1)
+hilt_color = Color(0.5370987, 0.48452926, 0.42358288, 1)
+part_name = &"DaggerRight"
+socket = &"hand_r"
+direction = Vector3(0, 0.5070201, -0.86193424)
+
+[sub_resource type="Resource" id="Resource_f6r5t"]
+script = ExtResource("2_v0q84")
+blade_length = 0.32
+blade_width = 0.045
+blade_color = Color(0.85430586, 0.86504203, 0.88082504, 1)
+hilt_color = Color(0.5370987, 0.48452926, 0.42358288, 1)
+part_name = &"DaggerLeft"
+socket = &"hand_l"
+direction = Vector3(0, 0.5070201, -0.86193424)
+
+[resource]
+script = ExtResource("3_061mx")
+weapon_type = "Daggers"
+cosmetics = Array[ExtResource("1_36a0w")]([SubResource("Resource_66xna"), SubResource("Resource_f6r5t")])
+id = &"rogue.twin_daggers"
+display_name = "Twin Daggers"
+description = "A matched pair of daggers: the rogue's baseline, with no bonuses or penalties."
+color = Color(0.85, 0.87, 0.9, 1)

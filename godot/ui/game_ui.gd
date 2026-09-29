@@ -1,31 +1,57 @@
 class_name GameUI
 extends CanvasLayer
-## The game's UI layer: HUD, menus and console, and the keys that open them: F1 help, F2 map selector (host), F3 class
-## picker, F10 main menu (offline) or leave (online), Tab scoreboard, ` console, Esc frees the mouse (click to play on).
+## The game's UI layer: HUD, tool panels, menus and console, and the keys that open them: F1 help, P spellbook,
+## I inventory, F4 balance, F6 tool bar, F2 map selector (host), F3 class picker, F10 main menu (offline) or leave
+## (online), Tab scoreboard, ` console, Esc frees the mouse (click the world to play on).
 ## While a menu or the console is open the game gets no input and the mouse is free; offline, the main menu and the map
-## selector also pause the game.
+## selector also pause the game. The tool panels (spellbook, inventory, balance) stay on screen while playing: opening
+## one frees the mouse to use it, a click on the world goes back to playing, and they only take the mouse while it is
+## free.
 
 @onready var hud: HUD = $HUD
 @onready var main_menu: MainMenu = $MainMenu
 @onready var class_picker: ClassPicker = $ClassPicker
 @onready var map_selector: MapSelector = $MapSelector
 @onready var console: DevConsole = $DevConsole
+@onready var panels: Control = $Panels
+@onready var tool_bar: ToolBar = $Panels/ToolBar
+@onready var spellbook: SpellbookPanel = $Panels/RightDock/SpellbookPanel
+@onready var inventory: InventoryPanel = $Panels/InventoryPanel
+@onready var balance: BalancePanel = $Panels/RightDock/BalancePanel
 
 var _mouse_released := false
 var _pause_request := 0
+var _was_playing := true
 
 
 func _ready() -> void:
 	class_picker.close_requested.connect(close_class_picker)
 	map_selector.close_requested.connect(close_map_selector)
+	spellbook.close_requested.connect(toggle_panel.bind(spellbook))
+	inventory.close_requested.connect(toggle_panel.bind(inventory))
+	balance.close_requested.connect(toggle_panel.bind(balance))
+	tool_bar.toggle_requested.connect(_on_tool_bar_toggle)
 	Game.local_character_changed.connect(_on_local_character_changed)
 	Session.joined.connect(close_main_menu)
 
 
 func _process(_delta: float) -> void:
-	var menu_open := main_menu.visible or class_picker.visible or map_selector.visible
+	var menu_open := _is_menu_open()
 	Game.gameplay_input_enabled = not menu_open and not console.visible and not _mouse_released
 	hud.visible = not menu_open
+	panels.visible = not menu_open
+	# While playing, clicks and keys must not reach the panels (the captured mouse sits at the screen center).
+	var playing := Game.gameplay_input_enabled
+	panels.mouse_behavior_recursive = Control.MOUSE_BEHAVIOR_DISABLED if playing else Control.MOUSE_BEHAVIOR_INHERITED
+	panels.focus_behavior_recursive = Control.FOCUS_BEHAVIOR_DISABLED if playing else Control.FOCUS_BEHAVIOR_INHERITED
+	if playing and not _was_playing:
+		var focused := get_viewport().gui_get_focus_owner()
+		if focused != null and panels.is_ancestor_of(focused):
+			focused.release_focus()
+	_was_playing = playing
+	hud.scoreboard_suppressed = balance.visible or spellbook.visible
+	tool_bar.show_open({&"help": hud.is_help_visible(), &"spellbook": spellbook.visible, &"inventory": inventory.visible,
+		&"balance": balance.visible})
 	var wanted := Input.MOUSE_MODE_CAPTURED if Game.gameplay_input_enabled and DisplayServer.window_is_focused() else Input.MOUSE_MODE_VISIBLE
 	if Input.mouse_mode != wanted:
 		Input.mouse_mode = wanted
@@ -56,6 +82,17 @@ func _unhandled_input(event: InputEvent) -> void:
 			open_map_selector()
 	elif event.is_action_pressed(&"toggle_help"):
 		hud.toggle_help()
+	elif event.is_action_pressed(&"toggle_spellbook"):
+		if not _is_menu_open():
+			toggle_panel(spellbook)
+	elif event.is_action_pressed(&"toggle_inventory"):
+		if not _is_menu_open():
+			toggle_panel(inventory)
+	elif event.is_action_pressed(&"toggle_balance"):
+		if not _is_menu_open():
+			toggle_panel(balance)
+	elif event.is_action_pressed(&"toggle_tool_bar"):
+		tool_bar.visible = not tool_bar.visible
 	elif event.is_action_pressed(&"scoreboard"):
 		hud.scoreboard_held = true
 	elif event.is_action_released(&"scoreboard"):
@@ -71,6 +108,32 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func show_message(text: String, color: Color) -> void:
 	hud.show_message(text, color)
+
+
+## Shows or hides a tool panel (spellbook, inventory, balance). Opening one frees the mouse to use it; closing the last
+## one goes back to playing.
+func toggle_panel(panel: Control) -> void:
+	panel.visible = not panel.visible
+	if panel.visible:
+		_mouse_released = true
+	elif not (spellbook.visible or inventory.visible or balance.visible):
+		_mouse_released = false
+
+
+func _on_tool_bar_toggle(panel: StringName) -> void:
+	match panel:
+		&"help":
+			hud.toggle_help()
+		&"spellbook":
+			toggle_panel(spellbook)
+		&"inventory":
+			toggle_panel(inventory)
+		&"balance":
+			toggle_panel(balance)
+
+
+func _is_menu_open() -> bool:
+	return main_menu.visible or class_picker.visible or map_selector.visible
 
 
 ## Opens the main menu; offline the game pauses, optionally a moment later so the camera can settle on the first frames.

@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_smbxe"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_uf1at"]
+
+[sub_resource type="Resource" id="Resource_272e6"]
+script = ExtResource("1_smbxe")
+part_name = &"LanternHandle"
+shape = 2
+socket = &"hand_l"
+offset = Vector3(0, 0, -0.06)
+size = Vector3(0.015, 0.14, 0.015)
+color = Color(0.38, 0.38, 0.42, 1)
+
+[sub_resource type="Resource" id="Resource_sexpw"]
+script = ExtResource("1_smbxe")
+part_name = &"LanternFrame"
+socket = &"hand_l"
+offset = Vector3(0, -0.16, -0.06)
+size = Vector3(0.13, 0.18, 0.13)
+color = Color(0.38, 0.38, 0.42, 1)
+roughness = 0.4
+
+[sub_resource type="Resource" id="Resource_lt6p8"]
+script = ExtResource("1_smbxe")
+part_name = &"LanternSpirit"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, -0.16, -0.06)
+size = Vector3(0.14, 0.14, 0.14)
+color = Color(0.95, 0.9, 0.55, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.8
+
+[resource]
+script = ExtResource("2_uf1at")
+weapon_type = "Lantern"
+ability_damage_multiplier = 0.9
+cooldown_multiplier = 0.85
+bonus_resource = 50.0
+cosmetics = Array[ExtResource("1_smbxe")]([SubResource("Resource_272e6"), SubResource("Resource_sexpw"), SubResource("Resource_lt6p8")])
+id = &"summoner.spirit_lantern"
+display_name = "Spirit Lantern"
+description = "Calls spirits faster: abilities recover 15% faster and you have 50 more mana, but they deal 10% less damage."
+color = Color(0.95, 0.9, 0.55, 1)

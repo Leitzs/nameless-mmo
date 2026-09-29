@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_6y0rq"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_45jhq"]
+
+[sub_resource type="Resource" id="Resource_wjooc"]
+script = ExtResource("1_6y0rq")
+part_name = &"AxeHandle"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.19176047, -0.23071179)
+direction = Vector3(0, 0.6392015, -0.7690393)
+size = Vector3(0.05, 0.9, 0.05)
+color = Color(0.5370987, 0.4100209, 0.2716998, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_ilosr"]
+script = ExtResource("1_6y0rq")
+part_name = &"AxeHead"
+socket = &"hand_r"
+offset = Vector3(0, 0.39630494, -0.47680435)
+direction = Vector3(0, 0.6392015, -0.7690393)
+size = Vector3(0.03, 0.22, 0.42)
+color = Color(0.735357, 0.735357, 0.7483791, 1)
+roughness = 0.35
+
+[resource]
+script = ExtResource("2_45jhq")
+weapon_type = "Great axe"
+cosmetics = Array[ExtResource("1_6y0rq")]([SubResource("Resource_wjooc"), SubResource("Resource_ilosr")])
+id = &"barbarian.great_axe"
+display_name = "Great Axe"
+description = "A two-handed war axe: the barbarian's baseline, with no bonuses or penalties."
+color = Color(0.74, 0.74, 0.75, 1)

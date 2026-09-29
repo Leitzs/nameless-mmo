@@ -16,7 +16,14 @@ func execute(ctx: SpellContext) -> void:
 	spawn_cast_flash(ctx, 0.9 * visual_scale)
 
 
-## The payload for this use (stronger from stealth).
+## The payload for this use (scaled by the weapon, stronger from stealth).
 func get_payload(ctx: SpellContext) -> ProjectilePayload:
 	var base := payload if payload != null else ProjectilePayload.new()
-	return base.with_damage_multiplier(get_stealth_multiplier(ctx))
+	return base.with_damage_multiplier(get_damage_multiplier(ctx))
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Fires a %s projectile at %s m/s" % ["homing" if homing_acceleration > 0.0 else "straight", AbilityText.number(projectile_speed)])
+	lines.append_array(text.payload(payload))
+	return lines

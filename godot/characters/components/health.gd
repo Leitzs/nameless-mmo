@@ -72,6 +72,17 @@ func was_damaged_within(seconds: float) -> bool:
 	return Session.server_time() - _last_damaged_time < seconds
 
 
+## Server: changes the maximum (class, weapon and balance changes), keeping the same fraction of health.
+func set_max_health(value: float) -> void:
+	var new_max := maxf(1.0, value)
+	if is_equal_approx(new_max, max_health):
+		return
+	var fraction := get_fraction()
+	max_health = new_max
+	if is_alive():
+		health = clampf(new_max * fraction, 1.0, new_max)
+
+
 ## Server: full health, no shield.
 func restore() -> void:
 	shield = 0.0

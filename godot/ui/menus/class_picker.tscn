@@ -52,5 +52,5 @@ columns = 4
 [node name="Hint" type="Label" parent="Center/Panel/Content"]
 layout_mode = 2
 theme_type_variation = &"DimLabel"
-text = "Changing class respawns your character. F3 or Esc closes this."
+text = "Changing class respawns your character with that class's weapons. F3 or Esc closes this."
 horizontal_alignment = 1

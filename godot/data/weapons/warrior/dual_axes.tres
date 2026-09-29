@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_p0rcu"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_wtu1l"]
+
+[sub_resource type="Resource" id="Resource_lkeqd"]
+script = ExtResource("1_p0rcu")
+part_name = &"HandAxeHandleRight"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.10227232, -0.123046234)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.04, 0.48, 0.04)
+color = Color(0.4845, 0.3811, 0.2478, 1)
+
+[sub_resource type="Resource" id="Resource_imlah"]
+script = ExtResource("1_p0rcu")
+part_name = &"HandAxeHeadRight"
+socket = &"hand_r"
+offset = Vector3(0, 0.21732868, -0.33147326)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.025, 0.16, 0.24)
+color = Color(0.7354, 0.7354, 0.7484, 1)
+roughness = 0.35
+
+[sub_resource type="Resource" id="Resource_gnsn7"]
+script = ExtResource("1_p0rcu")
+part_name = &"HandAxeHandleLeft"
+shape = 2
+socket = &"hand_l"
+offset = Vector3(0, 0.10227232, -0.123046234)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.04, 0.48, 0.04)
+color = Color(0.4845, 0.3811, 0.2478, 1)
+
+[sub_resource type="Resource" id="Resource_yg6ha"]
+script = ExtResource("1_p0rcu")
+part_name = &"HandAxeHeadLeft"
+socket = &"hand_l"
+offset = Vector3(0, 0.21732868, -0.33147326)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.025, 0.16, 0.24)
+color = Color(0.7354, 0.7354, 0.7484, 1)
+roughness = 0.35
+
+[resource]
+script = ExtResource("2_wtu1l")
+weapon_type = "Axes"
+attack_damage_multiplier = 0.8
+attack_speed_multiplier = 1.35
+move_speed_multiplier = 1.05
+cosmetics = Array[ExtResource("1_p0rcu")]([SubResource("Resource_lkeqd"), SubResource("Resource_imlah"), SubResource("Resource_gnsn7"), SubResource("Resource_yg6ha")])
+id = &"warrior.dual_axes"
+display_name = "Dual Axes"
+description = "An axe in each hand: attacks come 35% faster (so rage builds faster) but each deals 20% less, and you move 5% faster."
+color = Color(0.9, 0.5, 0.4, 1)

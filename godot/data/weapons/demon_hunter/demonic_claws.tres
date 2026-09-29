@@ -1,0 +1,89 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_cw4br"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_mmgmi"]
+
+[sub_resource type="Resource" id="Resource_wnd3q"]
+script = ExtResource("1_cw4br")
+part_name = &"ClawRight0"
+shape = 3
+socket = &"hand_r"
+offset = Vector3(-0.035, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.55, 1, 0.3, 1)
+roughness = 0.3
+emissive = 1.5
+
+[sub_resource type="Resource" id="Resource_8isv5"]
+script = ExtResource("1_cw4br")
+part_name = &"ClawRight1"
+shape = 3
+socket = &"hand_r"
+offset = Vector3(0, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.55, 1, 0.3, 1)
+roughness = 0.3
+emissive = 1.5
+
+[sub_resource type="Resource" id="Resource_4odkj"]
+script = ExtResource("1_cw4br")
+part_name = &"ClawRight2"
+shape = 3
+socket = &"hand_r"
+offset = Vector3(0.035, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.55, 1, 0.3, 1)
+roughness = 0.3
+emissive = 1.5
+
+[sub_resource type="Resource" id="Resource_e7kb6"]
+script = ExtResource("1_cw4br")
+part_name = &"ClawLeft0"
+shape = 3
+socket = &"hand_l"
+offset = Vector3(-0.035, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.55, 1, 0.3, 1)
+roughness = 0.3
+emissive = 1.5
+
+[sub_resource type="Resource" id="Resource_gqjb6"]
+script = ExtResource("1_cw4br")
+part_name = &"ClawLeft1"
+shape = 3
+socket = &"hand_l"
+offset = Vector3(0, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.55, 1, 0.3, 1)
+roughness = 0.3
+emissive = 1.5
+
+[sub_resource type="Resource" id="Resource_jyjtq"]
+script = ExtResource("1_cw4br")
+part_name = &"ClawLeft2"
+shape = 3
+socket = &"hand_l"
+offset = Vector3(0.035, 0.02, -0.12)
+direction = Vector3(0, 0.1, -1)
+size = Vector3(0.025, 0.2, 0.025)
+color = Color(0.55, 1, 0.3, 1)
+roughness = 0.3
+emissive = 1.5
+
+[resource]
+script = ExtResource("2_mmgmi")
+weapon_type = "Claws"
+attack_damage_multiplier = 0.8
+attack_speed_multiplier = 1.3
+bonus_health = -20.0
+move_speed_multiplier = 1.08
+cosmetics = Array[ExtResource("1_cw4br")]([SubResource("Resource_wnd3q"), SubResource("Resource_8isv5"), SubResource("Resource_4odkj"), SubResource("Resource_e7kb6"), SubResource("Resource_gqjb6"), SubResource("Resource_jyjtq")])
+id = &"demon_hunter.demonic_claws"
+display_name = "Demonic Claws"
+description = "Fight bare-clawed: attacks come 30% faster and you move 8% faster, but each hit deals 20% less and you have 20 less health."
+color = Color(0.55, 1, 0.3, 1)

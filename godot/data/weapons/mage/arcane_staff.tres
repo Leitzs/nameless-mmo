@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_s0yn5"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_1tga3"]
+
+[sub_resource type="Resource" id="Resource_1exqk"]
+script = ExtResource("1_s0yn5")
+part_name = &"StaffShaft"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.1, 0)
+rotation_degrees = Vector3(-8.000001, 0, 0)
+size = Vector3(0.06, 1.75, 0.06)
+color = Color(0.38109186, 0.29337206, 0.20598418, 1)
+roughness = 0.75
+
+[sub_resource type="Resource" id="Resource_kdtqf"]
+script = ExtResource("1_s0yn5")
+part_name = &"StaffOrb"
+shape = 1
+socket = &"hand_r"
+offset = Vector3(0, 1.0457059, -0.13291031)
+size = Vector3(0.18, 0.18, 0.18)
+color = Color(0.76737565, 0.58383155, 1, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_1tga3")
+weapon_type = "Staff"
+cosmetics = Array[ExtResource("1_s0yn5")]([SubResource("Resource_1exqk"), SubResource("Resource_kdtqf")])
+id = &"mage.arcane_staff"
+display_name = "Arcane Staff"
+description = "A tall staff crowned with an arcane crystal: the mage's baseline, with no bonuses or penalties."
+color = Color(0.77, 0.58, 1, 1)

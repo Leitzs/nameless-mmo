@@ -10,6 +10,8 @@ signal hosted
 signal joined
 signal join_failed(reason: String)
 signal disconnected(reason: String)
+## Offline, hosting or joined changed (a client leaving a server goes from CLIENT to OFFLINE).
+signal mode_changed(previous: Mode)
 
 enum Mode { OFFLINE, HOST, CLIENT }
 
@@ -18,7 +20,12 @@ const MAX_CLIENTS := 15
 const CONNECT_TIMEOUT := 12.0
 const PING_INTERVAL := 1.0
 
-var mode := Mode.OFFLINE
+var mode := Mode.OFFLINE:
+	set(value):
+		if value != mode:
+			var previous := mode
+			mode = value
+			mode_changed.emit(previous)
 ## Address being joined, while the connection is pending.
 var connecting_address := ""
 ## Last connection error, empty when there is none.

@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_13fqk"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_hhnn0"]
+
+[sub_resource type="Resource" id="Resource_8gf5l"]
+script = ExtResource("1_13fqk")
+part_name = &"StaffShaft"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.1, 0)
+rotation_degrees = Vector3(-8, 0, 0)
+size = Vector3(0.06, 1.7, 0.06)
+color = Color(0.9063318, 0.886004, 0.80946815, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_nmtlo"]
+script = ExtResource("1_13fqk")
+part_name = &"StaffCross"
+socket = &"hand_r"
+offset = Vector3(0, 0.9, -0.115)
+rotation_degrees = Vector3(-8, 0, 0)
+size = Vector3(0.3, 0.04, 0.04)
+color = Color(0.9063318, 0.886004, 0.80946815, 1)
+roughness = 0.7
+
+[sub_resource type="Resource" id="Resource_ved1q"]
+script = ExtResource("1_13fqk")
+part_name = &"StaffOrb"
+shape = 1
+socket = &"hand_r"
+offset = Vector3(0, 1.0457059, -0.13291031)
+size = Vector3(0.16, 0.16, 0.16)
+color = Color(0.6651851, 1, 0.735357, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_hhnn0")
+weapon_type = "Staff"
+cosmetics = Array[ExtResource("1_13fqk")]([SubResource("Resource_8gf5l"), SubResource("Resource_nmtlo"), SubResource("Resource_ved1q")])
+id = &"necromancer.bone_staff"
+display_name = "Bone Staff"
+description = "A staff of fused bone with a soul-light: the necromancer's baseline, with no bonuses or penalties."
+color = Color(0.67, 1, 0.74, 1)

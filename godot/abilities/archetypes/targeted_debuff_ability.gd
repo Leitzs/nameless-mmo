@@ -22,5 +22,14 @@ func execute(ctx: SpellContext) -> void:
 	AbilityFX.spawn_beam(ctx.origin, target.get_target_point(), color, 0.25)
 	AbilityFX.spawn_burst(target.get_target_point(), color, 1.6, target)
 	if damage > 0.0:
-		Combat.apply_damage(caster, target, damage * get_stealth_multiplier(ctx), damage_type)
+		Combat.apply_damage(caster, target, damage * get_damage_multiplier(ctx), damage_type)
 	Combat.apply_statuses(caster, target, statuses)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Afflicts the enemy under the crosshair, if nothing blocks the line of sight")
+	if damage > 0.0:
+		lines.append("Hit: %s" % text.damage(damage, damage_type))
+	lines.append_array(text.statuses(statuses))
+	return lines

@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/projectile_payload.gd" id="1_nwwh5"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_dn3f0"]
+[ext_resource type="Script" path="res://abilities/archetypes/projectile_ability.gd" id="3_6a6c7"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="4_7rihv"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="5_f34lc"]
+
+[sub_resource type="Resource" id="Resource_k05s8"]
+script = ExtResource("1_nwwh5")
+damage_type = 0
+
+[sub_resource type="Resource" id="Resource_uhp5u"]
+script = ExtResource("3_6a6c7")
+payload = SubResource("Resource_k05s8")
+projectile_speed = 70.0
+homing_acceleration = 25.0
+visual_scale = 0.45
+id = &"archer.crossbow_bolt"
+display_name = "Crossbow Bolt"
+description = "A heavy bolt that hits hard, but reloading takes long and slows you down."
+color = Color(0.9, 0.9, 0.8, 1)
+cast_time = 1.1
+release_delay = 0.4
+max_range = 45.0
+animation = &"attack_3"
+animation_speed = 1.2
+
+[sub_resource type="Resource" id="Resource_1xfkp"]
+script = ExtResource("4_7rihv")
+part_name = &"CrossbowStock"
+socket = &"hand_l"
+offset = Vector3(0, 0.02, -0.18)
+size = Vector3(0.06, 0.07, 0.6)
+color = Color(0.34, 0.25, 0.17, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_xhvk5"]
+script = ExtResource("4_7rihv")
+part_name = &"CrossbowProd"
+socket = &"hand_l"
+offset = Vector3(0, 0.05, -0.44)
+size = Vector3(0.7, 0.035, 0.05)
+color = Color(0.38, 0.38, 0.42, 1)
+roughness = 0.4
+
+[sub_resource type="Resource" id="Resource_dux4t"]
+script = ExtResource("4_7rihv")
+part_name = &"CrossbowString"
+socket = &"hand_l"
+offset = Vector3(0, 0.05, -0.36)
+size = Vector3(0.64, 0.008, 0.008)
+color = Color(0.93, 0.92, 0.85, 1)
+roughness = 0.5
+
+[resource]
+script = ExtResource("5_f34lc")
+weapon_type = "Crossbow"
+basic_attack = SubResource("Resource_uhp5u")
+ability_damage_multiplier = 1.1
+move_speed_multiplier = 0.95
+cosmetics = Array[ExtResource("4_7rihv")]([SubResource("Resource_1xfkp"), SubResource("Resource_xhvk5"), SubResource("Resource_dux4t")])
+id = &"archer.heavy_crossbow"
+display_name = "Heavy Crossbow"
+description = "Slow, heavy bolts: each shot deals 30 damage but reloading takes long and slows you while aiming. Abilities deal 10% more damage; you move 5% slower."
+color = Color(0.55, 0.5, 0.45, 1)

@@ -8,9 +8,12 @@
 [ext_resource type="Resource" path="res://data/abilities/paladin/cleanse.tres" id="6_f6ru0"]
 [ext_resource type="Resource" path="res://data/abilities/paladin/divine_shield.tres" id="7_0jl2o"]
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_p6mww"]
-[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="9_dnwht"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="10_dish8"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_djgfv"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="11_y5avf"]
+[ext_resource type="Resource" path="res://data/weapons/paladin/longsword_and_shield.tres" id="12_na1hm"]
+[ext_resource type="Resource" path="res://data/weapons/paladin/warhammer.tres" id="13_f6ru0"]
+[ext_resource type="Resource" path="res://data/weapons/paladin/tower_shield.tres" id="14_0jl2o"]
 
 [sub_resource type="Resource" id="Resource_1dg05"]
 script = ExtResource("8_p6mww")
@@ -29,37 +32,6 @@ size = Vector3(0.03, 0.07, 0.24)
 color = Color(0.88082504, 0.76737565, 0.38109186, 1)
 roughness = 0.35
 
-[sub_resource type="Resource" id="Resource_4m47p"]
-script = ExtResource("9_dnwht")
-blade_color = Color(0.80946815, 0.8152507, 0.8433892, 1)
-hilt_color = Color(0.88082504, 0.76737565, 0.38109186, 1)
-part_name = &"Sword"
-socket = &"hand_r"
-direction = Vector3(0, 0.6392015, -0.7690393)
-
-[sub_resource type="Resource" id="Resource_rovsd"]
-script = ExtResource("8_p6mww")
-part_name = &"Shield"
-shape = 2
-socket = &"lowerarm_l"
-offset = Vector3(-0.12, 0, -0.06)
-rotation_degrees = Vector3(0, 0, 90)
-size = Vector3(0.62, 0.05, 0.62)
-color = Color(0.38109186, 0.46135613, 0.7014107, 1)
-roughness = 0.45
-
-[sub_resource type="Resource" id="Resource_wmtpu"]
-script = ExtResource("8_p6mww")
-part_name = &"ShieldEmblem"
-shape = 2
-socket = &"lowerarm_l"
-offset = Vector3(-0.15, 0, -0.06)
-rotation_degrees = Vector3(0, 0, 90)
-size = Vector3(0.24, 0.05, 0.24)
-color = Color(0.88082504, 0.76737565, 0.38109186, 1)
-roughness = 0.3
-emissive = 0.2
-
 [sub_resource type="Resource" id="Resource_5fmnq"]
 script = ExtResource("10_dish8")
 type = 1
@@ -70,14 +42,14 @@ regen_per_second = 8.0
 script = ExtResource("11_y5avf")
 id = &"paladin"
 display_name = "Paladin"
-description = "Sword and shield (mana). Crusader Strike, Hammer of Justice, Flash of Light, Cleanse, Divine Shield."
+description = "Holy knight (mana). Crusader Strike, Hammer of Justice, Flash of Light, Cleanse, Divine Shield."
 color = Color(1, 0.91627353, 0.6262097, 1)
 max_health = 420.0
 health_regen = 5.0
 resource = SubResource("Resource_5fmnq")
 move_speed = 4.8
-frontal_block = 0.15
 abilities = Array[ExtResource("1_spxwi")]([ExtResource("2_qjfvn"), ExtResource("3_kcdsx"), ExtResource("4_djgfv"), ExtResource("5_na1hm"), ExtResource("6_f6ru0"), ExtResource("7_0jl2o")])
+weapons = Array[ExtResource("11_djgfv")]([ExtResource("12_na1hm"), ExtResource("13_f6ru0"), ExtResource("14_0jl2o")])
 body_color = Color(0.63314396, 0.6485889, 0.72529787, 1)
 limb_color = Color(0.39080822, 0.40172037, 0.45591694, 1)
-cosmetics = Array[ExtResource("8_p6mww")]([SubResource("Resource_1dg05"), SubResource("Resource_84bbc"), SubResource("Resource_4m47p"), SubResource("Resource_rovsd"), SubResource("Resource_wmtpu")])
+cosmetics = Array[ExtResource("8_p6mww")]([SubResource("Resource_1dg05"), SubResource("Resource_84bbc")])

@@ -50,7 +50,7 @@ func execute(ctx: SpellContext) -> void:
 
 	var connected := false
 	for target in targets:
-		var amount := damage * get_stealth_multiplier(ctx)
+		var amount := damage * get_damage_multiplier(ctx)
 		if behind_damage_multiplier > 1.0 and Combat.is_behind(caster, target):
 			amount *= behind_damage_multiplier
 			target.show_combat_text("BEHIND!", Color(1.0, 0.85, 0.3).linear_to_srgb())
@@ -74,3 +74,19 @@ func execute(ctx: SpellContext) -> void:
 ## Server: called for every enemy the swing damaged.
 func _on_strike_hit(_ctx: SpellContext, _target: CombatCharacter) -> void:
 	pass
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	var who := "every enemy in a %d° arc" % roundi(arc_degrees) if hit_all_in_arc else "the target (or the closest enemy in a %d° arc)" % roundi(arc_degrees)
+	lines.append("Strikes %s within %s: %s" % [who, AbilityText.meters(reach), text.damage(damage, damage_type)])
+	if behind_damage_multiplier > 1.0:
+		lines.append("%s damage from behind" % AbilityText.percent_change(behind_damage_multiplier))
+	if heal_fraction > 0.0:
+		lines.append("Heals you for %s of the damage dealt" % AbilityText.percent(heal_fraction))
+	if knockback > 0.0:
+		lines.append("Knocks enemies back (%s m/s)" % AbilityText.number(knockback))
+	if resource_on_hit != 0.0:
+		lines.append("%+d %s when it connects" % [roundi(resource_on_hit), text.resource_name])
+	lines.append_array(text.statuses(statuses))
+	return lines

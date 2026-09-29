@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_deea5"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="2_g48qe"]
+
+[sub_resource type="Resource" id="Resource_bsuom"]
+script = ExtResource("1_deea5")
+part_name = &"DrumBody"
+shape = 2
+socket = &"spine_03"
+offset = Vector3(0, -0.05, 0.24)
+rotation_degrees = Vector3(90, 0, 0)
+size = Vector3(0.38, 0.22, 0.38)
+color = Color(0.6, 0.35, 0.2, 1)
+
+[sub_resource type="Resource" id="Resource_mu2y4"]
+script = ExtResource("1_deea5")
+part_name = &"DrumSkin"
+shape = 2
+socket = &"spine_03"
+offset = Vector3(0, -0.05, 0.355)
+rotation_degrees = Vector3(90, 0, 0)
+size = Vector3(0.36, 0.01, 0.36)
+color = Color(0.93, 0.88, 0.75, 1)
+roughness = 0.8
+
+[sub_resource type="Resource" id="Resource_2yr65"]
+script = ExtResource("1_deea5")
+part_name = &"BeatNote"
+shape = 1
+socket = &"hand_l"
+offset = Vector3(0, 0.06, -0.1)
+color = Color(1, 0.6, 0.35, 1)
+roughness = 0.2
+emissive = 3.0
+cast_shadow = false
+spell_origin = true
+light_energy = 0.6
+
+[resource]
+script = ExtResource("2_g48qe")
+weapon_type = "Instrument"
+attack_speed_multiplier = 0.8
+ability_damage_multiplier = 1.15
+healing_multiplier = 1.15
+move_speed_multiplier = 0.95
+cosmetics = Array[ExtResource("1_deea5")]([SubResource("Resource_bsuom"), SubResource("Resource_mu2y4"), SubResource("Resource_2yr65")])
+id = &"bard.war_drum"
+display_name = "War Drum"
+description = "A booming war drum: abilities and heals are 15% stronger, but notes come 20% slower and you move 5% slower."
+color = Color(1, 0.6, 0.35, 1)

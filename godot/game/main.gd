@@ -12,6 +12,7 @@ extends Node
 @onready var players: Node = $Players
 @onready var player_spawner: MultiplayerSpawner = $PlayerSpawner
 @onready var match_rules: Match = $Match
+@onready var inventory: Inventory = $Inventory
 @onready var effects: Node3D = $Effects
 @onready var ui: GameUI = $UI
 @onready var dev_commands: DevCommands = $DevCommands

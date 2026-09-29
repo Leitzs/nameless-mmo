@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_w1ieo"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_ow8ml"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="3_qe5ma"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="4_wwrrf"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="5_imj02"]
+
+[sub_resource type="Resource" id="Resource_nekki"]
+script = ExtResource("1_w1ieo")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2"])
+damage = 12.0
+damage_type = 5
+heal_fraction = 0.5
+id = &"warlock.soul_siphon"
+display_name = "Soul Siphon"
+description = "Close-range stabs with a ritual dagger that heal you for half the damage they deal."
+color = Color(0.63, 1, 0.48, 1)
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.7
+
+[sub_resource type="Resource" id="Resource_rljix"]
+script = ExtResource("4_wwrrf")
+blade_length = 0.36
+blade_width = 0.055
+blade_color = Color(0.45, 0.8, 0.35, 1)
+hilt_color = Color(0.3, 0.22, 0.34, 1)
+part_name = &"SacrificialDagger"
+socket = &"hand_r"
+direction = Vector3(0, 0.50702, -0.861934)
+
+[resource]
+script = ExtResource("5_imj02")
+weapon_type = "Dagger"
+basic_attack = SubResource("Resource_nekki")
+bonus_health = 30.0
+cosmetics = Array[ExtResource("3_qe5ma")]([SubResource("Resource_rljix")])
+id = &"warlock.sacrificial_dagger"
+display_name = "Sacrificial Dagger"
+description = "A ritual blade. The basic attack becomes close-range stabs that heal you for half the damage they deal, and you have 30 more health."
+color = Color(0.55, 0.9, 0.4, 1)

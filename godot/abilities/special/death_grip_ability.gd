@@ -29,7 +29,7 @@ func execute(ctx: SpellContext) -> void:
 
 	AbilityFX.spawn_beam(ctx.origin, target.get_target_point(), color, 0.4, 0.09)
 	if damage > 0.0:
-		Combat.apply_damage(caster, target, damage, damage_type)
+		Combat.apply_damage(caster, target, damage * ctx.damage_multiplier, damage_type)
 	if not target.is_alive():
 		return
 	if target.statuses.is_invulnerable() or _is_immune(target):
@@ -50,3 +50,12 @@ func _is_immune(target: CombatCharacter) -> bool:
 		if target.statuses.has(immunity):
 			return true
 	return false
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Yanks the target through the air to land %s in front of you" % AbilityText.meters(stop_distance))
+	if damage > 0.0:
+		lines.append("Hit: %s" % text.damage(damage, damage_type))
+	lines.append_array(text.statuses(statuses))
+	return lines

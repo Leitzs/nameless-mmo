@@ -14,6 +14,8 @@ var aim_location := Vector3.ZERO
 var target: CombatCharacter
 ## The caster was in stealth when the ability started (ambush bonuses).
 var from_stealth := false
+## Multiplies the damage of this use: the caster's weapon for this slot (see Ability.get_damage_multiplier).
+var damage_multiplier := 1.0
 ## The caster's movement input when it released the ability (Blink goes that way).
 var move_direction := Vector3.ZERO
 ## The caster's position at the release (before any predicted movement).
@@ -59,6 +61,7 @@ func with_aim(new_aim: Vector3, new_target: CombatCharacter) -> SpellContext:
 	copy.aim_location = new_aim
 	copy.target = new_target
 	copy.from_stealth = from_stealth
+	copy.damage_multiplier = damage_multiplier
 	copy.move_direction = move_direction
 	copy.start_position = start_position
 	copy.payload = payload

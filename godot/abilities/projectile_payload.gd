@@ -12,9 +12,11 @@ extends Resource
 @export var statuses: Array[StatusSpec] = []
 
 
+## A copy dealing multiplier times the damage (itself when multiplier is 1).
 func with_damage_multiplier(multiplier: float) -> ProjectilePayload:
 	if is_equal_approx(multiplier, 1.0):
 		return self
 	var copy := duplicate() as ProjectilePayload
 	copy.direct_damage *= multiplier
+	copy.splash_damage *= multiplier
 	return copy

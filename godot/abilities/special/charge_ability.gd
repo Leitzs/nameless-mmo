@@ -52,7 +52,7 @@ func execute(ctx: SpellContext) -> void:
 
 	var reach := CombatCharacter.CAPSULE_RADIUS * 2.0 + 1.5
 	if is_instance_valid(target) and Combat.flat(destination - target.global_position).length() <= reach \
-			and Combat.apply_damage(caster, target, damage, RPG.DamageType.PHYSICAL):
+			and Combat.apply_damage(caster, target, damage * ctx.damage_multiplier, RPG.DamageType.PHYSICAL):
 		if root != null:
 			Combat.apply_status(caster, target, root)
 		AbilityFX.spawn_burst(target.get_target_point(), color, 1.8)
@@ -67,3 +67,14 @@ func _plan(caster: CombatCharacter, target: CombatCharacter) -> Array:
 	var travel := maxf(0.0, Combat.flat(to_target).length() - stop_distance)
 	var destination := caster.global_position + Combat.flat(to_target).normalized() * travel + Vector3.UP * to_target.y
 	return [destination, clampf(travel / charge_speed, 0.1, 1.2)]
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Rushes to the target (at least %s away) at %s m/s" % [AbilityText.meters(min_distance), AbilityText.number(charge_speed)])
+	lines.append("On arrival: %s" % text.damage(damage, RPG.DamageType.PHYSICAL))
+	if root != null and root.status != null:
+		lines.append(text.status(root))
+	if rage_generated > 0.0:
+		lines.append("%+d %s" % [roundi(rage_generated), text.resource_name])
+	return lines

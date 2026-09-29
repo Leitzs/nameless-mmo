@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_qp7r7"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="2_qmule"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="3_kulh5"]
+
+[sub_resource type="Resource" id="Resource_ymr6q"]
+script = ExtResource("2_qmule")
+blade_color = Color(0.80946815, 0.8152507, 0.8433892, 1)
+hilt_color = Color(0.88082504, 0.76737565, 0.38109186, 1)
+part_name = &"Sword"
+socket = &"hand_r"
+direction = Vector3(0, 0.6392015, -0.7690393)
+
+[sub_resource type="Resource" id="Resource_p03e7"]
+script = ExtResource("1_qp7r7")
+part_name = &"Shield"
+shape = 2
+socket = &"lowerarm_l"
+offset = Vector3(-0.12, 0, -0.06)
+rotation_degrees = Vector3(0, 0, 90)
+size = Vector3(0.62, 0.05, 0.62)
+color = Color(0.38109186, 0.46135613, 0.7014107, 1)
+roughness = 0.45
+
+[sub_resource type="Resource" id="Resource_qd74c"]
+script = ExtResource("1_qp7r7")
+part_name = &"ShieldEmblem"
+shape = 2
+socket = &"lowerarm_l"
+offset = Vector3(-0.15, 0, -0.06)
+rotation_degrees = Vector3(0, 0, 90)
+size = Vector3(0.24, 0.05, 0.24)
+color = Color(0.88082504, 0.76737565, 0.38109186, 1)
+roughness = 0.3
+emissive = 0.2
+
+[resource]
+script = ExtResource("3_kulh5")
+weapon_type = "Sword and shield"
+frontal_block = 0.15
+cosmetics = Array[ExtResource("1_qp7r7")]([SubResource("Resource_ymr6q"), SubResource("Resource_p03e7"), SubResource("Resource_qd74c")])
+id = &"paladin.longsword_and_shield"
+display_name = "Longsword & Shield"
+description = "The paladin's classic kit: the shield blocks 15% of the damage of attacks from the front."
+color = Color(0.88, 0.77, 0.38, 1)

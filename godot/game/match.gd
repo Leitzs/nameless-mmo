@@ -1,7 +1,8 @@
 class_name Match
 extends Node
 ## Deathmatch rules, run by the server (offline play too, where this machine is the server):
-##   - each player spawns as the class in its PlayerInfo (sent when joining, changeable in game),
+##   - each player spawns as the class in its PlayerInfo (sent when joining, changeable in game), holding the weapon
+##     equipped in its inventory (a new class brings its own weapons, see Inventory),
 ##   - every player is hostile to every other player; kills and deaths are counted and announced,
 ##   - a dead player respawns after RESPAWN_DELAY at the player start farthest from the other players.
 ## Bots are not players: their BotSpawner respawns them.
@@ -15,7 +16,7 @@ var _characters: Dictionary[int, Object] = {}
 # ---------------------------------------------------------------------------------------------------------------------
 # Players (server)
 
-## A client finished connecting and sends its profile (the login options of the Unreal version).
+## A client finished connecting and sends its profile.
 @rpc("any_peer", "call_remote", "reliable")
 func request_join(player_name: String, class_id: StringName) -> void:
 	if multiplayer.is_server():
@@ -31,6 +32,7 @@ func add_player(peer_id: int, player_name: String, class_id: StringName) -> void
 	var chosen_class := class_id if Game.find_class(class_id) != null else Game.get_default_class_id()
 	Game.main.player_spawner.spawn({"peer": peer_id, "name": safe_name, "class": chosen_class})
 	RPGLog.info("%s joined as %s" % [safe_name, chosen_class])
+	Game.main.inventory.fill_for_class(peer_id)
 	spawn_character(peer_id)
 
 
@@ -74,11 +76,13 @@ func spawn_character(peer_id: int) -> void:
 		return
 	_remove_character(peer_id)
 	var start := _choose_start(peer_id)
+	var weapon := Game.main.inventory.get_equipped_weapon(peer_id)
 	var character := map.spawn_actor({
 		"kind": &"player",
 		"name": "Player%d" % peer_id,
 		"peer": peer_id,
 		"class": info.class_id,
+		"weapon": weapon.id if weapon != null else &"",
 		"position": start.origin,
 		"yaw": start.basis.get_euler().y,
 	}) as CombatCharacter
@@ -87,12 +91,14 @@ func spawn_character(peer_id: int) -> void:
 		character.died.connect(_on_character_died.bind(character))
 
 
-## Switches a player to another class. A living character is replaced right away; a dead one respawns as the new class.
+## Switches a player to another class, with the new class's weapons. A living character is replaced right away; a dead
+## one respawns as the new class.
 func change_class(peer_id: int, class_id: StringName) -> void:
 	var info := Game.get_player_info(peer_id)
 	if info == null or Game.find_class(class_id) == null:
 		return
 	info.class_id = class_id
+	Game.main.inventory.fill_for_class(peer_id)
 	RPGLog.info("%s switched to %s" % [info.player_name, class_id])
 	var character := get_character(peer_id)
 	if character != null and character.is_alive():

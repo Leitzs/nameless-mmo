@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_uubsf"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_yxfko"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="3_8aorf"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="4_wnwjn"]
+
+[sub_resource type="Resource" id="Resource_l0j86"]
+script = ExtResource("1_uubsf")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2"])
+damage = 20.0
+reach = 2.4
+arc_degrees = 120.0
+hit_all_in_arc = true
+resource_on_hit = 8.0
+knockback = 5.0
+id = &"barbarian.crushing_blow"
+display_name = "Crushing Blow"
+description = "Slow, crushing maul blows that hit every enemy in front of you and knock them back."
+color = Color(0.85, 0.75, 0.6, 1)
+cast_time = 0.95
+release_delay = 0.4
+max_range = 4.5
+slows_while_casting = false
+animation_speed = 1.1
+
+[sub_resource type="Resource" id="Resource_7dngy"]
+script = ExtResource("3_8aorf")
+part_name = &"MaulHandle"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.19176061, -0.2307117)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.055, 1, 0.055)
+color = Color(0.34, 0.25, 0.17, 1)
+
+[sub_resource type="Resource" id="Resource_msfp7"]
+script = ExtResource("3_8aorf")
+part_name = &"MaulHead"
+socket = &"hand_r"
+offset = Vector3(0, 0.52414566, -0.63061196)
+direction = Vector3(0, 0.639202, -0.769039)
+size = Vector3(0.3, 0.24, 0.24)
+color = Color(0.45, 0.42, 0.4, 1)
+roughness = 0.7
+
+[resource]
+script = ExtResource("4_wnwjn")
+weapon_type = "Maul"
+basic_attack = SubResource("Resource_l0j86")
+bonus_health = 20.0
+cosmetics = Array[ExtResource("3_8aorf")]([SubResource("Resource_7dngy"), SubResource("Resource_msfp7")])
+id = &"barbarian.crushing_maul"
+display_name = "Crushing Maul"
+description = "Slow, crushing blows that hit every enemy in front of you and knock them back. Adds 20 health."
+color = Color(0.6, 0.55, 0.5, 1)

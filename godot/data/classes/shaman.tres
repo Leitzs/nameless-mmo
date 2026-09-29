@@ -10,6 +10,10 @@
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_d1q0y"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="9_u6vk7"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="10_yajwq"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_y7kwc"]
+[ext_resource type="Resource" path="res://data/weapons/shaman/hammer_and_storm_orb.tres" id="12_1yvw0"]
+[ext_resource type="Resource" path="res://data/weapons/shaman/totem_staff.tres" id="13_rtby0"]
+[ext_resource type="Resource" path="res://data/weapons/shaman/storm_axe.tres" id="14_d1q0y"]
 
 [sub_resource type="Resource" id="Resource_ywwyx"]
 script = ExtResource("8_d1q0y")
@@ -59,40 +63,6 @@ size = Vector3(0.02, 0.22, 0.05)
 color = Color(0.9063318, 0.88082504, 0.7977378, 1)
 roughness = 0.9
 
-[sub_resource type="Resource" id="Resource_5r7s3"]
-script = ExtResource("8_d1q0y")
-part_name = &"HammerHandle"
-shape = 2
-socket = &"hand_r"
-offset = Vector3(0, 0.12784031, -0.15380786)
-direction = Vector3(0, 0.6392015, -0.7690393)
-size = Vector3(0.04, 0.55, 0.04)
-color = Color(0.5370987, 0.42358288, 0.29337206, 1)
-roughness = 0.8
-
-[sub_resource type="Resource" id="Resource_vr72e"]
-script = ExtResource("8_d1q0y")
-part_name = &"HammerHead"
-socket = &"hand_r"
-offset = Vector3(0, 0.31960076, -0.38451964)
-direction = Vector3(0, 0.6392015, -0.7690393)
-size = Vector3(0.22, 0.11, 0.11)
-color = Color(0.58383155, 0.58383155, 0.60971165, 1)
-
-[sub_resource type="Resource" id="Resource_x0cdp"]
-script = ExtResource("8_d1q0y")
-part_name = &"StormOrb"
-shape = 1
-socket = &"hand_l"
-offset = Vector3(0, 0.06, -0.1)
-size = Vector3(0.13, 0.13, 0.13)
-color = Color(0.6651851, 0.85430586, 1, 1)
-roughness = 0.2
-emissive = 3.0
-cast_shadow = false
-spell_origin = true
-light_energy = 0.6
-
 [sub_resource type="Resource" id="Resource_6vnni"]
 script = ExtResource("9_u6vk7")
 type = 1
@@ -110,6 +80,7 @@ health_regen = 5.0
 resource = SubResource("Resource_6vnni")
 move_speed = 4.9
 abilities = Array[ExtResource("1_doe7o")]([ExtResource("2_3l1ej"), ExtResource("3_485vl"), ExtResource("4_6v00n"), ExtResource("5_y7kwc"), ExtResource("6_1yvw0"), ExtResource("7_rtby0")])
+weapons = Array[ExtResource("11_y7kwc")]([ExtResource("12_1yvw0"), ExtResource("13_rtby0"), ExtResource("14_d1q0y")])
 body_color = Color(0.30797648, 0.4572192, 0.54587555, 1)
 limb_color = Color(0.16107033, 0.26651356, 0.32915118, 1)
-cosmetics = Array[ExtResource("8_d1q0y")]([SubResource("Resource_ywwyx"), SubResource("Resource_65u81"), SubResource("Resource_1ljs8"), SubResource("Resource_7bteg"), SubResource("Resource_djkm2"), SubResource("Resource_5r7s3"), SubResource("Resource_vr72e"), SubResource("Resource_x0cdp")])
+cosmetics = Array[ExtResource("8_d1q0y")]([SubResource("Resource_ywwyx"), SubResource("Resource_65u81"), SubResource("Resource_1ljs8"), SubResource("Resource_7bteg"), SubResource("Resource_djkm2")])

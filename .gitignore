@@ -1,40 +1,8 @@
-# Unreal generated
-Binaries/
-Intermediate/
-Saved/
-DerivedDataCache/
-Build/*
-!Build/*/
-Build/*/**
-!Build/*/PakBlacklist*.txt
-
-# Plugin build output
-Plugins/**/Binaries/
-Plugins/**/Intermediate/
-
-# IDE / project files
+# IDE / editor files
 .vs/
 .vscode/
 .idea/
-*.sln
-*.suo
-*.opensdf
-*.sdf
-*.VC.db
-*.VC.opendb
 *.code-workspace
-*.xcodeproj
-*.xcworkspace
-
-# Compiled artifacts
-*.pdb
-*.dll
-*.exe
-*.lib
-*.so
-*.dylib
-*.target
-*.modules
 
 # OS
 .DS_Store

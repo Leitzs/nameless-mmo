@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://game/dev/dev_commands.gd" id="3_dev_commands"]
 [ext_resource type="Script" path="res://game/dev/self_test.gd" id="4_self_test"]
 [ext_resource type="PackedScene" path="res://ui/game_ui.tscn" id="5_ui"]
+[ext_resource type="Script" path="res://game/inventory.gd" id="6_inventory"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_main")
@@ -21,6 +22,9 @@ spawn_path = NodePath("../Players")
 
 [node name="Match" type="Node" parent="."]
 script = ExtResource("2_match")
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource("6_inventory")
 
 [node name="DevCommands" type="Node" parent="."]
 script = ExtResource("3_dev_commands")

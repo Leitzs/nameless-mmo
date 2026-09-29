@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="1_dxpai"]
+[ext_resource type="Script" path="res://characters/visual/blade_cosmetic.gd" id="2_5iqi7"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="3_0c0kr"]
+
+[sub_resource type="Resource" id="Resource_uep08"]
+script = ExtResource("2_5iqi7")
+blade_length = 1.05
+blade_width = 0.09
+blade_color = Color(0.7014107, 0.88082504, 0.97769153, 1)
+hilt_color = Color(0.42358288, 0.42358288, 0.48452926, 1)
+part_name = &"Runeblade"
+socket = &"hand_r"
+direction = Vector3(0, 0.6392015, -0.7690393)
+
+[resource]
+script = ExtResource("3_0c0kr")
+weapon_type = "Runeblade"
+cosmetics = Array[ExtResource("1_dxpai")]([SubResource("Resource_uep08")])
+id = &"death_knight.runeblade"
+display_name = "Runeblade"
+description = "A frost-rimed runeblade: the death knight's baseline, with no bonuses or penalties."
+color = Color(0.7, 0.88, 0.98, 1)

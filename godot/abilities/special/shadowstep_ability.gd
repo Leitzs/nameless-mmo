@@ -30,3 +30,11 @@ func execute(ctx: SpellContext) -> void:
 	AbilityFX.spawn_burst(destination + Vector3.UP * CombatCharacter.CENTER_HEIGHT, color, 2.0)
 	if haste != null:
 		ctx.caster.statuses.apply(haste, ctx.caster)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Teleports %s behind the target, facing its back. Keeps stealth" % AbilityText.meters(behind_distance))
+	if haste != null and haste.status != null:
+		lines.append("You gain " + text.status(haste))
+	return lines

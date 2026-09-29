@@ -1,6 +1,5 @@
 // Opaque surface for MultiMesh instances (vegetation, props, range rings). Each instance brings its own LINEAR
-// albedo (MultiMesh instance color) and its (roughness, emissive) in the instance custom data, like the per-instance
-// custom data of Unreal's M_RPG_Surface.
+// albedo (MultiMesh instance color) and its (roughness, emissive) in the instance custom data.
 shader_type spatial;
 
 varying float instance_roughness;

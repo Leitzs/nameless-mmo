@@ -20,10 +20,19 @@ func execute(ctx: SpellContext) -> void:
 
 	var blast := Game.current_map.spawn_actor(DelayedBlast.make_spawn_data(location, strike_delay, radius, color, ctx.target)) as DelayedBlast
 	if blast != null:
-		blast.arm(damage, RPG.DamageType.LIGHTNING, stun, caster)
+		blast.arm(damage * ctx.damage_multiplier, RPG.DamageType.LIGHTNING, stun, caster)
 
 	var spark := FXParams.make(color, 15.0, 0.25, Vector3.ONE * 0.2, Vector3.ONE * 0.8)
 	spark.flicker = 0.6
 	spark.light_energy = 2.7
 	spark.light_range = 5.0
 	FX.spawn_for_all(ctx.origin, spark)
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Calls a bolt on the target (the warning follows it); after %s: %s within %s" % [AbilityText.seconds(strike_delay),
+		text.damage(damage, RPG.DamageType.LIGHTNING), AbilityText.meters(radius)])
+	if stun != null and stun.status != null:
+		lines.append(text.status(stun))
+	return lines

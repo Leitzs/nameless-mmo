@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StatusEffect" format=3]
+
+[ext_resource type="Script" path="res://statuses/status_effect.gd" id="1_venom"]
+
+[resource]
+script = ExtResource("1_venom")
+id = &"venom"
+display_name = "ENVENOMED"
+color = Color(0.7, 1, 0.35, 1)
+effect = 10
+damage_type = 7
+replace_existing = true
+overlay_priority = 19
+overlay_intensity = 1.4

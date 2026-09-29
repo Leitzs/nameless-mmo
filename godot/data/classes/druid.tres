@@ -10,6 +10,10 @@
 [ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="8_g3x4n"]
 [ext_resource type="Script" path="res://characters/resource_config.gd" id="9_tslkq"]
 [ext_resource type="Script" path="res://characters/character_class.gd" id="10_afn7e"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="11_52k3s"]
+[ext_resource type="Resource" path="res://data/weapons/druid/oak_staff.tres" id="12_0c33o"]
+[ext_resource type="Resource" path="res://data/weapons/druid/feral_claws.tres" id="13_35ciw"]
+[ext_resource type="Resource" path="res://data/weapons/druid/blooming_branch.tres" id="14_g3x4n"]
 
 [sub_resource type="Resource" id="Resource_7lp64"]
 script = ExtResource("8_g3x4n")
@@ -60,31 +64,6 @@ size = Vector3(0.29, 0.04, 0.29)
 color = Color(0.42358288, 0.6651851, 0.3133042, 1)
 roughness = 0.9
 
-[sub_resource type="Resource" id="Resource_bp66r"]
-script = ExtResource("8_g3x4n")
-part_name = &"StaffShaft"
-shape = 2
-socket = &"hand_r"
-offset = Vector3(0, 0.1, 0)
-rotation_degrees = Vector3(-8, 0, 0)
-size = Vector3(0.06, 1.7, 0.06)
-color = Color(0.48452926, 0.38109186, 0.24780053, 1)
-roughness = 0.8
-
-[sub_resource type="Resource" id="Resource_5tdbl"]
-script = ExtResource("8_g3x4n")
-part_name = &"StaffOrb"
-shape = 1
-socket = &"hand_r"
-offset = Vector3(0, 1.0457059, -0.13291031)
-size = Vector3(0.17, 0.17, 0.17)
-color = Color(0.6262097, 1, 0.58383155, 1)
-roughness = 0.2
-emissive = 3.0
-cast_shadow = false
-spell_origin = true
-light_energy = 0.6
-
 [sub_resource type="Resource" id="Resource_7wgbf"]
 script = ExtResource("9_tslkq")
 type = 1
@@ -102,6 +81,7 @@ health_regen = 5.0
 resource = SubResource("Resource_7wgbf")
 sprint_speed = 7.8
 abilities = Array[ExtResource("1_pl2tb")]([ExtResource("2_vttfb"), ExtResource("3_dt3c4"), ExtResource("4_hrk42"), ExtResource("5_52k3s"), ExtResource("6_0c33o"), ExtResource("7_35ciw")])
+weapons = Array[ExtResource("11_52k3s")]([ExtResource("12_0c33o"), ExtResource("13_35ciw"), ExtResource("14_g3x4n")])
 body_color = Color(0.4572192, 0.5257669, 0.3499023, 1)
 limb_color = Color(0.26651356, 0.314944, 0.19069183, 1)
-cosmetics = Array[ExtResource("8_g3x4n")]([SubResource("Resource_7lp64"), SubResource("Resource_5dshn"), SubResource("Resource_23gt4"), SubResource("Resource_g4g52"), SubResource("Resource_qlidk"), SubResource("Resource_bp66r"), SubResource("Resource_5tdbl")])
+cosmetics = Array[ExtResource("8_g3x4n")]([SubResource("Resource_7lp64"), SubResource("Resource_5dshn"), SubResource("Resource_23gt4"), SubResource("Resource_g4g52"), SubResource("Resource_qlidk")])

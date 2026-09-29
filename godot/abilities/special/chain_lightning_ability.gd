@@ -27,7 +27,7 @@ func execute(ctx: SpellContext) -> void:
 		return
 
 	var struck: Array[CombatCharacter] = []
-	var amount := damage * get_stealth_multiplier(ctx)
+	var amount := damage * get_damage_multiplier(ctx)
 	var current := target
 	while current != null:
 		AbilityFX.spawn_beam(from, current.get_target_point(), color, 0.3, 0.07)
@@ -53,3 +53,13 @@ func _next_target(caster: CombatCharacter, from: Vector3, struck: Array[CombatCh
 			best = candidate
 			best_distance = distance
 	return best
+
+
+func describe(text: AbilityText) -> PackedStringArray:
+	var lines := PackedStringArray()
+	lines.append("Strikes the target: %s" % text.damage(damage, damage_type))
+	if jumps > 0:
+		lines.append("Then arcs to up to %d more enemies within %s of the last one, %s damage each jump" % [jumps,
+			AbilityText.meters(jump_range), AbilityText.percent_change(falloff)])
+	lines.append_array(text.statuses(statuses))
+	return lines

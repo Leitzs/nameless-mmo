@@ -1,0 +1,63 @@
+[gd_resource type="Resource" script_class="Weapon" format=3]
+
+[ext_resource type="Script" path="res://abilities/archetypes/melee_strike_ability.gd" id="1_emu6v"]
+[ext_resource type="Script" path="res://statuses/status_spec.gd" id="2_spsks"]
+[ext_resource type="Resource" path="res://data/statuses/poison.tres" id="3_0k7nf"]
+[ext_resource type="Script" path="res://characters/visual/cosmetic_part.gd" id="4_a3g7n"]
+[ext_resource type="Script" path="res://items/weapon.gd" id="5_a6t3g"]
+
+[sub_resource type="Resource" id="Resource_iik3h"]
+script = ExtResource("2_spsks")
+status = ExtResource("3_0k7nf")
+duration = 4.0
+magnitude = 3.0
+
+[sub_resource type="Resource" id="Resource_65mhc"]
+script = ExtResource("1_emu6v")
+combo_animations = Array[StringName]([&"attack_1", &"attack_2"])
+damage = 11.0
+damage_type = 5
+reach = 2.5
+arc_degrees = 150.0
+hit_all_in_arc = true
+statuses = Array[ExtResource("2_spsks")]([SubResource("Resource_iik3h")])
+resource_on_hit = 8.0
+id = &"death_knight.plague_reap"
+display_name = "Plague Reap"
+description = "Scythe sweeps that hit every enemy in front of you and infect them with plague."
+color = Color(0.6, 0.9, 0.45, 1)
+cast_time = 0.7
+release_delay = 0.28
+max_range = 4.5
+slows_while_casting = false
+
+[sub_resource type="Resource" id="Resource_biwnw"]
+script = ExtResource("4_a3g7n")
+part_name = &"ScytheShaft"
+shape = 2
+socket = &"hand_r"
+offset = Vector3(0, 0.1, 0)
+rotation_degrees = Vector3(-8, 0, 0)
+size = Vector3(0.05, 1.65, 0.05)
+color = Color(0.2, 0.2, 0.24, 1)
+
+[sub_resource type="Resource" id="Resource_0bg67"]
+script = ExtResource("4_a3g7n")
+part_name = &"ScytheBlade"
+socket = &"hand_r"
+offset = Vector3(0, 0.88, -0.42)
+rotation_degrees = Vector3(-20, 0, 0)
+size = Vector3(0.02, 0.1, 0.62)
+color = Color(0.55, 0.75, 0.45, 1)
+roughness = 0.3
+emissive = 0.3
+
+[resource]
+script = ExtResource("5_a6t3g")
+weapon_type = "Scythe"
+basic_attack = SubResource("Resource_65mhc")
+cosmetics = Array[ExtResource("4_a3g7n")]([SubResource("Resource_biwnw"), SubResource("Resource_0bg67")])
+id = &"death_knight.plague_scythe"
+display_name = "Plague Scythe"
+description = "Sweep every enemy in front of you and infect them with plague (3 damage per second for 4 seconds)."
+color = Color(0.6, 0.9, 0.45, 1)

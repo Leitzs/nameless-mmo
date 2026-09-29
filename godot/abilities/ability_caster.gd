@@ -1,7 +1,8 @@
 class_name AbilityCaster
 extends Node
 ## A character's ability hotbar (slot 0 = basic attack on the left mouse button, slots 1-5 the number keys),
-## cooldowns and casting.
+## cooldowns and casting. The equipped weapon can replace the basic attack and, with the balance settings, scales costs,
+## cooldowns and the basic attack's speed (see the character's get_*_multiplier functions).
 ##
 ## Networking ("owner moves, server rules"): the machine that controls the character predicts its own casts
 ## (animation, facing, cooldown, dashes) and asks the server, which validates, spends the resource, runs the effects
@@ -43,6 +44,19 @@ func setup(character: CombatCharacter, slot_abilities: Array[Ability]) -> void:
 		_slot_memory.append({})
 
 
+## Puts another ability in a slot (the equipped weapon's basic attack). A cast of that slot ends.
+func set_ability(slot: int, ability: Ability) -> void:
+	if slot < 0 or slot >= RPG.NUM_SLOTS or get_ability(slot) == ability:
+		return
+	for cast: CastInstance in ([_cast] + _background_casts):
+		if cast != null and cast.slot == slot:
+			_end_cast(cast, true, false)
+	while abilities.size() <= slot:
+		abilities.append(null)
+	abilities[slot] = ability
+	_slot_memory[slot] = {}
+
+
 func _physics_process(delta: float) -> void:
 	if _cast != null:
 		_tick_cast(_cast, delta)
@@ -55,6 +69,24 @@ func _physics_process(delta: float) -> void:
 
 func get_ability(slot: int) -> Ability:
 	return abilities[slot] if slot >= 0 and slot < abilities.size() else null
+
+
+## What using the slot costs this character (weapon and balance applied).
+func get_cost(slot: int) -> float:
+	var ability := get_ability(slot)
+	return ability.resource_cost * _character.get_cost_multiplier(slot) if ability != null else 0.0
+
+
+## The cooldown using the slot starts for this character (weapon, attack speed and balance applied).
+func get_ability_cooldown(slot: int) -> float:
+	var ability := get_ability(slot)
+	return ability.get_cooldown_duration(_character) * _character.get_cooldown_multiplier(slot) if ability != null else 0.0
+
+
+## Seconds the slot keeps this character busy (the basic attack is faster with a quick weapon).
+func get_cast_time(slot: int) -> float:
+	var ability := get_ability(slot)
+	return ability.cast_time / _character.get_attack_speed(slot) if ability != null else 0.0
 
 
 ## Seconds left on the slot's cooldown as this machine knows it (server value and own prediction).
@@ -110,7 +142,7 @@ func can_activate(slot: int) -> RPG.CastResult:
 		return RPG.CastResult.BUSY
 	if get_cooldown_remaining(slot) > 0.0:
 		return RPG.CastResult.COOLDOWN
-	if not _character.resources.can_afford(ability.resource_cost):
+	if not _character.resources.can_afford(get_cost(slot)):
 		return RPG.CastResult.NOT_ENOUGH_RESOURCE
 	var caster_result := ability.check_caster_state(_character)
 	if caster_result != RPG.CastResult.SUCCESS:
@@ -262,7 +294,7 @@ func _server_can_activate(slot: int, remote: bool) -> RPG.CastResult:
 			return RPG.CastResult.BUSY
 	if _server_cooldown_remaining(slot) > 0.001:
 		return RPG.CastResult.COOLDOWN
-	if not _character.resources.can_afford(ability.resource_cost):
+	if not _character.resources.can_afford(get_cost(slot)):
 		return RPG.CastResult.NOT_ENOUGH_RESOURCE
 	return ability.check_caster_state(_character)
 
@@ -288,7 +320,10 @@ func _start_cast(slot: int, is_local: bool, is_server: bool) -> void:
 	cast.is_server = is_server
 	cast.memory = _slot_memory[slot]
 	cast.from_stealth = _character.is_stealthed()
-	cast.cooldown_duration = ability.get_cooldown_duration(_character)
+	cast.cost = get_cost(slot)
+	cast.cooldown_duration = get_ability_cooldown(slot)
+	cast.speed = _character.get_attack_speed(slot)
+	cast.release_delay = ability.release_delay / cast.speed
 	cast.animation = ability.pick_animation(cast)
 
 	if is_server:
@@ -300,24 +335,25 @@ func _start_cast(slot: int, is_local: bool, is_server: bool) -> void:
 			_character.face_location(cast.activation_aim.location, true)
 		if cast.cooldown_duration > 0.0:
 			_predicted_cooldowns[slot] = Vector2(Session.local_time() + cast.cooldown_duration, cast.cooldown_duration)
-	_character.play_action_for_all(cast.animation, ability.animation_speed)
+	_character.play_action_for_all(cast.animation, ability.animation_speed * cast.speed)
 
+	var cast_time := ability.cast_time / cast.speed
 	if is_server and not is_local:
-		cast.duration = ability.cast_time - SERVER_TIME_TOLERANCE
+		cast.duration = cast_time - SERVER_TIME_TOLERANCE
 	else:
-		cast.duration = maxf(ability.cast_time, ability.release_delay)
+		cast.duration = maxf(cast_time, cast.release_delay)
 
 	_cast = cast
 	cast_started.emit(ability)
-	if is_local and ability.release_delay <= 0.0:
+	if is_local and cast.release_delay <= 0.0:
 		_release_local(cast, true)
 
 
 ## Server: spends the resource, starts the cooldown and breaks stealth.
 func _commit(cast: CastInstance) -> void:
 	var ability := cast.ability
-	if ability.resource_cost > 0.0:
-		_character.resources.add(-ability.resource_cost)
+	if cast.cost > 0.0:
+		_character.resources.add(-cast.cost)
 	var duration := cast.cooldown_duration
 	if not cast.is_local:
 		duration -= SERVER_TIME_TOLERANCE
@@ -339,7 +375,7 @@ func _tick_cast(cast: CastInstance, delta: float) -> void:
 			# Interrupted during the wind-up: the cost and cooldown stay spent.
 			_end_cast(cast, true)
 			return
-		if cast.elapsed >= cast.ability.release_delay:
+		if cast.elapsed >= cast.release_delay:
 			_release_local(cast, false)
 			if cast.ended:
 				return
@@ -387,6 +423,7 @@ func _make_context(cast: CastInstance, aim_location: Vector3, target: CombatChar
 	ctx.aim_location = aim_location
 	ctx.target = target
 	ctx.from_stealth = cast.from_stealth
+	ctx.damage_multiplier = _character.get_damage_multiplier(cast.slot)
 	ctx.move_direction = move_direction
 	ctx.start_position = _character.global_position
 	cast.context = ctx
