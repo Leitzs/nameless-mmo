@@ -1,0 +1,31 @@
+; Engine configuration file.
+config_version=5
+
+[application]
+
+config/name="RPGTest"
+config/description="Godot port of the RPGTest Unreal project."
+run/main_scene="res://scenes/test_arena.tscn"
+config/features=PackedStringArray("4.7", "Forward Plus")
+
+[autoload]
+
+Game="*res://scripts/core/game.gd"
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+
+[layer_names]
+
+3d_physics/layer_1="World"
+3d_physics/layer_2="Characters"
+
+[physics]
+
+common/physics_ticks_per_second=60
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=1

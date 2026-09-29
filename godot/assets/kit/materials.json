@@ -1,0 +1,2979 @@
+{
+ "materials": {
+  "M_AgedBrass_01": {
+   "base": [
+    0.35999999940395355,
+    0.25599999725818634,
+    0.09599999710917473
+   ],
+   "roughness": 0.7,
+   "metallic": 1.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Bark_Dead_01": {
+   "base": [
+    0.85,
+    0.85,
+    0.85
+   ],
+   "roughness": 0.9200000166893005,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0,
+   "texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Bark.png",
+   "normal_texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Bark_N.png",
+   "card": false,
+   "bark": true
+  },
+  "M_Bark_Oak_01": {
+   "base": [
+    1.0,
+    0.95,
+    0.9
+   ],
+   "roughness": 0.9200000166893005,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0,
+   "texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Bark.png",
+   "normal_texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Bark_N.png",
+   "card": false,
+   "bark": true
+  },
+  "M_BlackSteel_01": {
+   "base": [
+    0.0400000000372529,
+    0.0400000000372529,
+    0.04399999976158142
+   ],
+   "roughness": 0.7,
+   "metallic": 1.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Blood_01": {
+   "base": [
+    0.11999999731779099,
+    0.004999999888241291,
+    0.004999999888241291
+   ],
+   "roughness": 0.15000000596046448,
+   "metallic": 0.0,
+   "emissive": [
+    0.11999999731779099,
+    0.004999999888241291,
+    0.004999999888241291
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Bone_01": {
+   "base": [
+    0.21000000275671482,
+    0.18400000035762787,
+    0.13499999744817615
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_BottleGlass_01": {
+   "base": [
+    0.05000000074505806,
+    0.11999999731779099,
+    0.05000000074505806
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.05000000074505806,
+    0.11999999731779099,
+    0.05000000074505806
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Bronze_Aged_01": {
+   "base": [
+    0.24000000953674316,
+    0.1600000001490116,
+    0.06399999931454659
+   ],
+   "roughness": 0.7,
+   "metallic": 1.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_CastleStone_01": {
+   "base": [
+    0.07687500041599074,
+    0.0792083328900238,
+    0.0575416647673895
+   ],
+   "roughness": 0.8999999761581421,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Clay_01": {
+   "base": [
+    0.14316666467736167,
+    0.09754166814188162,
+    0.06237500021234155
+   ],
+   "roughness": 0.9300000071525574,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Cloth_Awning_01": {
+   "base": [
+    0.11849999986588955,
+    0.02837499976158142,
+    0.022999999579042196
+   ],
+   "roughness": 0.949999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Cloth_MageRobe_01": {
+   "base": [
+    0.029374999925494194,
+    0.0322499992325902,
+    0.06174999987706542
+   ],
+   "roughness": 0.949999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Cloth_MageTrim_01": {
+   "base": [
+    0.07587500102818012,
+    0.02256249962374568,
+    0.021062499843537807
+   ],
+   "roughness": 0.949999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Cloth_Rogue_01": {
+   "base": [
+    0.027437500189989805,
+    0.02837499976158142,
+    0.02493750024586916
+   ],
+   "roughness": 0.949999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Coals_01": {
+   "base": [
+    1.0,
+    0.25,
+    0.03999999910593033
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    0.25,
+    0.03999999910593033
+   ],
+   "emissive_strength": 3.0,
+   "opacity": 1.0
+  },
+  "M_Cobblestone_01": {
+   "base": [
+    0.0677083331781129,
+    0.07004166565214595,
+    0.04837500032347938
+   ],
+   "roughness": 0.800000011920929,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Crystal_Arcane_01": {
+   "base": [
+    0.1599999964237213,
+    0.10000000149011612,
+    0.8999999761581421
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.1599999964237213,
+    0.10000000149011612,
+    0.8999999761581421
+   ],
+   "emissive_strength": 2.5,
+   "opacity": 1.0
+  },
+  "M_Crystal_Necro_01": {
+   "base": [
+    0.07999999821186066,
+    0.550000011920929,
+    0.14000000059604645
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.07999999821186066,
+    0.550000011920929,
+    0.14000000059604645
+   ],
+   "emissive_strength": 2.0,
+   "opacity": 1.0
+  },
+  "M_DarkLeather_01": {
+   "base": [
+    0.026875000447034836,
+    0.022124999668449163,
+    0.01874999958090484
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_DarkWood_01": {
+   "base": [
+    0.031187499407678843,
+    0.023787500026325386,
+    0.017924999740595617
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Dirt_01": {
+   "base": [
+    0.05958333363135656,
+    0.04483333292106787,
+    0.03229166675979893
+   ],
+   "roughness": 0.949999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_DungeonFloor_01": {
+   "base": [
+    0.05625000006208817,
+    0.05116666667163372,
+    0.04541666666045785
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_DungeonStone_01": {
+   "base": [
+    0.051666665356606245,
+    0.0551874996162951,
+    0.03556249965913594
+   ],
+   "roughness": 0.75,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Eye_Iris_01": {
+   "base": [
+    0.11999999731779099,
+    0.20000000298023224,
+    0.15000000596046448
+   ],
+   "roughness": 0.10000000149011612,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Eye_Sclera_01": {
+   "base": [
+    0.8500000238418579,
+    0.8199999928474426,
+    0.7799999713897705
+   ],
+   "roughness": 0.05000000074505806,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Fern_01": {
+   "base": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0,
+   "texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Fern_Frond.png",
+   "card": true,
+   "bark": false
+  },
+  "M_Fire_Glow_01": {
+   "base": [
+    1.0,
+    0.25,
+    0.019999999552965164
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    0.25,
+    0.019999999552965164
+   ],
+   "emissive_strength": 2.0,
+   "opacity": 1.0
+  },
+  "M_Flower_Red_01": {
+   "base": [
+    0.42499999701976776,
+    0.04499999899417162,
+    0.0400000000372529
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Flower_Violet_01": {
+   "base": [
+    0.2500000074505806,
+    0.09999999776482582,
+    0.42499999701976776
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Flower_White_01": {
+   "base": [
+    0.675000011920929,
+    0.6500000059604645,
+    0.550000011920929
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_ForestGround_01": {
+   "base": [
+    0.035583332957079016,
+    0.039104166285445295,
+    0.018749999813735485
+   ],
+   "roughness": 0.949999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_FoundationStone_01": {
+   "base": [
+    0.0677083331781129,
+    0.07004166565214595,
+    0.04837500032347938
+   ],
+   "roughness": 0.8999999761581421,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Glass_Clear_01": {
+   "base": [
+    0.6000000238418579,
+    0.6499999761581421,
+    0.6000000238418579
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.6000000238418579,
+    0.6499999761581421,
+    0.6000000238418579
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Grass_01": {
+   "base": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "roughness": 0.800000011920929,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0,
+   "texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Grass_Blades.png",
+   "card": true,
+   "bark": false
+  },
+  "M_Grass_Dead_01": {
+   "base": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "roughness": 0.8500000238418579,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0,
+   "texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Grass_Dry.png",
+   "card": true,
+   "bark": false
+  },
+  "M_Hair_long_2101": {
+   "base": [
+    0.05649999901652336,
+    0.03612499963492155,
+    0.021062499843537807
+   ],
+   "roughness": 0.550000011920929,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Hair_long_2102": {
+   "base": [
+    0.2231250051409006,
+    0.19499999657273293,
+    0.13149999780580401
+   ],
+   "roughness": 0.550000011920929,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Hair_long_2103": {
+   "base": [
+    0.24250000901520252,
+    0.22212500497698784,
+    0.16250000102445483
+   ],
+   "roughness": 0.550000011920929,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Hair_long_2104": {
+   "base": [
+    0.30062499828636646,
+    0.2996249981224537,
+    0.3097499902360141
+   ],
+   "roughness": 0.550000011920929,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Hair_short_2100": {
+   "base": [
+    0.0409999992698431,
+    0.02837499976158142,
+    0.01912499964237213
+   ],
+   "roughness": 0.550000011920929,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Holy_Glow_01": {
+   "base": [
+    1.0,
+    0.699999988079071,
+    0.20000000298023224
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    0.699999988079071,
+    0.20000000298023224
+   ],
+   "emissive_strength": 1.7999999523162842,
+   "opacity": 1.0
+  },
+  "M_Ice_Crystal_01": {
+   "base": [
+    0.30000001192092896,
+    0.6499999761581421,
+    1.0
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.30000001192092896,
+    0.6499999761581421,
+    1.0
+   ],
+   "emissive_strength": 0.800000011920929,
+   "opacity": 1.0
+  },
+  "M_Ivy_01": {
+   "base": [
+    0.029999999329447746,
+    0.057500001043081284,
+    0.015999999828636646
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Leather_01": {
+   "base": [
+    0.05874999798834324,
+    0.0371250007301569,
+    0.02249999949708581
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Leaves_Bush_01": {
+   "base": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0,
+   "texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Leaves_Bush.png",
+   "card": true,
+   "bark": false
+  },
+  "M_Leaves_Dry_01": {
+   "base": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0,
+   "texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Leaves_Dry.png",
+   "card": true,
+   "bark": false
+  },
+  "M_Leaves_Oak_01": {
+   "base": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0,
+   "texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Leaves_Oak.png",
+   "card": true,
+   "bark": false
+  },
+  "M_Leaves_Pine_01": {
+   "base": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929
+   ],
+   "roughness": 0.699999988079071,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0,
+   "texture": "D:\\dev\\nameless-mmo\\Art\\Textures\\Foliage\\T_Needles_Pine.png",
+   "card": true,
+   "bark": false
+  },
+  "M_Lightning_Glow_01": {
+   "base": [
+    0.25,
+    0.5,
+    1.0
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.25,
+    0.5,
+    1.0
+   ],
+   "emissive_strength": 2.5,
+   "opacity": 1.0
+  },
+  "M_Mana_Crystal_01": {
+   "base": [
+    0.10000000149011612,
+    0.3499999940395355,
+    1.0
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.10000000149011612,
+    0.3499999940395355,
+    1.0
+   ],
+   "emissive_strength": 2.5,
+   "opacity": 1.0
+  },
+  "M_MetalIron_01": {
+   "base": [
+    0.12799999862909317,
+    0.12799999862909317,
+    0.13599999994039536
+   ],
+   "roughness": 0.7,
+   "metallic": 1.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_MossRock_01": {
+   "base": [
+    0.06687499970818558,
+    0.07149999976779023,
+    0.051708332650984325
+   ],
+   "roughness": 0.8999999761581421,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Mud_01": {
+   "base": [
+    0.03666666677842538,
+    0.02887499953309695,
+    0.020749999986340605
+   ],
+   "roughness": 0.3499999940395355,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Mushroom_Cap_01": {
+   "base": [
+    0.1497916638230284,
+    0.08650000020861626,
+    0.055749999824911356
+   ],
+   "roughness": 0.9300000071525574,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Mushroom_Stem_01": {
+   "base": [
+    0.19395833555608988,
+    0.17041666867832345,
+    0.13083333351338905
+   ],
+   "roughness": 0.9300000071525574,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Nature_Glow_01": {
+   "base": [
+    0.30000001192092896,
+    0.8999999761581421,
+    0.30000001192092896
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.30000001192092896,
+    0.8999999761581421,
+    0.30000001192092896
+   ],
+   "emissive_strength": 3.0,
+   "opacity": 1.0
+  },
+  "M_OldWood_01": {
+   "base": [
+    0.059750000635782875,
+    0.04406249926735958,
+    0.029437499586492777
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_PaleWood_01": {
+   "base": [
+    0.14724999976654848,
+    0.13300000131130219,
+    0.10499999873961012
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Parchment_01": {
+   "base": [
+    0.19395833555608988,
+    0.16379166953265667,
+    0.11537500175957878
+   ],
+   "roughness": 0.9300000071525574,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Plaster_01": {
+   "base": [
+    0.16524999930212897,
+    0.14170833490788937,
+    0.10654166666790843
+   ],
+   "roughness": 0.9300000071525574,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Poison_Glow_01": {
+   "base": [
+    0.20000000298023224,
+    0.8999999761581421,
+    0.10000000149011612
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.20000000298023224,
+    0.8999999761581421,
+    0.10000000149011612
+   ],
+   "emissive_strength": 2.5,
+   "opacity": 1.0
+  },
+  "M_Portal_Glow_01": {
+   "base": [
+    0.3499999940395355,
+    0.20000000298023224,
+    1.0
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.3499999940395355,
+    0.20000000298023224,
+    1.0
+   ],
+   "emissive_strength": 3.0,
+   "opacity": 1.0
+  },
+  "M_Potion_Blue_01": {
+   "base": [
+    0.05000000074505806,
+    0.25,
+    0.8999999761581421
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.05000000074505806,
+    0.25,
+    0.8999999761581421
+   ],
+   "emissive_strength": 0.800000011920929,
+   "opacity": 1.0
+  },
+  "M_Potion_Green_01": {
+   "base": [
+    0.10000000149011612,
+    0.800000011920929,
+    0.15000000596046448
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.10000000149011612,
+    0.800000011920929,
+    0.15000000596046448
+   ],
+   "emissive_strength": 0.800000011920929,
+   "opacity": 1.0
+  },
+  "M_Potion_Red_01": {
+   "base": [
+    0.800000011920929,
+    0.019999999552965164,
+    0.029999999329447746
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.800000011920929,
+    0.019999999552965164,
+    0.029999999329447746
+   ],
+   "emissive_strength": 0.800000011920929,
+   "opacity": 1.0
+  },
+  "M_REF_Mannequin": {
+   "base": [
+    0.3499999940395355,
+    0.3499999940395355,
+    0.36000001430511475
+   ],
+   "roughness": 0.6000000238418579,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Rock_01": {
+   "base": [
+    0.10416666728754838,
+    0.09908333048224449,
+    0.09333333326503634
+   ],
+   "roughness": 0.8999999761581421,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Rock_Cliff_01": {
+   "base": [
+    0.06499999901279807,
+    0.06758333292479315,
+    0.04795833374373615
+   ],
+   "roughness": 0.9200000166893005,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_RoofShingles_01": {
+   "base": [
+    0.04506249943127235,
+    0.038374999538064,
+    0.03256250033155084
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_RoofTiles_01": {
+   "base": [
+    0.06854166633759937,
+    0.04920833293969433,
+    0.02524999987023572
+   ],
+   "roughness": 0.8500000238418579,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Rune_Glow_01": {
+   "base": [
+    0.20000000298023224,
+    0.550000011920929,
+    1.0
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.20000000298023224,
+    0.550000011920929,
+    1.0
+   ],
+   "emissive_strength": 4.0,
+   "opacity": 1.0
+  },
+  "M_RustedIron_01": {
+   "base": [
+    0.09749999921768904,
+    0.061749998945742846,
+    0.04874999984167516
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Skin_dark_elf_01": {
+   "base": [
+    0.1850000023841858,
+    0.1757500022649765,
+    0.23125000298023224
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Skin_elf_female_01": {
+   "base": [
+    0.6290000081062317,
+    0.49024999141693115,
+    0.41624999046325684
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Skin_elf_male_01": {
+   "base": [
+    0.6105000078678131,
+    0.4625000059604645,
+    0.38849999010562897
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Skin_human_female_01": {
+   "base": [
+    0.5550000071525574,
+    0.38849999010562897,
+    0.30525000393390656
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Skin_human_male_01": {
+   "base": [
+    0.5550000071525574,
+    0.38849999010562897,
+    0.30525000393390656
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Skin_undead_01": {
+   "base": [
+    0.29600000381469727,
+    0.30525000393390656,
+    0.24975000321865082
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Sky_Cloud_01": {
+   "base": [
+    0.8500000238418579,
+    0.8700000047683716,
+    0.8999999761581421
+   ],
+   "roughness": 1.0,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Sky_Moon_01": {
+   "base": [
+    0.5800000131130219,
+    0.5944999903440475,
+    0.6524999886751175
+   ],
+   "roughness": 1.0,
+   "metallic": 0.0,
+   "emissive": [
+    0.5800000131130219,
+    0.5944999903440475,
+    0.6524999886751175
+   ],
+   "emissive_strength": 2.0,
+   "opacity": 1.0
+  },
+  "M_Sky_Moon_Blood_01": {
+   "base": [
+    0.7249999940395355,
+    0.18124999850988388,
+    0.08699999935925007
+   ],
+   "roughness": 1.0,
+   "metallic": 0.0,
+   "emissive": [
+    0.7249999940395355,
+    0.18124999850988388,
+    0.08699999935925007
+   ],
+   "emissive_strength": 3.0,
+   "opacity": 1.0
+  },
+  "M_Sky_Star_01": {
+   "base": [
+    0.8999999761581421,
+    0.9200000166893005,
+    1.0
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.8999999761581421,
+    0.9200000166893005,
+    1.0
+   ],
+   "emissive_strength": 20.0,
+   "opacity": 1.0
+  },
+  "M_Steel_01": {
+   "base": [
+    0.25599999725818634,
+    0.25599999725818634,
+    0.2640000060200691
+   ],
+   "roughness": 0.7,
+   "metallic": 1.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Straw_01": {
+   "base": [
+    0.09999999900658925,
+    0.0800624992698431,
+    0.040187499641130366
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_TempleMarble_01": {
+   "base": [
+    0.11812499708806475,
+    0.11816666694357991,
+    0.09150000048490863
+   ],
+   "roughness": 0.6000000238418579,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Thatch_01": {
+   "base": [
+    0.0886249989271164,
+    0.06962500015894572,
+    0.037812500105549894
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Void_Glow_01": {
+   "base": [
+    0.4000000059604645,
+    0.05000000074505806,
+    0.8500000238418579
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.4000000059604645,
+    0.05000000074505806,
+    0.8500000238418579
+   ],
+   "emissive_strength": 2.0,
+   "opacity": 1.0
+  },
+  "M_Volcanic_01": {
+   "base": [
+    0.03499999999379118,
+    0.02974999975413084,
+    0.026041666511446238
+   ],
+   "roughness": 0.8500000238418579,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  },
+  "M_Window_Glow_01": {
+   "base": [
+    0.25,
+    0.14000000059604645,
+    0.05000000074505806
+   ],
+   "roughness": 0.07999999821186066,
+   "metallic": 0.0,
+   "emissive": [
+    0.8999999761581421,
+    0.550000011920929,
+    0.20000000298023224
+   ],
+   "emissive_strength": 1.0,
+   "opacity": 1.0
+  },
+  "M_WoodPlanks_01": {
+   "base": [
+    0.06637499978144965,
+    0.05012499882529179,
+    0.03256250033155084
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "emissive": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "emissive_strength": 0.0,
+   "opacity": 1.0
+  }
+ },
+ "assets": {
+  "SM_House_Village_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    8.683,
+    7.042,
+    10.283
+   ]
+  },
+  "SM_House_Tavern_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    13.408,
+    10.606,
+    15.183
+   ]
+  },
+  "SM_House_Cottage_Poor_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    7.622,
+    5.559,
+    6.062
+   ]
+  },
+  "SM_House_Merchant_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    9.308,
+    8.209,
+    10.682
+   ]
+  },
+  "SM_House_Blacksmith_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    12.384,
+    6.154,
+    6.934
+   ]
+  },
+  "SM_BldKit_Wall_Timber_2m_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    2.107,
+    0.235,
+    2.806
+   ]
+  },
+  "SM_BldKit_Wall_Timber_Window_2m_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    2.106,
+    0.501,
+    2.804
+   ]
+  },
+  "SM_BldKit_Wall_Timber_Door_2m_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    2.108,
+    0.263,
+    2.805
+   ]
+  },
+  "SM_BldKit_Wall_Stone_2m_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    2.006,
+    0.396,
+    3.009
+   ]
+  },
+  "SM_BldKit_Wall_Stone_Window_2m_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    2.007,
+    0.547,
+    3.004
+   ]
+  },
+  "SM_BldKit_Foundation_2m_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    2.0,
+    0.396,
+    0.6
+   ]
+  },
+  "SM_BldKit_Roof_Shingle_2m_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    2.208,
+    5.273,
+    3.402
+   ]
+  },
+  "SM_BldKit_Roof_Tile_2m_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    2.208,
+    5.268,
+    3.317
+   ]
+  },
+  "SM_BldKit_Chimney_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    1.059,
+    0.97,
+    3.229
+   ]
+  },
+  "SM_BldKit_Stairs_Wood_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    1.16,
+    3.401,
+    3.496
+   ]
+  },
+  "SM_BldKit_Balcony_Wood_2m_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    2.1,
+    1.307,
+    1.903
+   ]
+  },
+  "SM_BldKit_Window_Shuttered_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    1.102,
+    0.512,
+    1.295
+   ]
+  },
+  "SM_BldKit_Door_Plank_01": {
+   "collection": "ENV_Buildings",
+   "size_m": [
+    1.447,
+    0.236,
+    2.265
+   ]
+  },
+  "SM_CastleWall_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    6.031,
+    3.037,
+    7.141
+   ]
+  },
+  "SM_CastleTower_Round_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    8.039,
+    8.038,
+    19.711
+   ]
+  },
+  "SM_CastleWall_Damaged_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    6.344,
+    5.996,
+    5.775
+   ]
+  },
+  "SM_CastleWall_Corner_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    2.493,
+    2.491,
+    7.145
+   ]
+  },
+  "SM_CastleWall_Ruin_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    4.37,
+    3.383,
+    2.865
+   ]
+  },
+  "SM_CastleTower_Square_Small_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    5.45,
+    5.45,
+    18.514
+   ]
+  },
+  "SM_CastleTower_Broken_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    8.942,
+    8.538,
+    7.31
+   ]
+  },
+  "SM_Portcullis_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    3.204,
+    0.132,
+    4.422
+   ]
+  },
+  "SM_CastleGate_Doors_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    3.007,
+    0.225,
+    3.63
+   ]
+  },
+  "SM_CastleStairs_Stone_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    2.293,
+    3.946,
+    3.028
+   ]
+  },
+  "SM_Bridge_Stone_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    12.009,
+    4.139,
+    4.553
+   ]
+  },
+  "SM_Hoarding_Wood_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    6.474,
+    2.223,
+    4.441
+   ]
+  },
+  "SM_Watchtower_Wood_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    3.471,
+    3.521,
+    9.912
+   ]
+  },
+  "SM_Debris_Stone_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    2.719,
+    2.302,
+    0.813
+   ]
+  },
+  "SM_StoneArch_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    4.713,
+    0.966,
+    5.177
+   ]
+  },
+  "SM_CastleDoor_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    2.309,
+    0.712,
+    3.314
+   ]
+  },
+  "SM_CastleWindow_Gothic_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    1.91,
+    0.659,
+    2.868
+   ]
+  },
+  "SM_Gatehouse_01": {
+   "collection": "ENV_Castle",
+   "size_m": [
+    9.749,
+    7.568,
+    12.046
+   ]
+  },
+  "SM_Dungeon_Floor_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    4.0,
+    4.0,
+    0.216
+   ]
+  },
+  "SM_Dungeon_Floor_Broken_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    4.011,
+    4.009,
+    1.612
+   ]
+  },
+  "SM_Dungeon_Ceiling_Vault_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    4.829,
+    4.066,
+    2.634
+   ]
+  },
+  "SM_Dungeon_Column_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    0.957,
+    0.962,
+    3.36
+   ]
+  },
+  "SM_Dungeon_Door_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    2.114,
+    0.617,
+    2.84
+   ]
+  },
+  "SM_PrisonGate_Iron_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    1.355,
+    0.125,
+    2.4
+   ]
+  },
+  "SM_Dungeon_Cell_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    4.04,
+    3.749,
+    3.003
+   ]
+  },
+  "SM_Shackles_Wall_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    1.364,
+    0.136,
+    0.716
+   ]
+  },
+  "SM_Chains_Hanging_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    1.203,
+    0.158,
+    2.406
+   ]
+  },
+  "SM_Brazier_Iron_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    0.89,
+    0.881,
+    1.112
+   ]
+  },
+  "SM_Dungeon_Stairs_Spiral_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    3.736,
+    3.742,
+    5.412
+   ]
+  },
+  "SM_Dungeon_Wall_Collapsed_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    4.276,
+    2.21,
+    1.995
+   ]
+  },
+  "SM_Skeleton_Remains_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    1.731,
+    1.619,
+    0.352
+   ]
+  },
+  "SM_Cage_Wood_Hanging_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    1.136,
+    1.144,
+    3.436
+   ]
+  },
+  "SM_TortureRack_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    2.306,
+    1.3,
+    1.274
+   ]
+  },
+  "SM_Stocks_Pillory_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    1.817,
+    0.705,
+    1.211
+   ]
+  },
+  "SM_Altar_Dungeon_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    3.217,
+    2.226,
+    1.558
+   ]
+  },
+  "SM_Door_AncientMagic_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    7.014,
+    1.307,
+    7.773
+   ]
+  },
+  "SM_Chest_IronBound_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    0.975,
+    0.615,
+    0.741
+   ]
+  },
+  "SM_Dungeon_Wall_Niche_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    4.007,
+    0.669,
+    4.008
+   ]
+  },
+  "SM_Dungeon_Wall_01": {
+   "collection": "ENV_Dungeon",
+   "size_m": [
+    4.008,
+    0.59,
+    4.005
+   ]
+  },
+  "SM_Rock_Mossy_Large_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    4.677,
+    3.396,
+    2.581
+   ]
+  },
+  "SM_Tree_Dead_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    4.719,
+    5.151,
+    7.204
+   ]
+  },
+  "SM_Tree_Dead_02": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    8.436,
+    5.335,
+    8.793
+   ]
+  },
+  "SM_Tree_DeadOak_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    5.731,
+    5.534,
+    5.914
+   ]
+  },
+  "SM_Tree_Dead_Twisted_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    3.267,
+    5.65,
+    4.989
+   ]
+  },
+  "SM_Tree_Fallen_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    10.217,
+    3.809,
+    3.605
+   ]
+  },
+  "SM_Tree_Stump_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    2.12,
+    2.239,
+    0.902
+   ]
+  },
+  "SM_Weeds_Forest_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    1.235,
+    1.044,
+    0.479
+   ]
+  },
+  "SM_Flowers_Poppy_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    0.625,
+    0.527,
+    0.455
+   ]
+  },
+  "SM_Flowers_Daisy_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    0.565,
+    0.627,
+    0.447
+   ]
+  },
+  "SM_Flowers_Violet_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    0.503,
+    0.491,
+    0.454
+   ]
+  },
+  "SM_Mushrooms_Cluster_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    0.43,
+    0.222,
+    0.189
+   ]
+  },
+  "SM_Roots_Exposed_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    4.106,
+    2.863,
+    0.34
+   ]
+  },
+  "SM_Ivy_Wall_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    4.414,
+    0.072,
+    2.489
+   ]
+  },
+  "SM_Moss_Patch_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    1.48,
+    1.532,
+    0.068
+   ]
+  },
+  "SM_Rock_Small_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    0.609,
+    0.479,
+    0.262
+   ]
+  },
+  "SM_Rock_Small_02": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    0.668,
+    0.397,
+    0.185
+   ]
+  },
+  "SM_Rock_Medium_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    1.575,
+    1.296,
+    0.94
+   ]
+  },
+  "SM_Rock_Medium_Mossy_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    2.076,
+    1.622,
+    1.055
+   ]
+  },
+  "SM_Rock_Large_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    5.38,
+    4.253,
+    3.192
+   ]
+  },
+  "SM_Rock_Boulder_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    3.093,
+    2.797,
+    2.167
+   ]
+  },
+  "SM_Rock_Broken_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    2.12,
+    1.268,
+    0.833
+   ]
+  },
+  "SM_Rock_Cliff_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    10.605,
+    3.7,
+    7.529
+   ]
+  },
+  "SM_Rock_Formation_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    7.104,
+    6.514,
+    5.543
+   ]
+  },
+  "SM_Rock_CaveArch_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    8.203,
+    3.936,
+    4.917
+   ]
+  },
+  "SM_Tree_Oak_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    8.821,
+    8.114,
+    6.481
+   ]
+  },
+  "SM_Tree_Oak_02": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    11.36,
+    10.444,
+    7.274
+   ]
+  },
+  "SM_Tree_Oak_03": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    8.084,
+    6.721,
+    5.681
+   ]
+  },
+  "SM_Tree_Oak_Ancient_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    7.979,
+    7.798,
+    8.285
+   ]
+  },
+  "SM_Tree_Small_Forest_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    5.168,
+    5.643,
+    5.917
+   ]
+  },
+  "SM_Tree_Small_Forest_02": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    4.79,
+    4.376,
+    3.976
+   ]
+  },
+  "SM_Tree_Pine_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    8.144,
+    8.161,
+    14.166
+   ]
+  },
+  "SM_Tree_Pine_02": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    6.564,
+    6.438,
+    11.166
+   ]
+  },
+  "SM_Tree_Pine_Young_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    3.72,
+    3.69,
+    5.666
+   ]
+  },
+  "SM_Bush_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    2.434,
+    2.529,
+    2.184
+   ]
+  },
+  "SM_Bush_02": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    1.857,
+    1.995,
+    1.677
+   ]
+  },
+  "SM_Bush_Dead_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    2.163,
+    1.944,
+    1.913
+   ]
+  },
+  "SM_Fern_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    1.745,
+    1.934,
+    0.531
+   ]
+  },
+  "SM_Fern_02": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    1.978,
+    1.743,
+    0.532
+   ]
+  },
+  "SM_Grass_Tall_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    1.125,
+    1.069,
+    1.065
+   ]
+  },
+  "SM_Grass_Short_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    0.876,
+    0.829,
+    0.443
+   ]
+  },
+  "SM_Grass_Dead_01": {
+   "collection": "ENV_Nature",
+   "size_m": [
+    0.958,
+    1.019,
+    0.946
+   ]
+  },
+  "SM_Road_Dirt_01": {
+   "collection": "ENV_Roads",
+   "size_m": [
+    4.599,
+    4.221,
+    0.304
+   ]
+  },
+  "SM_Road_Cobblestone_01": {
+   "collection": "ENV_Roads",
+   "size_m": [
+    4.0,
+    4.007,
+    0.176
+   ]
+  },
+  "SM_Road_Village_01": {
+   "collection": "ENV_Roads",
+   "size_m": [
+    5.0,
+    4.105,
+    0.141
+   ]
+  },
+  "SM_Path_Stone_01": {
+   "collection": "ENV_Roads",
+   "size_m": [
+    2.103,
+    4.168,
+    0.163
+   ]
+  },
+  "SM_Trail_Forest_01": {
+   "collection": "ENV_Roads",
+   "size_m": [
+    2.921,
+    4.112,
+    0.153
+   ]
+  },
+  "SM_Road_Cobblestone_Cross_01": {
+   "collection": "ENV_Roads",
+   "size_m": [
+    4.006,
+    4.03,
+    0.175
+   ]
+  },
+  "SM_Road_Cobblestone_Curve90_01": {
+   "collection": "ENV_Roads",
+   "size_m": [
+    7.828,
+    7.791,
+    0.127
+   ]
+  },
+  "SM_Road_Cobblestone_Broken_01": {
+   "collection": "ENV_Roads",
+   "size_m": [
+    4.0,
+    4.029,
+    0.426
+   ]
+  },
+  "SM_Bridge_Wood_01": {
+   "collection": "ENV_Roads",
+   "size_m": [
+    9.039,
+    2.614,
+    3.705
+   ]
+  },
+  "SM_Ruin_Column_Broken_01": {
+   "collection": "ENV_Ruins",
+   "size_m": [
+    5.537,
+    3.048,
+    2.483
+   ]
+  },
+  "SM_Temple_Column_Intact_01": {
+   "collection": "ENV_Ruins",
+   "size_m": [
+    1.257,
+    1.26,
+    5.761
+   ]
+  },
+  "SM_Temple_Platform_01": {
+   "collection": "ENV_Ruins",
+   "size_m": [
+    12.399,
+    6.024,
+    1.213
+   ]
+  },
+  "SM_Ruin_Arch_01": {
+   "collection": "ENV_Ruins",
+   "size_m": [
+    5.028,
+    2.275,
+    4.451
+   ]
+  },
+  "SM_Ruin_Statue_Knight_Broken_01": {
+   "collection": "ENV_Ruins",
+   "size_m": [
+    2.936,
+    1.81,
+    2.471
+   ]
+  },
+  "SM_Ruin_House_01": {
+   "collection": "ENV_Ruins",
+   "size_m": [
+    7.745,
+    5.72,
+    3.653
+   ]
+  },
+  "SM_Ruin_Wall_Overgrown_01": {
+   "collection": "ENV_Ruins",
+   "size_m": [
+    5.371,
+    3.059,
+    4.398
+   ]
+  },
+  "SM_Crystal_Cluster_Mana_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.99,
+    0.945,
+    0.779
+   ]
+  },
+  "SM_Crystal_Cluster_Void_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.63,
+    0.625,
+    0.55
+   ]
+  },
+  "SM_RuneStone_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.992,
+    0.586,
+    2.861
+   ]
+  },
+  "SM_RuneStone_Floating_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    1.587,
+    1.317,
+    2.403
+   ]
+  },
+  "SM_Portal_Frame_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    5.705,
+    5.613,
+    5.473
+   ]
+  },
+  "SM_Book_Spell_Ornate_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.28,
+    0.302,
+    0.09
+   ]
+  },
+  "SM_Book_Tome_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.251,
+    0.302,
+    0.061
+   ]
+  },
+  "SM_Book_Open_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.45,
+    0.362,
+    0.057
+   ]
+  },
+  "SM_Lectern_MageBook_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.52,
+    0.6,
+    1.182
+   ]
+  },
+  "SM_Potion_Health_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.124,
+    0.124,
+    0.211
+   ]
+  },
+  "SM_Potion_Mana_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.068,
+    0.068,
+    0.27
+   ]
+  },
+  "SM_Potion_Poison_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.114,
+    0.1,
+    0.19
+   ]
+  },
+  "SM_Lantern_Magic_Floating_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    0.251,
+    0.22,
+    0.505
+   ]
+  },
+  "SM_Pillar_Arcane_Ancient_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    1.617,
+    1.626,
+    5.711
+   ]
+  },
+  "SM_Shrine_Teleport_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    6.917,
+    6.916,
+    3.753
+   ]
+  },
+  "SM_Altar_Ancient_01": {
+   "collection": "PROP_Magic",
+   "size_m": [
+    2.7,
+    1.287,
+    1.729
+   ]
+  },
+  "SM_Barrel_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.628,
+    0.595,
+    0.9
+   ]
+  },
+  "SM_Crate_Wood_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.868,
+    0.868,
+    0.805
+   ]
+  },
+  "SM_Well_Village_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    2.872,
+    2.164,
+    2.851
+   ]
+  },
+  "SM_Cart_Hand_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    1.62,
+    3.283,
+    1.191
+   ]
+  },
+  "SM_Anvil_Stump_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.843,
+    0.729,
+    0.953
+   ]
+  },
+  "SM_Bench_Wood_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    1.603,
+    0.39,
+    0.504
+   ]
+  },
+  "SM_Table_Trestle_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    2.012,
+    0.894,
+    0.787
+   ]
+  },
+  "SM_Chair_Wood_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.454,
+    0.474,
+    1.001
+   ]
+  },
+  "SM_Stool_Wood_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.36,
+    0.343,
+    0.5
+   ]
+  },
+  "SM_Lantern_Iron_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.17,
+    0.17,
+    0.484
+   ]
+  },
+  "SM_Torch_Wall_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.1,
+    0.223,
+    0.406
+   ]
+  },
+  "SM_Candles_Cluster_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.24,
+    0.237,
+    0.192
+   ]
+  },
+  "SM_NoticeBoard_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    1.797,
+    0.626,
+    2.327
+   ]
+  },
+  "SM_Fence_Wood_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    2.703,
+    0.164,
+    1.412
+   ]
+  },
+  "SM_HayPile_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    2.56,
+    2.186,
+    1.229
+   ]
+  },
+  "SM_WeaponRack_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    1.503,
+    0.605,
+    2.223
+   ]
+  },
+  "SM_Signpost_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.768,
+    0.641,
+    2.701
+   ]
+  },
+  "SM_Sack_Grain_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.594,
+    0.529,
+    0.562
+   ]
+  },
+  "SM_Bucket_Wood_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.33,
+    0.308,
+    0.448
+   ]
+  },
+  "SM_MarketStall_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    3.006,
+    1.83,
+    2.605
+   ]
+  },
+  "SM_Forge_Smithy_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    2.804,
+    1.277,
+    3.605
+   ]
+  },
+  "SM_Shelf_Wall_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    1.248,
+    0.36,
+    1.809
+   ]
+  },
+  "SM_Bed_Straw_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    1.094,
+    2.168,
+    0.905
+   ]
+  },
+  "SM_Tankard_Pewter_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.137,
+    0.094,
+    0.15
+   ]
+  },
+  "SM_Mug_Clay_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.113,
+    0.084,
+    0.101
+   ]
+  },
+  "SM_Plate_Wood_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.24,
+    0.24,
+    0.023
+   ]
+  },
+  "SM_Bowl_Wood_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.17,
+    0.17,
+    0.063
+   ]
+  },
+  "SM_Bottle_Wine_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.086,
+    0.086,
+    0.325
+   ]
+  },
+  "SM_CookingPot_Iron_01": {
+   "collection": "PROP_Village",
+   "size_m": [
+    0.42,
+    0.42,
+    0.588
+   ]
+  },
+  "SM_Staff_Necromancer_01": {
+   "collection": "ITEM_Staffs",
+   "size_m": [
+    0.205,
+    0.246,
+    1.777
+   ]
+  },
+  "SM_Staff_Arcane_01": {
+   "collection": "ITEM_Staffs",
+   "size_m": [
+    0.251,
+    0.244,
+    1.942
+   ]
+  },
+  "SM_Staff_Fire_01": {
+   "collection": "ITEM_Staffs",
+   "size_m": [
+    0.225,
+    0.241,
+    1.99
+   ]
+  },
+  "SM_Staff_Ice_01": {
+   "collection": "ITEM_Staffs",
+   "size_m": [
+    0.153,
+    0.129,
+    1.9
+   ]
+  },
+  "SM_Staff_Lightning_01": {
+   "collection": "ITEM_Staffs",
+   "size_m": [
+    0.191,
+    0.197,
+    1.912
+   ]
+  },
+  "SM_Staff_Nature_01": {
+   "collection": "ITEM_Staffs",
+   "size_m": [
+    0.141,
+    0.146,
+    1.852
+   ]
+  },
+  "SM_Staff_Holy_01": {
+   "collection": "ITEM_Staffs",
+   "size_m": [
+    0.4,
+    0.062,
+    1.975
+   ]
+  },
+  "SM_Staff_Void_01": {
+   "collection": "ITEM_Staffs",
+   "size_m": [
+    0.484,
+    0.12,
+    2.051
+   ]
+  },
+  "SM_Dagger_Rogue_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.13,
+    0.034,
+    0.411
+   ]
+  },
+  "SM_Sword_Iron_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.188,
+    0.037,
+    0.911
+   ]
+  },
+  "SM_Sword_Steel_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.205,
+    0.04,
+    1.006
+   ]
+  },
+  "SM_Sword_Knight_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.316,
+    0.037,
+    1.235
+   ]
+  },
+  "SM_Sword_Ancient_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.09,
+    0.09,
+    0.799
+   ]
+  },
+  "SM_Sword_Runic_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.231,
+    0.037,
+    1.085
+   ]
+  },
+  "SM_Sword_Magic_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.251,
+    0.044,
+    1.118
+   ]
+  },
+  "SM_Dagger_Simple_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.098,
+    0.033,
+    0.351
+   ]
+  },
+  "SM_Dagger_Curved_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.099,
+    0.033,
+    0.368
+   ]
+  },
+  "SM_Dagger_Poison_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.089,
+    0.033,
+    0.361
+   ]
+  },
+  "SM_Dagger_Assassin_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.05,
+    0.05,
+    0.408
+   ]
+  },
+  "SM_Dagger_Ceremonial_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.132,
+    0.033,
+    0.395
+   ]
+  },
+  "SM_Axe_Wood_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.19,
+    0.036,
+    0.781
+   ]
+  },
+  "SM_Axe_Battle_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.328,
+    0.045,
+    0.968
+   ]
+  },
+  "SM_Axe_TwoHanded_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.56,
+    0.052,
+    1.705
+   ]
+  },
+  "SM_Axe_Ancient_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.224,
+    0.063,
+    0.782
+   ]
+  },
+  "SM_Bow_Hunting_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.056,
+    0.16,
+    1.23
+   ]
+  },
+  "SM_Bow_Long_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.056,
+    0.18,
+    1.83
+   ]
+  },
+  "SM_Bow_Rogue_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.056,
+    0.1,
+    1.13
+   ]
+  },
+  "SM_Bow_DarkFantasy_01": {
+   "collection": "ITEM_Weapons",
+   "size_m": [
+    0.056,
+    0.145,
+    1.38
+   ]
+  }
+ }
+}

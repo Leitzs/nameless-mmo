@@ -1,8 +1,20 @@
 {
   "mcpServers": {
-    "unreal-mcp": {
-      "type": "http",
-      "url": "http://127.0.0.1:8000/mcp"
+    "godot": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@coding-solo/godot-mcp"],
+      "env": {
+        "DEBUG": "false"
+      }
+    },
+    "codegraph": {
+      "type": "stdio",
+      "command": "codegraph",
+      "args": [
+        "serve",
+        "--mcp"
+      ]
     }
   }
 }

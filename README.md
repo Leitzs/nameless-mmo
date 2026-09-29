@@ -1,41 +1,32 @@
-# RPGTest
+# nameless-mmo
 
-Unreal Engine 5.8 C++ + Blueprint RPG project.
+Action-RPG built in **Godot 4.7.2** with GDScript. It started as an Unreal Engine 5.8 C++ project (RPGTest), which was ported to Godot and then removed.
 
 ## Requirements
-- Unreal Engine 5.8 (Epic Games Launcher)
-- Visual Studio 2022 with the **Game development with C++** workload (or JetBrains Rider)
+- [Godot 4.7.2](https://godotengine.org/) (standard build, not .NET)
 - Git + [Git LFS](https://git-lfs.com/)
+- Blender, only to rebuild the asset kit (`Scripts/blender_kit/`)
 
 ## Setup
 ```bash
 git clone <repo-url>
-cd rpg-test
+cd nameless-mmo
 git lfs install
 git lfs pull
 ```
-Then right-click `RPGTest.uproject` → **Generate Visual Studio project files**, open `RPGTest.sln`,
-build **RPGTestEditor / Development Editor / Win64**, and run.
+Open `godot/project.godot` in the Godot editor and press Play, or run
+`Godot_v4.7.2-stable_win64.exe --path godot`.
+The main scene is `scenes/test_arena.tscn`, and the title screen shows on first load.
 
-## Maps
-Pressing Play first shows a map selector (press F2 in game to open it again):
-
-| Map | Purpose |
-| --- | --- |
-| `Content/RPGTest/Maps/L_Whisperwood` | Whisperwood Forest: the procedural forest with the village, roads and a training bot. |
-| `Content/RPGTest/Maps/L_TestArena` | Test Arena: a flat grid map for testing the mage, spells and bot rules. Built by `Scripts/create_test_arena.py`; see the script header for its layout and how to rebuild it. |
+Self test (headless; exits 0 on success, 1 on failure):
+`Godot_v4.7.2-stable_win64_console.exe --headless --path godot -- --selftest`
 
 ## Layout
 | Path | Purpose |
 | --- | --- |
-| `Source/RPGTest/Core` | Game mode, game instance, player controller |
-| `Source/RPGTest/Characters` | Player and NPC classes |
-| `Source/RPGTest/Components` | Reusable actor components (stats, inventory, ...) |
-| `Source/RPGTest/UI` | C++ widget base classes |
-| `Content/RPGTest/*` | Project assets (Marketplace/Fab packs go at `Content/` root) |
-| `Content/LevelPrototyping` | Grid materials and blockout meshes from the engine's Level Prototyping template pack |
-| `Scripts/` | Editor Python scripts (run with `UnrealEditor-Cmd -run=pythonscript` or Tools > Execute Python Script) |
-| `Config/` | Project settings |
-| `Plugins/` | Project plugins |
+| `godot/` | The game: scripts, scenes, assets. Details in `godot/README.md`. |
+| `Art/` | Blender kit (`Art/Blender`), exported FBX/materials (`Art/Export`), third-party CC0 sources (`Art/ThirdParty`) |
+| `Scripts/blender_kit/` | Blender Python that builds the kit and the game characters |
+| `Docs/ROADMAP.md` | Current state and open TODOs |
 
-Binary assets (`.uasset`, `.umap`, textures, audio, meshes) are stored with Git LFS — see `.gitattributes`.
+Binary assets (meshes, textures, audio) are stored with Git LFS. See `.gitattributes`.

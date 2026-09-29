@@ -1,0 +1,145 @@
+{
+ "default_tracked_quest": "WhisperingCrypt",
+ "quests": [
+  {
+   "id": "WhisperingCrypt",
+   "title": "The Whispering Crypt",
+   "summary": "Find the ancient relics",
+   "description": "\"The ancient stone guardians have awakened in the crypts of the Arch-Mage Valerius. The locals speak of a rhythmic humming beneath the soil, carrying the scent of elder ozone. You must delve into the deep vaults to secure the relic before the void-leaking wards collapse completely.\"",
+   "chapter": "Act I · Main Quest",
+   "category": "MAIN",
+   "difficulty": "HARD",
+   "location": "Catacombs",
+   "region": "The Whispering Catacombs, level II",
+   "objectives": [
+    {
+     "text": "Locate the ancient door seal of the Arch-Mage",
+     "completed": true
+    },
+    {
+     "text": "Defeat the stone guardians (1/3)",
+     "completed": false
+    },
+    {
+     "text": "Retrieve the Gilded relic of cosmic focus",
+     "completed": false
+    }
+   ],
+   "rewards": [
+    {
+     "label": "Gold sovereign",
+     "value": "350 GP"
+    },
+    {
+     "label": "Arcane Experience",
+     "value": "1,200 XP"
+    }
+   ],
+   "reward_item_name": "Arch-Mage Sigil Amulet",
+   "reward_item_type": "Rare Accessory",
+   "reward_item_icon": "Items/T_Item_SigilAmulet"
+  },
+  {
+   "id": "VoidBendingSeal",
+   "title": "Void-Bending Seal",
+   "summary": "Close the cosmic rift",
+   "description": "\"A tear in the firmament hangs above the old observatory. Whatever answers from the other side grows louder every night.\"",
+   "chapter": "Act I · Main Quest",
+   "category": "MAIN",
+   "difficulty": "HARD",
+   "location": "Tower Peak",
+   "region": "Tower Peak, the Shattered Spire",
+   "objectives": [
+    {
+     "text": "Climb to the observatory at Tower Peak",
+     "completed": false
+    },
+    {
+     "text": "Bind the rift with three leyline anchors (0/3)",
+     "completed": false
+    }
+   ],
+   "rewards": [
+    {
+     "label": "Gold sovereign",
+     "value": "500 GP"
+    },
+    {
+     "label": "Arcane Experience",
+     "value": "1,800 XP"
+    }
+   ],
+   "reward_item_name": "",
+   "reward_item_type": "",
+   "reward_item_icon": ""
+  },
+  {
+   "id": "StoneGuardians",
+   "title": "Stone Guardians",
+   "summary": "Defeat the monolithic guardians blocking the path",
+   "description": "\"The Whispering Crypt has remained sealed for three centuries. Locals speak of soft singing emanating from the stone gates at midnight.\"",
+   "chapter": "Side Rumor",
+   "category": "SIDE",
+   "difficulty": "MEDIUM",
+   "location": "Catacombs",
+   "region": "The Whispering Catacombs, level II",
+   "objectives": [
+    {
+     "text": "Defeat the monolithic guardians blocking the path (0/3)",
+     "completed": false
+    }
+   ],
+   "rewards": [
+    {
+     "label": "Gold sovereign",
+     "value": "120 GP"
+    }
+   ],
+   "reward_item_name": "",
+   "reward_item_type": "",
+   "reward_item_icon": ""
+  },
+  {
+   "id": "LeylineTrial",
+   "title": "Trial of the Leylines",
+   "summary": "Attune to a leyline portal",
+   "description": "\"Every initiate of the Arcane Guild must first learn to hear the leylines. Find a portal and listen.\"",
+   "chapter": "Arcane Guild Trial",
+   "category": "GUILD",
+   "difficulty": "EASY",
+   "location": "Oakhaven",
+   "region": "Oakhaven Refuge",
+   "objectives": [
+    {
+     "text": "Attune to any leyline portal",
+     "completed": false
+    }
+   ],
+   "rewards": [],
+   "reward_item_name": "",
+   "reward_item_type": "",
+   "reward_item_icon": ""
+  },
+  {
+   "id": "ElderPillarRitual",
+   "title": "The Elder Pillar Ritual",
+   "summary": "Investigate ancient runes",
+   "description": "\"Re-aligned the shattered magical flow in the ancient ruins.\"",
+   "chapter": "Prologue · Completed",
+   "category": "COMPLETED",
+   "difficulty": "MEDIUM",
+   "location": "Pillar Ridge",
+   "region": "Pillar Ridge",
+   "objectives": [
+    {
+     "text": "Investigate the runes on the elder pillar",
+     "completed": true
+    }
+   ],
+   "rewards": [],
+   "reward_item_name": "",
+   "reward_item_type": "",
+   "reward_item_icon": ""
+  }
+ ]
+}

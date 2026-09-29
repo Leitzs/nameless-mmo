@@ -7,7 +7,12 @@ Build/*
 !Build/*/
 Build/*/**
 !Build/*/PakBlacklist*.txt
-
+# IDE / Assets files
+.codegraph
+.claude
+Content
+Plugins
+Art
 # Plugin build output
 Plugins/**/Binaries/
 Plugins/**/Intermediate/
