@@ -110,7 +110,7 @@ class FanOfBlades extends Ability:
 				if target:
 					BladeKit.bleed(caster, target)
 					BladeKit.combo(caster, 1.0)
-			caster.get_tree().current_scene.add_child(p)
+			Game.add_to_world(p)
 			p.launch(caster.get_target_point() + dir * 0.6, dir)
 
 

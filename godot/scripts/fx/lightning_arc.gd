@@ -17,6 +17,14 @@ var _mesh: ImmediateMesh
 static func spawn(context: Node, a: Vector3, b: Vector3, tint: Color, life := 0.25, thickness := 0.08, branch_count := 2) -> LightningArc:
 	if context == null or not context.is_inside_tree():
 		return null
+	if Game.world and Game.world.broadcasting():
+		Game.world.queue_event([NetWorld.Ev.ARC, a, b, tint, life, thickness, branch_count])
+	return spawn_local(context, a, b, tint, life, thickness, branch_count)
+
+
+static func spawn_local(context: Node, a: Vector3, b: Vector3, tint: Color, life := 0.25, thickness := 0.08, branch_count := 2) -> LightningArc:
+	if context == null or not context.is_inside_tree() or not Net.renders():
+		return null
 	var arc := LightningArc.new()
 	arc.from = a
 	arc.to = b
@@ -24,11 +32,12 @@ static func spawn(context: Node, a: Vector3, b: Vector3, tint: Color, life := 0.
 	arc.lifetime = life
 	arc.width = thickness
 	arc.branches = branch_count
-	context.get_tree().current_scene.add_child(arc)
+	Game.add_to_world(arc)
 	return arc
 
 
 func _ready() -> void:
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	top_level = true
 	global_transform = Transform3D.IDENTITY
 	_mesh = ImmediateMesh.new()

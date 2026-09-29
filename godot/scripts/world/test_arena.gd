@@ -1,14 +1,18 @@
 ## Flat grid test arena (port of L_TestArena / Scripts/create_test_arena.py), built in code:
-## floor, boundary walls, pillars and a ramp, navmesh baked at startup, the chosen class, bot
-## spawners and the UI (the title screen shows on the first load of a session).
+## floor, boundary walls, pillars and a ramp, navmesh baked at startup, the chosen class and bot
+## spawners. It is a networked level: every peer builds the geometry, only the server bakes the
+## navmesh, spawns bots and players (through its NetWorld) and runs the AI.
 ## Run with `-- --selftest` to cast every spell at a bot and print the results (like RpgSelfTest).
 extends Node3D
 
 const ARENA_SIZE := 80.0
-const PLAYER_RESPAWN_DELAY := 3.0
+## Player (re)spawn points, spread over the southern half (bots patrol the north).
+const SPAWN_POINTS: Array[Vector3] = [Vector3(0, 0, 8), Vector3(10, 0, 16), Vector3(-10, 0, 16), Vector3(0, 0, 24),
+	Vector3(20, 0, 32), Vector3(-20, 0, 32), Vector3(30, 0, 4), Vector3(-30, 0, 4)]
 
 var player: PlayerCharacter
 var ui: UIRoot
+var world: NetWorld
 var _nav: NavigationRegion3D
 var _spawn_point := Vector3.ZERO
 
@@ -18,9 +22,17 @@ func _ready() -> void:
 	_nav = NavigationRegion3D.new()
 	add_child(_nav)
 	_build_geometry(_nav)
+	world = NetWorld.attach(self)
+	world.spawn_points = SPAWN_POINTS
+	if not multiplayer.is_server():
+		return
 	_bake_navmesh()
+	Game.player_changed.connect(func(p: PlayerCharacter) -> void:
+		if p:
+			player = p)
 
-	_spawn_player()
+	if not Net.dedicated:
+		_spawn_player()
 
 	if Game.is_self_test():
 		_run_self_test()
@@ -35,19 +47,10 @@ func _ready() -> void:
 	add_child(cultists)
 	cultists.global_position = Vector3(0, 0, -32)
 
-	ui = UIRoot.new()
-	add_child(ui)
-	ui.set_player(player)
-	if not Game.title_screen_shown and not OS.get_cmdline_user_args().has("--skip-title"):
-		Game.title_screen_shown = true
-		ui.open_screen(&"MainMenu")
 
-
+## The local player (offline at the arena centre, online at the best free spawn point).
 func _spawn_player() -> void:
-	player = Game.create_player()
-	player.position = _spawn_point
-	add_child(player)
-	player.died.connect(_on_player_died)
+	player = world.spawn_player(multiplayer.get_unique_id(), Game.selected_class, null if Net.is_online() else _spawn_point)
 
 
 func _build_environment() -> void:
@@ -147,14 +150,6 @@ func _bake_navmesh() -> void:
 	_nav.navigation_mesh = nav_mesh
 	_nav.bake_navigation_mesh(false)
 
-
-func _on_player_died(_c: RPGCharacter) -> void:
-	await get_tree().create_timer(PLAYER_RESPAWN_DELAY, false).timeout
-	# Rebuild the player in place so every component starts fresh.
-	player.queue_free()
-	_spawn_player()
-	if ui:
-		ui.set_player(player)
 
 
 # ---------------------------------------------------------------------------------------------

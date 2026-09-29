@@ -31,7 +31,16 @@ func build() -> void:
 			["Nautical Chart (Map)", &"WorldMap"], ["Chronicle Log (Quests)", &"QuestJournal"]]:
 		var b := _item(column, entry[0], UITokens.ButtonVariant.SECONDARY)
 		b.pressed.connect(ui.open_screen.bind(entry[1]))
+	var party := _item(column, "Multiplayer", UITokens.ButtonVariant.SECONDARY)
+	party.pressed.connect(func() -> void: ui.open_screen(&"Multiplayer"))
 	_item(column, "Configuration", UITokens.ButtonVariant.SECONDARY).disabled = true
+	if Net.is_online():
+		var leave := _item(column, "Leave Session", UITokens.ButtonVariant.DANGER)
+		leave.pressed.connect(func() -> void:
+			ui.show_confirm("Leave Session", "Disconnect and return to your own world?", "Leave",
+				func() -> void:
+					Game.main.leave_session()
+					ui.switch_to(&"MainMenu")))
 	var abandon := _item(column, "Abandon to Sanctuary", UITokens.ButtonVariant.DANGER)
 	abandon.pressed.connect(func() -> void:
 		ui.show_confirm("Confirm Action", "Are you sure you wish to abandon your journey and return to the sanctuary of the title screen?", "Confirm",

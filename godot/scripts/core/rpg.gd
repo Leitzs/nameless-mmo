@@ -8,6 +8,12 @@ enum CastResult { SUCCESS, INVALID_SLOT, DEAD, INCAPACITATED, BUSY, COOLDOWN, NO
 enum School { ARCANE, FIRE, FROST, LIGHTNING, SHADOW, PHYSICAL, NATURE }
 enum DamageType { PHYSICAL, FIRE, FROST, LIGHTNING, POISON, ARCANE, SHADOW, NATURE }
 
+## Factions decide hostility. Players are their own faction (their peer id, 1 offline), so every
+## player is hostile to every other one (FFA PvP); summons share their summoner's faction and
+## NPC enemies share ENEMY_FACTION. NEUTRAL_FACTION is hostile to nobody.
+const NEUTRAL_FACTION := 0
+const ENEMY_FACTION := -1
+
 const LAYER_WORLD := 1
 const LAYER_CHARACTERS := 2
 const CHARACTER_GROUP := &"rpg_characters"
@@ -45,7 +51,19 @@ static func are_hostile(a: Node, b: Node) -> bool:
 	var cb := b as RPGCharacter
 	if ca == null or cb == null or ca == cb:
 		return false
-	return ca.team != cb.team and ca.team != Team.NEUTRAL and cb.team != Team.NEUTRAL
+	var fa := ca.get_faction()
+	var fb := cb.get_faction()
+	return fa != fb and fa != NEUTRAL_FACTION and fb != NEUTRAL_FACTION
+
+
+## Whether [param c] is hostile to whoever is looking at this screen (red telegraphs).
+static func hostile_to_viewer(c: Node) -> bool:
+	var ch := c as RPGCharacter
+	if ch == null:
+		return false
+	if is_instance_valid(Game.player) and Game.player.is_inside_tree():
+		return are_hostile(ch, Game.player)
+	return ch.get_faction() == ENEMY_FACTION
 
 
 ## Living characters hostile to [param source] whose body overlaps the sphere.
@@ -90,7 +108,10 @@ static func heal(target: RPGCharacter, amount: float) -> float:
 	target.attributes.heal(amount)
 	var healed := target.attributes.health - before
 	if healed >= 1.0:
-		Game.heal_number.emit(target.get_target_point() + Vector3.UP * 1.1, healed)
+		var at := target.get_target_point() + Vector3.UP * 1.1
+		Game.heal_number.emit(at, healed)
+		if Game.world and Game.world.broadcasting():
+			Game.world.queue_event([NetWorld.Ev.HEAL, at, healed])
 	return healed
 
 

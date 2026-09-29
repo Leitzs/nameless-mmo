@@ -228,7 +228,7 @@ func _refresh_tracker() -> void:
 
 
 func _process(delta: float) -> void:
-	if not is_instance_valid(player):
+	if not is_instance_valid(player) or not player.is_inside_tree():
 		return
 	var a := player.attributes
 	_health_bar.max_value = a.max_health
@@ -281,6 +281,12 @@ func _status_string(c: RPGCharacter) -> String:
 		parts.append(def.get("label", String(id)) + (" x%d" % n if n > 1 else ""))
 	if c.stealthed: parts.append("Hidden")
 	return ", ".join(parts)
+
+
+## Short message above the hotbar (network notices, cast errors).
+func toast(text: String, seconds := 4.0) -> void:
+	_message.text = text
+	_message_time = seconds
 
 
 func _on_cast_failed(result: int) -> void:

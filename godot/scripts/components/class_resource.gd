@@ -63,6 +63,8 @@ func consume_all() -> float:
 
 func _process(delta: float) -> void:
 	lockout = maxf(0.0, lockout - delta)
+	if not multiplayer.is_server():
+		return
 	if decay_per_second > 0.0 and value > 0.0 and RPG.now() - _last_gain > decay_delay:
 		value = maxf(0.0, value - decay_per_second * delta)
 		changed.emit(value)

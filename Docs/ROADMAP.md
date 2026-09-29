@@ -16,8 +16,9 @@ The project is Godot-only (`godot/`). The Unreal version (v0.1, "RPGTest") was p
 | Quests (data only) | `quests/quest_database.gd`, `assets/data/quests.json` | Read by the journal, the HUD tracker and the world map. |
 | Map | `scenes/test_arena.tscn` | Test arena only. |
 | Characters | `assets/characters/`, `assets/animations/` | Kit characters on the CC0 Quaternius UAL rig, built from `Scripts/blender_kit/build_game_characters.py -- --rig ual`. |
+| Multiplayer (FFA PvP + PvE) | `net/`, `core/main.gd` | Server-authoritative ENet, listen or dedicated server, join by IP, client prediction + reconciliation, interpolation, lag compensation, 30/60/128 Hz, UPnP, F3 stats, lag proxy. See `godot/README.md` and `Docs/NETWORK_TESTING.md`. |
 
-Verify with `-- --selftest`.
+Verify with `-- --selftest` and `-- --selftest-net [--via-proxy 80]`.
 
 ## Not done yet
 
@@ -27,6 +28,12 @@ The Unreal maps and their generator scripts were deleted with the project, so th
 - [ ] Medieval props (Cottage, Campfire, Watchtower, Fence, CastleWall/Tower, Gatehouse, Keep) and the castle map.
 - [ ] Kingdom main map from the Blender kit (spawn → farms → village → forest/sanctum/ruins/barrow → Highcrest → castle). Needs a Godot import of `Art/Export/Kit`.
 - [ ] Map travel from the world map markers (only the test arena exists now).
+
+### Multiplayer
+Open bugs and scenarios still to run are in `Docs/NETWORK_TESTING.md` (B1 movement drift under latency first).
+- [ ] Predict mobility abilities (Blink, dashes); delay events to the interpolation time.
+- [ ] Owner-only replication for cooldowns / inventory; interest management; scoreboard and kill feed.
+- [ ] Run the windowed scenarios (M1-M21) on real machines and over the internet.
 
 ### Gameplay
 - [ ] Play-test and tune numbers (damage, cooldowns, resources, bot HP).

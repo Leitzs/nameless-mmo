@@ -82,7 +82,7 @@ class ThrowingKnives extends Spell:
 			if i == count / 2:
 				knife.homing_target = ctx.target
 				knife.homing_acceleration = 40.0
-			caster.get_tree().current_scene.add_child(knife)
+			Game.add_to_world(knife)
 			knife.launch(spawn, knife_dir)
 		var flash := fx(color)
 		flash.intensity = 6.0

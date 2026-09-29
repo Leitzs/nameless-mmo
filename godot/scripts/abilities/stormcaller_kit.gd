@@ -152,10 +152,41 @@ class BallLightningOrb extends Node3D:
 	var travel := 22.0
 	var zap_damage := 10.0
 	var zap_range := 4.5
+	## Client copy: drifts and glows, never zaps.
+	var visual_only := false
 	var _moved := 0.0
 	var _zap := 0.0
+	var _visual_id := 0
+
+	static func spawn_visual(_context: Node, args: Array) -> BallLightningOrb:
+		if not Net.renders():
+			return null
+		var orb := BallLightningOrb.new()
+		orb.visual_only = true
+		orb.direction = args[1]
+		orb.speed = args[2]
+		orb.travel = args[3]
+		Game.add_to_world(orb)
+		orb.global_position = args[0]
+		return orb
+
+	func end_visual() -> void:
+		queue_free()
+
+	func _announce() -> void:
+		if is_inside_tree() and Game.world:
+			_visual_id = Game.world.announce_visual(&"orb", [global_position, direction, speed, travel - _moved])
+
+	func _finish() -> void:
+		if not visual_only and Game.world:
+			Game.world.end_visual(_visual_id)
+		queue_free()
 
 	func _ready() -> void:
+		if not visual_only and multiplayer.is_server():
+			_announce.call_deferred()
+		if not Net.renders():
+			return
 		var orb := MeshInstance3D.new()
 		orb.mesh = TransientFX.make_mesh(TransientFX.Shape.SPHERE)
 		orb.scale = Vector3.ONE * 0.9
@@ -168,8 +199,8 @@ class BallLightningOrb extends Node3D:
 		add_child(light)
 
 	func _physics_process(delta: float) -> void:
-		if not is_instance_valid(caster):
-			queue_free()
+		if not visual_only and not is_instance_valid(caster):
+			_finish()
 			return
 		var step := direction * speed * delta
 		var q := PhysicsRayQueryParameters3D.create(global_position, global_position + step * 3.0, RPG.LAYER_WORLD)
@@ -177,6 +208,10 @@ class BallLightningOrb extends Node3D:
 			_moved = travel
 		global_position += step
 		_moved += step.length()
+		if visual_only:
+			if _moved >= travel:
+				queue_free()
+			return
 		_zap -= delta
 		if _zap <= 0.0:
 			_zap = 0.35
@@ -187,7 +222,7 @@ class BallLightningOrb extends Node3D:
 				LightningArc.spawn(caster, global_position, global_position + Vector3(randf_range(-2, 2), -1.5, randf_range(-2, 2)), StormKit.BOLT, 0.12, 0.04, 0)
 		if _moved >= travel:
 			ParticleFX.burst(caster, global_position, ParticleFX.Kind.SPARKS, StormKit.WHITE_HOT, 24, 1.2)
-			queue_free()
+			_finish()
 
 
 ## [4] Ball Lightning: a slow orb that repeatedly zaps nearby enemies along its path.
@@ -210,7 +245,7 @@ class BallLightning extends Ability:
 		orb.caster = ctx.caster
 		var dir := RPG.flat(ctx.aim_location - ctx.caster.global_position)
 		orb.direction = dir.normalized() if dir.length() > 0.1 else RPG.flat(ctx.caster.get_forward()).normalized()
-		ctx.caster.get_tree().current_scene.add_child(orb)
+		Game.add_to_world(orb)
 		orb.global_position = ctx.caster.global_position + Vector3.UP * 1.3 + orb.direction * 1.0
 
 

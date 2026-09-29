@@ -22,6 +22,38 @@ class Params:
 	## 0..1 random opacity/brightness jitter per frame.
 	var flicker := 0.0
 	var opacity := 0.55
+	## Optional fixed orientation (beams).
+	var oriented := false
+	var orientation := Basis.IDENTITY
+	## Optional travel to move_to over move_time, easing in (falling meteor).
+	var moves := false
+	var move_to := Vector3.ZERO
+	var move_time := 0.0
+
+	func to_array() -> Array:
+		return [shape, color, intensity, lifetime, grow_time, fade_start, start_scale, end_scale, light_energy,
+			light_range, flicker, opacity, oriented, orientation, moves, move_to, move_time]
+
+	static func from_array(a: Array) -> Params:
+		var p := Params.new()
+		p.shape = a[0]
+		p.color = a[1]
+		p.intensity = a[2]
+		p.lifetime = a[3]
+		p.grow_time = a[4]
+		p.fade_start = a[5]
+		p.start_scale = a[6]
+		p.end_scale = a[7]
+		p.light_energy = a[8]
+		p.light_range = a[9]
+		p.flicker = a[10]
+		p.opacity = a[11]
+		p.oriented = a[12]
+		p.orientation = a[13]
+		p.moves = a[14]
+		p.move_to = a[15]
+		p.move_time = a[16]
+		return p
 
 
 var _p: Params
@@ -34,20 +66,36 @@ var _follow_offset := Vector3.ZERO
 
 
 ## Spawns an effect in [param context]'s scene. With [param follow], it tracks that node.
+## On the server it is also sent to every client.
 static func spawn(context: Node, position: Vector3, params: Params, follow: Node3D = null) -> TransientFX:
 	if context == null or not context.is_inside_tree():
+		return null
+	if Game.world and Game.world.broadcasting():
+		Game.world.queue_event([NetWorld.Ev.TRANSIENT, position, params.to_array(), NetWorld.id_of(follow)])
+	return spawn_local(context, position, params, follow)
+
+
+## Spawns the effect on this peer only (effects spawned by other effects, and replicated events).
+static func spawn_local(context: Node, position: Vector3, params: Params, follow: Node3D = null) -> TransientFX:
+	if context == null or not context.is_inside_tree() or not Net.renders():
 		return null
 	var fx := TransientFX.new()
 	fx._p = params
 	fx._follow = follow
 	if follow:
 		fx._follow_offset = position - follow.global_position
-	context.get_tree().current_scene.add_child(fx)
+	Game.add_to_world(fx)
 	fx.global_position = position
+	if params.oriented:
+		fx.global_basis = params.orientation
+	if params.moves:
+		fx.create_tween().tween_property(fx, "global_position", params.move_to, params.move_time).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	return fx
 
 
 func _ready() -> void:
+	# Moved in _process (follow / tweens), so it must not be physics-interpolated.
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	if _p.grow_time < 0.0:
 		_p.grow_time = _p.lifetime
 	if _p.fade_start < 0.0:

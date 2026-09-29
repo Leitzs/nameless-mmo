@@ -19,18 +19,44 @@ var bolt := true
 var color := Color.WHITE
 var instigator: RPGCharacter
 var tracked_target: RPGCharacter
+## Client copy: shows the closing circle only; the strike arrives as effect events.
+var visual_only := false
 
 var _age := 0.0
 var _marker: MeshInstance3D
 var _marker_material: StandardMaterial3D
 
 
+## Client: the visual copy of a server blast.
+static func spawn_visual(context: Node, args: Array) -> DelayedBlast:
+	if not Net.renders():
+		return null
+	var b := DelayedBlast.new()
+	b.visual_only = true
+	b.radius = args[1]
+	b.delay = args[2]
+	b.color = args[3]
+	b.tracked_target = (context as NetWorld).find_character(args[4]) if context is NetWorld else null
+	Game.add_to_world(b)
+	b.global_position = args[0]
+	return b
+
+
+func _announce() -> void:
+	if is_inside_tree() and Game.world:
+		Game.world.announce_visual(&"blast", [global_position, radius, delay - _age, color, NetWorld.id_of(tracked_target)])
+
+
 func _ready() -> void:
-	_marker = MeshInstance3D.new()
-	_marker.mesh = TransientFX.make_mesh(TransientFX.Shape.CYLINDER)
-	_marker_material = TransientFX.make_glow_material(color, 3.0, 0.5)
-	_marker.material_override = _marker_material
-	add_child(_marker)
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	if not visual_only and multiplayer.is_server():
+		_announce.call_deferred()
+	if Net.renders():
+		_marker = MeshInstance3D.new()
+		_marker.mesh = TransientFX.make_mesh(TransientFX.Shape.CYLINDER)
+		_marker_material = TransientFX.make_glow_material(color, 3.0, 0.5)
+		_marker.material_override = _marker_material
+		add_child(_marker)
 	_snap_to_ground()
 
 
@@ -40,11 +66,15 @@ func _process(delta: float) -> void:
 		global_position = tracked_target.global_position
 		_snap_to_ground()
 	var alpha := clampf(_age / delay, 0.0, 1.0)
-	var diameter := radius * 2.0 * lerpf(1.4, 1.0, alpha)
-	_marker.scale = Vector3(diameter, 0.03, diameter)
-	_marker_material.albedo_color.a = 0.3 + 0.3 * absf(sin(_age * (8.0 + 30.0 * alpha)))
+	if _marker:
+		var diameter := radius * 2.0 * lerpf(1.4, 1.0, alpha)
+		_marker.scale = Vector3(diameter, 0.03, diameter)
+		_marker_material.albedo_color.a = 0.3 + 0.3 * absf(sin(_age * (8.0 + 30.0 * alpha)))
 	if _age >= delay:
-		_detonate()
+		if visual_only:
+			queue_free()
+		else:
+			_detonate()
 
 
 func _detonate() -> void:

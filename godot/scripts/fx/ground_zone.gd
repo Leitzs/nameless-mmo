@@ -18,6 +18,8 @@ var on_tick: Callable
 var on_end: Callable
 ## Follow this node (Wrath of the Storm follows the caster).
 var follow: Node3D
+## Client copy of a server zone: draws only, never ticks.
+var visual_only := false
 var _age := 0.0
 var _accum := 0.0
 var _disc: MeshInstance3D
@@ -34,13 +36,37 @@ static func spawn(caster: RPGCharacter, position: Vector3, zone_radius: float, z
 	z.kind = particle_kind
 	z.owner_character = caster
 	z.on_tick = tick
-	caster.get_tree().current_scene.add_child(z)
+	Game.add_to_world(z)
+	z.global_position = position
+	return z
+
+
+## Client side of a replicated zone.
+static func spawn_visual(context: Node, position: Vector3, zone_radius: float, zone_duration: float, tint: Color,
+		particle_kind: ParticleFX.Kind, follow_node: Node3D) -> GroundZone:
+	if context == null or not context.is_inside_tree() or not Net.renders():
+		return null
+	var z := GroundZone.new()
+	z.visual_only = true
+	z.radius = zone_radius
+	z.duration = zone_duration
+	z.tick_interval = 0.5
+	z.color = tint
+	z.kind = particle_kind
+	z.follow = follow_node
+	Game.add_to_world(z)
 	z.global_position = position
 	return z
 
 
 func _ready() -> void:
-	add_to_group(&"ground_zones")
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	if not visual_only:
+		add_to_group(&"ground_zones")
+		# Deferred: callers set follow / callbacks right after spawn().
+		_announce.call_deferred()
+	if not Net.renders():
+		return
 	_disc = MeshInstance3D.new()
 	var cyl := CylinderMesh.new()
 	cyl.top_radius = radius
@@ -73,7 +99,7 @@ func allies() -> Array[RPGCharacter]:
 		return out
 	for node in get_tree().get_nodes_in_group(RPG.CHARACTER_GROUP):
 		var c := node as RPGCharacter
-		if c and c.is_alive() and c.team == owner_character.team and RPG.flat(c.global_position - global_position).length() <= radius + c.body_radius:
+		if c and c.is_alive() and c.get_faction() == owner_character.get_faction() and RPG.flat(c.global_position - global_position).length() <= radius + c.body_radius:
 			out.append(c)
 	return out
 
@@ -82,24 +108,31 @@ func contains(point: Vector3) -> bool:
 	return RPG.flat(point - global_position).length() <= radius
 
 
+func _announce() -> void:
+	if is_inside_tree() and Game.world and Game.world.broadcasting():
+		Game.world.queue_event([NetWorld.Ev.ZONE, global_position, radius, duration - _age, color, kind, NetWorld.id_of(follow)])
+
+
 func _process(delta: float) -> void:
 	_age += delta
 	if follow and is_instance_valid(follow):
 		global_position = follow.global_position
-	var fade_in := clampf(_age / 0.25, 0.0, 1.0)
-	var fade_out := clampf((duration - _age) / 0.4, 0.0, 1.0)
-	# Big zones stay faint so they never hide the fight.
-	_mat.albedo_color.a = clampf(1.2 / radius, 0.06, 0.28) * fade_in * fade_out * (0.85 + 0.15 * sin(_age * 6.0))
+	if _mat:
+		var fade_in := clampf(_age / 0.25, 0.0, 1.0)
+		var fade_out := clampf((duration - _age) / 0.4, 0.0, 1.0)
+		# Big zones stay faint so they never hide the fight.
+		_mat.albedo_color.a = clampf(1.2 / radius, 0.06, 0.28) * fade_in * fade_out * (0.85 + 0.15 * sin(_age * 6.0))
 	_accum += delta
 	while _accum >= tick_interval and _age <= duration:
 		_accum -= tick_interval
-		if on_tick.is_valid() and is_instance_valid(owner_character):
+		if not visual_only and on_tick.is_valid() and is_instance_valid(owner_character):
 			on_tick.call(self)
+		# Ambient puffs are drawn by each peer's own copy of the zone.
 		if randf() < 0.7:
 			var offset := Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).limit_length(1.0) * radius * 0.8
-			ParticleFX.burst(self, global_position + offset + Vector3.UP * 0.2, kind, color, 6, 0.9)
+			ParticleFX.burst_local(self, global_position + offset + Vector3.UP * 0.2, kind, color, 6, 0.9)
 	if _age >= duration:
-		if on_end.is_valid() and is_instance_valid(owner_character):
+		if not visual_only and on_end.is_valid() and is_instance_valid(owner_character):
 			on_end.call(self)
 		queue_free()
 

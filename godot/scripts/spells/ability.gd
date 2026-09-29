@@ -7,9 +7,10 @@ extends Spell
 
 ## Ground telegraph shown to enemies of the caster (players see their own in their color).
 var telegraph_time := 0.0
-## Is this caster hostile to the player (red telegraphs)?
+## Is this caster hostile to whoever is watching (red telegraphs)? Telegraph.spawn re-evaluates
+## this on every peer when the caster is its context.
 static func is_enemy_caster(caster: RPGCharacter) -> bool:
-	return caster.team == RPG.Team.ENEMY
+	return RPG.hostile_to_viewer(caster)
 
 
 static func hit(caster: RPGCharacter, target: RPGCharacter, amount: float, type: int) -> float:
@@ -78,9 +79,27 @@ static func impact(caster: RPGCharacter, at: Vector3, tint: Color, kind: Particl
 	p.light_range = 4.0 * size + 2.0
 	TransientFX.spawn(caster, at, p)
 	ParticleFX.burst(caster, at, kind, tint, int(16 * size) + 6, size)
-	if shake > 0.0 and is_instance_valid(Game.player):
-		var d := Game.player.global_position.distance_to(at)
-		Game.player.add_shake(shake * clampf(1.0 - d / 25.0, 0.0, 1.0))
+	camera_shake(at, shake)
+
+
+## Camera kick for every player near [param at] (only [param only]'s player when given).
+static func camera_shake(at: Vector3, amount: float, only: RPGCharacter = null) -> void:
+	if amount <= 0.0:
+		return
+	if Game.world and Game.world.broadcasting():
+		Game.world.queue_event([NetWorld.Ev.SHAKE, at, amount, NetWorld.id_of(only)])
+	shake_local(at, amount, only)
+
+
+static func shake_local(at: Vector3, amount: float, only: RPGCharacter) -> void:
+	var me := Game.player
+	if not is_instance_valid(me):
+		return
+	if only:
+		if only == me:
+			me.add_shake(amount)
+		return
+	me.add_shake(amount * clampf(1.0 - me.global_position.distance_to(at) / 25.0, 0.0, 1.0))
 
 
 ## Standard projectile setup shared by bolt abilities.
@@ -98,6 +117,6 @@ static func launch(caster: RPGCharacter, ctx: Spell.Context, tint: Color, values
 		p.set(key, values[key])
 	p.color = tint
 	p.instigator = caster
-	caster.get_tree().current_scene.add_child(p)
+	Game.add_to_world(p)
 	p.launch(spawn, direction)
 	return p

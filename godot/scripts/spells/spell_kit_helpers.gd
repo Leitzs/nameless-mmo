@@ -38,8 +38,8 @@ static func beam(caster: RPGCharacter, from: Vector3, to: Vector3, color: Color)
 	p.end_scale = Vector3(0.06, length, 0.06)
 	p.flicker = 0.5
 	p.opacity = 0.85
-	var fx := TransientFX.spawn(caster, (from + to) * 0.5, p)
-	if fx:
-		var up := (to - from).normalized()
-		var side := up.cross(Vector3.FORWARD if absf(up.dot(Vector3.FORWARD)) < 0.9 else Vector3.RIGHT).normalized()
-		fx.global_basis = Basis(side, up, side.cross(up))
+	var up := (to - from).normalized()
+	var side := up.cross(Vector3.FORWARD if absf(up.dot(Vector3.FORWARD)) < 0.9 else Vector3.RIGHT).normalized()
+	p.oriented = true
+	p.orientation = Basis(side, up, side.cross(up))
+	TransientFX.spawn(caster, (from + to) * 0.5, p)

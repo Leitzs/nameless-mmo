@@ -59,10 +59,24 @@ var _material: ShaderMaterial
 
 
 ## [param size]: CIRCLE/RING radius in x (RING inner fraction in y); CONE (radius, angle deg); LINE (width, length).
+## When [param context] is the caster, "enemy" (red) is judged by each viewer: red if the caster is
+## hostile to the local player. [param is_enemy] is only the fallback for other contexts.
 static func spawn(context: Node, position: Vector3, yaw: float, telegraph_shape: Shape, size: Vector2, windup_time: float,
 		color: Color, is_enemy := false, hold_time := 0.0) -> Telegraph:
 	if context == null or not context.is_inside_tree():
 		return null
+	if Game.world and Game.world.broadcasting():
+		Game.world.queue_event([NetWorld.Ev.TELEGRAPH, position, yaw, telegraph_shape, size, windup_time, color,
+			NetWorld.id_of(context), is_enemy, hold_time])
+	return spawn_local(context, position, yaw, telegraph_shape, size, windup_time, color, is_enemy, hold_time)
+
+
+static func spawn_local(context: Node, position: Vector3, yaw: float, telegraph_shape: Shape, size: Vector2, windup_time: float,
+		color: Color, is_enemy := false, hold_time := 0.0) -> Telegraph:
+	if context == null or not context.is_inside_tree() or not Net.renders():
+		return null
+	if context is RPGCharacter:
+		is_enemy = RPG.hostile_to_viewer(context)
 	var t := Telegraph.new()
 	t.shape = telegraph_shape
 	t.windup = maxf(0.01, windup_time)
@@ -94,7 +108,7 @@ static func spawn(context: Node, position: Vector3, yaw: float, telegraph_shape:
 	t.mesh = plane
 	t.material_override = t._material
 	t.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	context.get_tree().current_scene.add_child(t)
+	Game.add_to_world(t)
 	t.global_position = position + Vector3.UP * 0.04
 	t.rotation.y = yaw
 	return t

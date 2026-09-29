@@ -1,5 +1,7 @@
 ## Fixed-size item grid (port of URPGInventoryComponent): stacks items, supports drag-and-drop slot
 ## moves and using consumables. Each slot is {"item": StringName, "quantity": int} (empty item = free).
+## The server owns it; on a client the player actions below become commands and the grid arrives
+## through the owner's StateSync (net_slots).
 class_name Inventory
 extends Node
 
@@ -15,6 +17,31 @@ var starting_items: Array = []
 func _init() -> void:
 	for i in num_slots:
 		slots.append({"item": &"", "quantity": 0})
+
+
+## [item, quantity, item, quantity, ...] for StateSync.
+var net_slots: Array:
+	get:
+		var out: Array = []
+		for s in slots:
+			out.append(s.item)
+			out.append(s.quantity)
+		return out
+	set(value):
+		if is_inside_tree() and multiplayer.is_server():
+			return
+		for i in mini(slots.size(), value.size() / 2):
+			slots[i] = {"item": StringName(value[i * 2]), "quantity": int(value[i * 2 + 1])}
+		changed.emit()
+
+
+## Client: forwards a player action to the server. True when it was sent (not applied here).
+func _send_to_server(op: StringName, a := 0, b := 0) -> bool:
+	var owner_player := get_parent() as PlayerCharacter
+	if owner_player == null or multiplayer.is_server():
+		return false
+	owner_player.request_command(op, a, b)
+	return true
 
 
 func _ready() -> void:
@@ -60,6 +87,8 @@ func add_item(item_id: StringName, quantity: int) -> int:
 func move_slot(from: int, to: int) -> bool:
 	if from == to or from < 0 or to < 0 or from >= slots.size() or to >= slots.size() or is_empty_slot(from):
 		return false
+	if _send_to_server(&"inv_move", from, to):
+		return false
 	var a := slots[from]
 	var b := slots[to]
 	var def := ItemDef.find(a.item)
@@ -83,6 +112,8 @@ func use_slot(index: int) -> bool:
 	var user := get_parent() as RPGCharacter
 	if def == null or user == null or not user.is_alive():
 		return false
+	if _send_to_server(&"inv_use", index):
+		return false
 	if not def.on_use(user):
 		return false
 	slots[index].quantity -= 1
@@ -97,6 +128,8 @@ func use_slot(index: int) -> bool:
 func drop_slot(index: int) -> bool:
 	if is_empty_slot(index):
 		return false
+	if _send_to_server(&"inv_drop", index):
+		return false
 	slots[index] = {"item": &"", "quantity": 0}
 	changed.emit()
 	return true
@@ -104,6 +137,8 @@ func drop_slot(index: int) -> bool:
 
 ## Packs all stacks to the front of the grid, rarest first.
 func sort_by_rarity() -> void:
+	if _send_to_server(&"inv_sort"):
+		return
 	var filled: Array[Dictionary] = []
 	for s in slots:
 		if s.item != &"" and s.quantity > 0:

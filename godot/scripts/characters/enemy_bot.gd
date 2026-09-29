@@ -97,11 +97,13 @@ func _on_died(instigator: Node) -> void:
 	_action = Action.NONE
 	current_target = null
 	super(instigator)
+	# Freed on the server; the spawner removes it from every client.
 	get_tree().create_timer(corpse_lifetime, false).timeout.connect(queue_free)
 
 
 func _physics_process(delta: float) -> void:
-	if is_alive():
+	# The AI runs on the server; clients interpolate the result.
+	if is_alive() and is_net_authority():
 		_think(delta)
 	super(delta)
 

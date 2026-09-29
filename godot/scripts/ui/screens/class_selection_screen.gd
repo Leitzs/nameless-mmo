@@ -277,6 +277,11 @@ func _begin_journey() -> void:
 	if _selected < 0:
 		return
 	Game.selected_class = CLASSES[_selected].player_class
+	if Net.is_online() or Net.is_connecting():
+		# In a session the class change respawns you in the current map.
+		Game.travel_to_map(Game.get_current_map_index())
+		ui.close_all()
+		return
 	ui.switch_to(&"WorldMap")
 
 

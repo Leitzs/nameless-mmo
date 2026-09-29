@@ -8,6 +8,8 @@ signal heal_number(position: Vector3, amount: float)
 ## Every hit (after multipliers); class resources and combo passives listen to this.
 signal damage_dealt(attacker: RPGCharacter, target: RPGCharacter, amount: float, type: int, is_dot: bool)
 signal character_killed(victim: RPGCharacter, killer: Node)
+## The character this peer controls changed (spawn, respawn, class change, leaving a session).
+signal player_changed(player: PlayerCharacter)
 
 const PLAYER_CLASSES := {
 	&"Mage": "res://scripts/characters/mage.gd",
@@ -29,7 +31,16 @@ var maps: Array[Dictionary] = [
 	{"name": "Kingdom of Dunmere", "description": "Handcrafted valley: farms, village and market, forest, mage sanctum, ruins, barrow dungeon and a hilltop castle.", "scene": ""},
 ]
 
-var player: PlayerCharacter
+## The character this peer controls (null on a dedicated server or before spawning).
+var player: PlayerCharacter:
+	set(value):
+		if player != value:
+			player = value
+			player_changed.emit(value)
+## Replication hub of the current level (set by NetWorld).
+var world: NetWorld
+## The persistent main scene (level holder + UI), set by Main.
+var main: Main
 var selected_class := &"Mage"
 var title_screen_shown := false
 var tracked_quest := ""
@@ -53,6 +64,7 @@ func _ready() -> void:
 	_add_keys(&"world_map", [KEY_M, KEY_F2])
 	_add_keys(&"debug_refill", [KEY_F5])
 	_add_keys(&"debug_god", [KEY_F6])
+	_add_keys(&"net_debug", [KEY_F3])
 	for i in 6:
 		_add_keys(StringName("spell_%d" % (i + 1)), [KEY_1 + i])
 	var args := OS.get_cmdline_user_args()
@@ -77,24 +89,32 @@ func is_self_test() -> bool:
 	return OS.get_cmdline_user_args().has("--selftest")
 
 
-func create_player() -> PlayerCharacter:
-	var script: Script = load(PLAYER_CLASSES.get(selected_class, PLAYER_CLASSES[&"Mage"]))
-	return script.new()
+## Adds a gameplay or effect node to the current level (freed with it on a map change).
+func add_to_world(node: Node) -> void:
+	if world and world.is_inside_tree():
+		world.add_prop(node)
+	else:
+		get_tree().current_scene.add_child(node)
 
 
 func get_current_map_index() -> int:
-	var path := get_tree().current_scene.scene_file_path if get_tree().current_scene else ""
-	for i in maps.size():
-		if maps[i].scene == path:
-			return i
-	return -1
+	return main.current_map if main else -1
 
 
+## Offline or as the host: loads the map for everyone. As a client, travelling to the current map
+## (the world map / class selection flow) respawns with the selected class instead.
 func travel_to_map(index: int) -> void:
-	if index < 0 or index >= maps.size() or maps[index].scene == "":
+	if index < 0 or index >= maps.size() or maps[index].scene == "" or main == null:
 		return
 	get_tree().paused = false
-	get_tree().change_scene_to_file(maps[index].scene)
+	if not multiplayer.is_server():
+		if index == get_current_map_index() and world:
+			world.send_command(&"respawn", String(selected_class))
+		return
+	if Net.is_online() and index == get_current_map_index() and world:
+		world.spawn_player(multiplayer.get_unique_id(), selected_class)
+		return
+	main.load_map(index)
 
 
 func set_tracked_quest(quest_id: String) -> void:

@@ -32,7 +32,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if not is_alive():
+	# Clients receive these values from the server (StateSync).
+	if not is_alive() or not multiplayer.is_server():
 		return
 	mana = minf(max_mana, mana + mana_regen * delta)
 	if not is_in_combat():

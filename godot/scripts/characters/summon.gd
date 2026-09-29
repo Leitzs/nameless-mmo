@@ -11,20 +11,32 @@ var guard_radius := 14.0
 var _age := 0.0
 
 
+## Server: spawns a summon on every peer, fighting for [param owner_character]'s faction.
 static func create(owner_character: RPGCharacter, summon_name: String, at: Vector3, tint: Color, duration: float, scale := 1.0, model := "") -> Summon:
-	var s := Summon.new()
+	var data := {"script": "res://scripts/characters/summon.gd", "pos": at, "yaw": owner_character.rotation.y,
+		"faction": owner_character.get_faction(), "name": summon_name,
+		"summon": {"tint": tint, "scale": scale, "model": model, "lifetime": duration}}
+	var s: Summon
+	if Game.world:
+		s = Game.world.spawn_character(data) as Summon
+	else:
+		s = Summon.new()
+		s.apply_spawn_data(data)
+		owner_character.get_tree().current_scene.add_child(s)
 	s.summoner = owner_character
-	s.display_name = summon_name
 	s.team = owner_character.team
-	s.model_tint = tint
-	s.lifetime = duration
-	s.model_scale = scale
-	if model != "":
-		s.model_path = model
-	s.position = at
-	owner_character.get_tree().current_scene.add_child(s)
 	s.home = at
 	return s
+
+
+func apply_spawn_data(data: Dictionary) -> void:
+	super(data)
+	var visual: Dictionary = data.get("summon", {})
+	model_tint = visual.get("tint", model_tint)
+	model_scale = visual.get("scale", model_scale)
+	lifetime = visual.get("lifetime", lifetime)
+	if visual.get("model", "") != "":
+		model_path = visual.model
 
 
 func _init() -> void:
@@ -38,6 +50,9 @@ func _init() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not is_net_authority():
+		super(delta)
+		return
 	_age += delta
 	if _age >= lifetime and is_alive():
 		ParticleFX.burst(self, get_target_point(), ParticleFX.Kind.SMOKE, model_tint, 10, 1.2)

@@ -255,6 +255,10 @@ func _refresh_modifiers(spell: Spell) -> void:
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		b.button_pressed = spell.active_modifier == m.id
 		b.pressed.connect(func() -> void:
-			spell.set_modifier(m.id)
+			var player := get_player()
+			if player:
+				player.select_modifier(spell, m.id)
+			else:
+				spell.set_modifier(m.id)
 			_select_spell(spell))
 		_modifier_box.add_child(b)

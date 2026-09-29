@@ -62,6 +62,43 @@ class Instance:
 
 var _active: Dictionary = {}
 var _immune_until: Dictionary = {}
+## Replicated view of _active: [id, stacks, remaining, potency, ...] rebuilt whenever a status
+## starts, stacks or ends (not every frame; clients count the timers down themselves).
+var _net_cache: Array = []
+
+## StateSync property. Clients rebuild their (display-only) statuses from it.
+var net_status: Array:
+	get:
+		return _net_cache
+	set(value):
+		if is_inside_tree() and multiplayer.is_server():
+			return
+		_net_cache = value
+		_active.clear()
+		for i in range(0, value.size() - 3, 4):
+			var inst := Instance.new()
+			inst.id = value[i]
+			inst.stacks = value[i + 1]
+			inst.remaining = value[i + 2]
+			inst.duration = value[i + 2]
+			inst.potency = value[i + 3]
+			_active[inst.id] = inst
+		changed.emit()
+
+
+func _init() -> void:
+	changed.connect(_refresh_net_cache)
+	status_applied.connect(func(_id: StringName, _stacks: int) -> void: _refresh_net_cache())
+
+
+func _refresh_net_cache() -> void:
+	if not is_inside_tree() or not multiplayer.is_server():
+		return
+	var out: Array = []
+	for id in _active:
+		var inst: Instance = _active[id]
+		out.append_array([id, inst.stacks, inst.remaining, inst.potency])
+	_net_cache = out
 ## Multiplier on incoming durations per status id (e.g. a boss with {&"freeze": 0.5}).
 var resistances: Dictionary = {}
 
@@ -334,6 +371,11 @@ func clear_all() -> void:
 # ---------------------------------------------------------------------------------------------
 
 func _process(delta: float) -> void:
+	if not multiplayer.is_server():
+		# Display only: the server decides ticks and expiry.
+		for inst in _active.values():
+			inst.remaining = maxf(0.0, inst.remaining - delta)
+		return
 	var owner := owner_character()
 	var expired: Array[StringName] = []
 	for id in _active.keys():

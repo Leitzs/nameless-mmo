@@ -10,10 +10,14 @@ Units are metres (Unreal cm / 100). Character origins are at the feet.
 - Self test (casts every Mage and Rogue spell at bots, exercises the inventory, opens every screen; exits 0/1):
   `Godot_v4.7.2-stable_win64_console.exe --headless --path godot -- --selftest`
 - Other user args: `--skip-title`, `--class Rogue`, `--screenshot out.png [--screen Inventory] [--cast 1]`.
+- Network self test (headless dedicated server + dummy client as child processes, optional lag proxy; exits 0/1):
+  `Godot_v4.7.2-stable_win64_console.exe --headless --path godot -- --selftest-net [--via-proxy 80]`
+- Multiplayer flags: see **Networking** below.
 - Character preview (models, materials, weapon grips): `... --path godot tools/preview_characters.tscn -- out.png [clip]`.
 
 Controls: WASD move, mouse look, wheel zoom, Space jump, Shift sprint, `1`-`6` spells, `Esc`/`P` pause or back,
-`I` inventory, `K` spellbook, `J` quest journal, `M`/`F2` world map, `F5` refill + reset cooldowns, `F6` god mode.
+`I` inventory, `K` spellbook, `J` quest journal, `M`/`F2` world map, `F5` refill + reset cooldowns, `F6` god mode,
+`F3` network stats overlay.
 
 ## Port map (historical: Unreal source is deleted)
 | Unreal (removed) | Godot |
@@ -64,6 +68,68 @@ UI is built in code from the tokens (no `.tscn` per screen); texts come from the
 - FX (no Niagara in Godot): `fx/particle_fx.gd` (embers, sparks, shards, leaves, smoke, shadow, runes, mist,
   blood), `fx/telegraph.gd` (circle, ring, cone, line; red for enemies), `fx/lightning_arc.gd`,
   `fx/ground_zone.gd` (lingering areas). `characters/summon.gd`: allied summons on the bot AI.
+
+## Networking
+Server-authoritative PvP (FFA: every player is hostile to every other player; bots, cultists and
+summons stay and are simulated by the server). Built-in ENet + SceneMultiplayer, no addons.
+
+**Play:** title screen (or pause menu) -> **Multiplayer**. *Host* opens a listen server (port 7777 by
+default, player cap, tick rate 30/60/128 Hz, optional UPnP) and reloads the arena as a networked
+world. *Join* takes the host's IP (LAN, or public IP with the port forwarded / UPnP). Your class is
+the one picked in Class Selection; picking another class in a session respawns you with it.
+*Leave Session* returns to your own offline world.
+
+**Command line** (after `--`):
+| Flag | Meaning |
+| --- | --- |
+| `--server` | Dedicated server: no local player, no UI, no visuals. Run it with `--headless`. |
+| `--port N`, `--max-players N` | Listen port (default 7777) and player cap (16). |
+| `--tick-rate N`, `--snapshot-rate N` | Simulation rate (default 60 = `network/tick_rate`) and snapshots per second (default = tick rate). Clients adopt the server's values. |
+| `--cheats` | Let clients use F5/F6 (always allowed offline and for the host). |
+| `--upnp` | Dedicated server: open the port on the router. |
+| `--connect IP[:PORT]`, `--name NAME`, `--class CLASS` | Join on start. |
+| `--interp-ms N` | Client interpolation delay (default 60 = `network/interp_delay_ms`). |
+| `--net-debug` | Start with the F3 overlay open. |
+| `--net-log` | Print network stats every 2 s (server: per-peer rtt, loss, input queue and input health). |
+
+Lag / loss simulation: `tools/net_proxy.tscn` is a UDP relay:
+`Godot_v4.7.2-stable_win64_console.exe --headless --path godot tools/net_proxy.tscn -- --listen 7778 --target 127.0.0.1:7777 --latency 80 --jitter 15 --loss 2`,
+then join `127.0.0.1:7778`. Latency is one-way (RTT is about twice it).
+
+**How it works** (`scripts/net/`):
+- `net.gd` (autoload `Net`): peer lifecycle, handshake (protocol version -> the client adopts the
+  server's tick rate before anything is replicated), player registry, client clock, UPnP, stats.
+  Offline play uses the `OfflineMultiplayerPeer` (a server with id 1), so single-player, the host and
+  a dedicated server all run the same server code.
+- `scenes/main.tscn` (`core/main.gd`): the level lives under `Levels` and is replicated by a
+  `MultiplayerSpawner` (late joiners get it too); the UI is local and persistent.
+- `net_world.gd` (`NetWorld`, one per level): characters are spawned through a `MultiplayerSpawner`
+  (code-built, `spawn_function`); slow state (health, mana, shield, statuses, class resource,
+  cooldowns, modifiers, inventory) rides on each character's `StateSync` synchronizer (on change,
+  20 Hz max). Per tick it sends one unreliable **snapshot** per client (its own movement state + input
+  ack, and every other entity) and one reliable batch of **events** (effects, damage/heal numbers,
+  cast poses, animations, visual-only copies of projectiles/zones/walls/orbs). Stealthed enemies are
+  left out of a client's snapshots.
+- `input_frame.gd`: one tick of input (move, camera yaw/pitch, jump/sprint/attack, aim origin, the
+  tick the client was viewing). Sent every tick with the last 4 frames for redundancy.
+- Prediction (`characters/player_character.gd`): the client simulates its own movement with the same
+  `_step_movement` the server runs, keeps unacknowledged frames, and on each snapshot rewinds to the
+  server state and replays them; small errors are smoothed on the visual, big ones (> 1.5 m) snap.
+  The server consumes one frame per tick per player (two when a backlog built up, waits when none
+  arrived, fills sequence gaps) and a token bucket caps inputs at one per tick (speed hacks).
+- Casts are reliable requests carrying the aim; the client plays the pose and starts the cooldown at
+  once, the server validates, runs the spell and reports refusals. `lag_compensation.gd` rewinds
+  other characters to what the shooter saw (max 200 ms) for instant hits; delayed effects
+  (telegraphs, meteors) are not rewound. Remote players' projectiles are advanced by half their RTT.
+- Remote entities (`net_interpolator.gd`) are drawn `interp_delay_ms` in the past, blended between
+  snapshots. Physics interpolation is on, so rendering stays smooth above the tick rate.
+- Effects: `TransientFX.spawn`, `ParticleFX.burst`, `Telegraph.spawn`, `LightningArc.spawn`,
+  `GroundZone`, `Ability.impact` / `camera_shake` broadcast from the server and replay on clients
+  (`*_local` variants draw on this peer only). Telegraph colour is judged per viewer (red = hostile to
+  you). Gameplay nodes go into the level through `Game.add_to_world`.
+- `net_debug_overlay.gd`: F3.
+
+Testing scenarios, known issues and latency bugs to chase: `Docs/NETWORK_TESTING.md`.
 
 ## Classes
 Every "Choose Your Path" card is a playable class (`characters/classes/`, kits in `abilities/*_kit.gd`): five

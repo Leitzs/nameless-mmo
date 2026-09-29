@@ -1,1 +1,4 @@
 .godot/
+
+# Godot AI MCP plugin (local dev tooling, not part of the game)
+addons/godot_ai/

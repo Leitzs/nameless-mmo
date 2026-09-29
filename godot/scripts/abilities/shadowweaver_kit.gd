@@ -227,8 +227,17 @@ class Eclipse extends Ability:
 		zone.follow = caster
 
 
-## Dims the world for the Eclipse, then restores it.
+## Dims the world for the Eclipse (on every peer), then restores it.
 static func darken(caster: RPGCharacter, duration: float) -> void:
+	if Game.world:
+		Game.world.announce_visual(&"darken", [duration])
+	darken_local(caster, duration)
+
+
+static func darken_local(context: Node, duration: float) -> void:
+	if not Net.renders():
+		return
+	var caster := context
 	var env_node := caster.get_tree().current_scene.find_children("*", "WorldEnvironment", true, false)
 	if env_node.is_empty():
 		return

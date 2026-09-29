@@ -1,10 +1,16 @@
 ## Shared player/NPC base (port of ARPGCharacterBase). Origin is at the feet. The visual is a
 ## skinned kit character on the CC0 Universal Animation Library rig (model_path), driven by that
 ## library's clips; without a model it falls back to a tinted primitive capsule.
+##
+## Networking: the server simulates every character (AUTHORITY). On a client, its own player is
+## PREDICTED (see PlayerCharacter) and everything else is INTERPOLATED from snapshots. Slow state
+## (health, mana, statuses, class resource...) is replicated by the StateSync synchronizer.
 class_name RPGCharacter
 extends CharacterBody3D
 
 signal died(character: RPGCharacter)
+
+enum NetRole { AUTHORITY, PREDICTED, INTERPOLATED }
 
 const SPELL_ORIGIN_LOCAL := Vector3(0.3, 1.4, -0.45)
 const ANIM_LIBRARY_PATH := "res://assets/animations/AnimationLibrary_Godot_Standard.gltf"
@@ -32,6 +38,15 @@ class Aim:
 @export var dual_wield := false
 
 var class_id := &""
+## Network identity (0 = not replicated yet), owning peer (players; 0 for NPCs) and faction
+## (see RPG.are_hostile; 0 = derived from team).
+var net_id := 0
+var owner_peer := 0
+var faction := 0
+var net_role := NetRole.AUTHORITY
+## Server: how many ticks behind the server this character's player sees the world (their
+## latency + interpolation delay); instant hits are rewound by this much. 0 = no rewind.
+var lag_comp_ticks := 0
 var body_radius := 0.34
 var body_height := 1.76
 
@@ -59,6 +74,15 @@ var _hit_react_cooldown := 0.0
 var _cast_pose := 0.0
 var _dead_time := 0.0
 
+## Parent of every visual (model, capsule, glows); offset to smooth prediction corrections.
+var _visual_root: Node3D
+var _visual_offset := Vector3.ZERO
+var _interp: NetInterpolator
+var _net_velocity := Vector3.ZERO
+var _net_on_floor := true
+var _net_culled := false
+var _was_alive := true
+
 var _model: Node3D
 var _anim: AnimationPlayer
 var _action_time := 0.0
@@ -82,10 +106,96 @@ func _init() -> void:
 	spellbook = Spellbook.new()
 	spellbook.name = "Spellbook"
 	add_child(spellbook)
+	_add_state_sync()
+
+
+## Replicated slow state, sent on change (reliable) to peers that have the level loaded.
+func _add_state_sync() -> void:
+	var sync := MultiplayerSynchronizer.new()
+	sync.name = "StateSync"
+	sync.root_path = NodePath("..")
+	sync.delta_interval = 0.05
+	sync.add_visibility_filter(func(peer: int) -> bool: return Net.is_peer_in_level(peer))
+	var config := SceneReplicationConfig.new()
+	for path in _net_properties():
+		config.add_property(path)
+		config.property_set_spawn(path, true)
+		config.property_set_replication_mode(path, SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
+	sync.replication_config = config
+	add_child(sync)
+
+
+## Properties StateSync replicates (paths relative to the character). Subclasses append.
+func _net_properties() -> Array[NodePath]:
+	return [NodePath("Attributes:health"), NodePath("Attributes:max_health"), NodePath("Attributes:mana"),
+		NodePath("Attributes:max_mana"), NodePath("Attributes:shield"), NodePath("StatusEffects:net_status"),
+		NodePath(".:net_resource"), NodePath(".:display_name")]
+
+
+## Class resource as (value, lockout) for StateSync.
+var net_resource: Vector2:
+	get:
+		return Vector2(resource.value, resource.lockout) if resource else Vector2.ZERO
+	set(v):
+		if resource and not (is_inside_tree() and multiplayer.is_server()):
+			resource.value = v.x
+			resource.lockout = v.y
+			resource.changed.emit(v.x)
+
+
+## Configures a character from MultiplayerSpawner data (see NetWorld.spawn_character). Runs on
+## every peer before the node enters the tree.
+func apply_spawn_data(data: Dictionary) -> void:
+	net_id = data.get("id", 0)
+	name = "C%d" % net_id
+	owner_peer = data.get("peer", 0)
+	faction = data.get("faction", 0)
+	position = data.get("pos", Vector3.ZERO)
+	rotation.y = data.get("yaw", 0.0)
+	if data.get("name", "") != "":
+		display_name = data.name
+
+
+## Faction for hostility checks (explicit, else from the legacy team).
+func get_faction() -> int:
+	if faction != 0:
+		return faction
+	match team:
+		RPG.Team.PLAYER:
+			return 1
+		RPG.Team.ENEMY:
+			return RPG.ENEMY_FACTION
+	return RPG.NEUTRAL_FACTION
+
+
+func is_net_authority() -> bool:
+	return net_role == NetRole.AUTHORITY
+
+
+func _enter_tree() -> void:
+	if multiplayer.is_server():
+		net_role = NetRole.AUTHORITY
+		if net_id == 0 and Game.world:
+			net_id = Game.world.next_id()
+	elif owner_peer != 0 and owner_peer == multiplayer.get_unique_id():
+		net_role = NetRole.PREDICTED
+	else:
+		net_role = NetRole.INTERPOLATED
+	if Game.world and net_id != 0:
+		Game.world.register(self, net_id)
+
+
+func _exit_tree() -> void:
+	if Game.world and net_id != 0:
+		Game.world.unregister(self, net_id)
 
 
 func _ready() -> void:
 	add_to_group(RPG.CHARACTER_GROUP)
+	if net_role == NetRole.INTERPOLATED:
+		# Placed every frame from the snapshot buffer, so no physics interpolation on top.
+		physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+		_interp = NetInterpolator.new()
 	collision_layer = RPG.LAYER_CHARACTERS
 	collision_mask = RPG.LAYER_WORLD | RPG.LAYER_CHARACTERS
 	floor_snap_length = 0.4
@@ -113,6 +223,9 @@ static func get_anim_library() -> AnimationLibrary:
 
 
 func _build_body() -> void:
+	_visual_root = Node3D.new()
+	_visual_root.name = "Visual"
+	add_child(_visual_root)
 	var shape := CapsuleShape3D.new()
 	shape.radius = body_radius
 	shape.height = body_height
@@ -136,7 +249,7 @@ func _build_body() -> void:
 	_hand_glow.position = SPELL_ORIGIN_LOCAL
 	_hand_material = TransientFX.make_glow_material(Color.WHITE, 8.0, 0.0)
 	_hand_glow.material_override = _hand_material
-	add_child(_hand_glow)
+	_visual_root.add_child(_hand_glow)
 
 	# Status shell: blue when frozen, yellow when stunned, orange when burning, violet when shielded.
 	_status_mesh = MeshInstance3D.new()
@@ -148,7 +261,7 @@ func _build_body() -> void:
 	_status_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_status_material = TransientFX.make_glow_material(Color.WHITE, 3.0, 0.0)
 	_status_mesh.material_override = _status_material
-	add_child(_status_mesh)
+	_visual_root.add_child(_status_mesh)
 
 
 func _build_capsule() -> void:
@@ -163,7 +276,7 @@ func _build_capsule() -> void:
 	mat.roughness = 0.8
 	_body_mesh.material_override = mat
 	_body_mesh.material_overlay = _flash_material
-	add_child(_body_mesh)
+	_visual_root.add_child(_body_mesh)
 	# A visor so facing is readable on the primitive body.
 	var visor := MeshInstance3D.new()
 	var box := BoxMesh.new()
@@ -173,11 +286,11 @@ func _build_capsule() -> void:
 	var visor_mat := StandardMaterial3D.new()
 	visor_mat.albedo_color = body_color.darkened(0.6)
 	visor.material_override = visor_mat
-	add_child(visor)
+	_visual_root.add_child(visor)
 
 
 func _build_model() -> bool:
-	if model_path == "" or not ResourceLoader.exists(model_path):
+	if model_path == "" or not ResourceLoader.exists(model_path) or not Net.renders():
 		return false
 	var packed := load(model_path) as PackedScene
 	if packed == null:
@@ -186,7 +299,7 @@ func _build_model() -> bool:
 	# glTF characters face +Z; Godot's forward is -Z.
 	_model.rotation.y = PI
 	_model.scale = Vector3.ONE * model_scale
-	add_child(_model)
+	_visual_root.add_child(_model)
 	KitMaterials.apply(_model)
 	var tint: StandardMaterial3D
 	if model_tint.a > 0.0:
@@ -321,6 +434,8 @@ func teleport_to(location: Vector3, facing: Vector3) -> void:
 	_push = Vector3.ZERO
 	if facing.length() > 0.01:
 		rotation.y = atan2(-facing.x, -facing.z)
+	if is_inside_tree():
+		reset_physics_interpolation()
 
 
 func apply_knockback(impulse: Vector3) -> void:
@@ -330,15 +445,23 @@ func apply_knockback(impulse: Vector3) -> void:
 
 func set_stealthed(value: bool) -> void:
 	stealthed = value
+	# Hostile viewers barely see a stealthed character (when the server sends it at all).
+	var alpha := (0.92 if RPG.hostile_to_viewer(self) else 0.65) if value else 0.0
 	if _model:
 		for node in _model.find_children("*", "MeshInstance3D", true, false):
-			(node as MeshInstance3D).transparency = 0.65 if value else 0.0
+			(node as MeshInstance3D).transparency = alpha
 	elif _body_mesh:
-		_body_mesh.transparency = 0.65 if value else 0.0
+		_body_mesh.transparency = alpha
 
 
 ## Plays a one-shot clip over the locomotion for [param duration] seconds (casts, attacks, hit reacts).
 func play_action(clip: StringName, duration: float, speed := 1.0) -> void:
+	if clip != &"" and Game.world and Game.world.broadcasting() and net_id != 0:
+		Game.world.queue_event([NetWorld.Ev.ACTION, net_id, clip, duration, speed])
+	play_action_local(clip, duration, speed)
+
+
+func play_action_local(clip: StringName, duration: float, speed := 1.0) -> void:
 	if _anim == null or clip == &"" or not _anim.has_animation(clip):
 		return
 	_anim.speed_scale = 1.0
@@ -348,11 +471,17 @@ func play_action(clip: StringName, duration: float, speed := 1.0) -> void:
 
 
 func play_cast_pose(duration: float, color: Color, clip: StringName = &"", clip_speed := 1.0) -> void:
+	if Game.world and Game.world.broadcasting() and net_id != 0:
+		Game.world.queue_event([NetWorld.Ev.CAST_POSE, net_id, duration, color, clip, clip_speed])
+	play_cast_pose_local(duration, color, clip, clip_speed)
+
+
+func play_cast_pose_local(duration: float, color: Color, clip: StringName = &"", clip_speed := 1.0) -> void:
 	_cast_pose = duration
 	var c := color * 2.0
 	c.a = 0.0
 	_hand_material.albedo_color = c
-	play_action(clip, maxf(duration, 0.35), clip_speed)
+	play_action_local(clip, maxf(duration, 0.35), clip_speed)
 
 
 ## Casting modifiers (Overcharge, Reality Fracture); 1 = normal.
@@ -389,8 +518,24 @@ func take_damage(amount: float, instigator: Node, type: int) -> float:
 	var shield_before := attributes.shield
 	var dealt := attributes.apply_damage(amount, instigator)
 	var absorbed := shield_before - attributes.shield
-	Game.damage_number.emit(get_target_point() + Vector3.UP * 1.1, dealt, absorbed, RPG.DAMAGE_COLORS.get(type, Color.WHITE), team == RPG.Team.PLAYER)
+	if Game.world and Game.world.broadcasting() and net_id != 0:
+		Game.world.queue_event([NetWorld.Ev.DAMAGE, net_id, dealt, absorbed, type])
+	Game.damage_number.emit(get_target_point() + Vector3.UP * 1.1, dealt, absorbed, RPG.DAMAGE_COLORS.get(type, Color.WHITE), _is_viewer())
 	return dealt
+
+
+## Client: a replicated hit on this character (numbers + flash; the hit react arrives as an ACTION).
+func show_damage(dealt: float, absorbed: float, type: int) -> void:
+	Game.damage_number.emit(get_target_point() + Vector3.UP * 1.1, dealt, absorbed, RPG.DAMAGE_COLORS.get(type, Color.WHITE), _is_viewer())
+	if dealt > 0.0:
+		_hit_flash = 0.12
+
+
+## Is this the character the local player controls (its damage numbers are red)?
+func _is_viewer() -> bool:
+	if Net.is_online() or Net.dedicated:
+		return is_instance_valid(Game.player) and Game.player == self
+	return team == RPG.Team.PLAYER
 
 
 func _on_damaged(health_damage: float, absorbed: float, instigator: Node) -> void:
@@ -424,12 +569,14 @@ func _on_died(instigator: Node) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if net_role == NetRole.INTERPOLATED:
+		return
 	if not is_alive():
 		_dead_time += delta
-		if _model == null:
-			# Primitive body: topple over.
-			_body_mesh.rotation.x = lerpf(_body_mesh.rotation.x, -PI * 0.5, minf(1.0, delta * 6.0))
-			_body_mesh.position = Vector3(0.0, lerpf(_body_mesh.position.y, body_radius, minf(1.0, delta * 6.0)), 0.0)
+		_topple(delta)
+		if net_role == NetRole.PREDICTED:
+			# The server moves corpses; the owner just follows the snapshots.
+			return
 		# Sink out of sight before the corpse is removed.
 		if _dead_time > corpse_lifetime - 1.0:
 			position.y -= delta * 0.8
@@ -437,7 +584,19 @@ func _physics_process(delta: float) -> void:
 			velocity.y -= _gravity * delta
 			move_and_slide()
 		return
+	_step_movement(delta)
 
+
+## Primitive body: topple over when dead.
+func _topple(delta: float) -> void:
+	if _model == null and _body_mesh:
+		_body_mesh.rotation.x = lerpf(_body_mesh.rotation.x, -PI * 0.5, minf(1.0, delta * 6.0))
+		_body_mesh.position = Vector3(0.0, lerpf(_body_mesh.position.y, body_radius, minf(1.0, delta * 6.0)), 0.0)
+
+
+## One tick of movement from move_input. Deterministic for the same state and input: the server
+## runs it for everyone, the owning client runs it to predict and to replay unacknowledged inputs.
+func _step_movement(delta: float) -> void:
 	var speed := get_desired_move_speed() * status.get_speed_multiplier()
 	var input := move_input.limit_length(1.0)
 	if input.length() > 0.01:
@@ -468,6 +627,17 @@ func _physics_process(delta: float) -> void:
 
 
 func _process(delta: float) -> void:
+	if net_role != NetRole.AUTHORITY:
+		_process_net(delta)
+	# Prediction corrections are absorbed by the visual and bled off over a few frames.
+	if not _visual_offset.is_zero_approx():
+		_visual_offset = _visual_offset.lerp(Vector3.ZERO, minf(1.0, delta * 12.0))
+		if _visual_offset.length() < 0.002:
+			_visual_offset = Vector3.ZERO
+		if _visual_root:
+			_visual_root.position = global_basis.inverse() * _visual_offset
+	elif _visual_root and _visual_root.position != Vector3.ZERO:
+		_visual_root.position = Vector3.ZERO
 	_hit_flash = maxf(0.0, _hit_flash - delta)
 	_hit_react_cooldown = maxf(0.0, _hit_react_cooldown - delta)
 	_flash_material.albedo_color.a = _hit_flash / 0.12 * 0.6
@@ -490,6 +660,55 @@ func _process(delta: float) -> void:
 	_status_material.albedo_color = shell
 
 
+## Client: follow the snapshot buffer (remote characters) and play deaths the server decided.
+func _process_net(delta: float) -> void:
+	if net_role == NetRole.INTERPOLATED and _interp and not _interp.is_empty():
+		var s := _interp.sample(Net.render_tick())
+		global_position = s.position
+		rotation.y = s.yaw
+		_net_velocity = s.velocity
+		_net_on_floor = s.flags & NetWorld.FLAG_ON_FLOOR != 0
+		var hidden := s.flags & NetWorld.FLAG_STEALTHED != 0
+		if hidden != stealthed:
+			set_stealthed(hidden)
+	var alive := is_alive()
+	if _was_alive and not alive:
+		_on_net_died()
+	elif alive and not _was_alive:
+		collision_layer = RPG.LAYER_CHARACTERS
+	_was_alive = alive
+	# (The predicted player topples in _physics_process.)
+	if not alive and net_role == NetRole.INTERPOLATED:
+		_dead_time += delta
+		_topple(delta)
+
+
+## Client: the server says we died (health reached 0).
+func _on_net_died() -> void:
+	_dead_time = 0.0
+	set_stealthed(false)
+	collision_layer = 0
+	if _anim:
+		_anim.speed_scale = 1.0
+		_anim.play(&"Death01", 0.15)
+
+
+## Client: a snapshot sample for this (interpolated) character.
+func push_net_sample(tick: int, pos: Vector3, yaw: float, vel: Vector3, flags: int) -> void:
+	if _interp:
+		if _interp.is_empty():
+			global_position = pos
+			rotation.y = yaw
+		_interp.push(tick, pos, yaw, vel, flags)
+
+
+## Client: hidden while the server leaves this character out of our snapshots (stealth).
+func set_net_culled(culled: bool) -> void:
+	if culled != _net_culled:
+		_net_culled = culled
+		visible = not culled
+
+
 ## Locomotion from the actual horizontal speed; one-shot actions play over it until they finish.
 func _update_animation(delta: float) -> void:
 	if _anim == null or not is_alive():
@@ -502,10 +721,12 @@ func _update_animation(delta: float) -> void:
 		_anim.speed_scale = 1.0
 		_action_time -= delta
 		return
-	var horizontal := Vector2(velocity.x, velocity.z).length()
+	var vel := _net_velocity if net_role == NetRole.INTERPOLATED else velocity
+	var on_floor := _net_on_floor if net_role == NetRole.INTERPOLATED else is_on_floor()
+	var horizontal := Vector2(vel.x, vel.z).length()
 	var clip := &"Idle"
 	var clip_speed := 1.0
-	if not is_on_floor() and absf(velocity.y) > 1.0:
+	if not on_floor and absf(vel.y) > 1.0:
 		clip = &"Jump"
 	elif horizontal > 6.5:
 		clip = &"Sprint"

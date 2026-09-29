@@ -62,7 +62,7 @@ func get_cooldown_rate() -> float:
 
 func _process(delta: float) -> void:
 	super(delta)
-	if overcharge_remaining > 0.0:
-		overcharge_remaining -= delta
-		if randf() < 0.3:
-			ParticleFX.burst(self, get_target_point() + Vector3(randf_range(-0.4, 0.4), randf_range(-0.6, 0.6), randf_range(-0.4, 0.4)), ParticleFX.Kind.SPARKS, StormKit.WHITE_HOT, 3, 0.5)
+	overcharge_remaining = maxf(0.0, overcharge_remaining - delta)
+	# Overcharge locks the Static bar, which is replicated: every peer draws its own sparks.
+	if resource.lockout > 0.0 and randf() < 0.3:
+		ParticleFX.burst_local(self, get_target_point() + Vector3(randf_range(-0.4, 0.4), randf_range(-0.6, 0.6), randf_range(-0.4, 0.4)), ParticleFX.Kind.SPARKS, StormKit.WHITE_HOT, 3, 0.5)

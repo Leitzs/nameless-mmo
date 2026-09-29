@@ -1,5 +1,6 @@
 ## Title screen shown on the first level load of a session (port of URPGMainMenuScreen, Figma
-## "main-menu"). Continue resumes, New Journey opens class selection, Quit asks for confirmation.
+## "main-menu"). Continue resumes, New Journey opens class selection, Multiplayer hosts or joins a
+## game, Quit asks for confirmation.
 ## Load Chronicle / Settings / Credits have no backing systems yet and stay disabled.
 extends UIScreen
 
@@ -29,6 +30,8 @@ func build() -> void:
 	cont.pressed.connect(ui.close_all)
 	var new_journey := _menu_button(buttons, "New Journey", UITokens.ButtonVariant.SECONDARY)
 	new_journey.pressed.connect(func() -> void: ui.open_screen(&"ClassSelection"))
+	var online := _menu_button(buttons, "Multiplayer", UITokens.ButtonVariant.SECONDARY)
+	online.pressed.connect(func() -> void: ui.open_screen(&"Multiplayer"))
 	for label in ["Load Chronicle", "Settings", "Credits"]:
 		_menu_button(buttons, label, UITokens.ButtonVariant.SECONDARY).disabled = true
 	var quit := _menu_button(buttons, "Quit", UITokens.ButtonVariant.SECONDARY)

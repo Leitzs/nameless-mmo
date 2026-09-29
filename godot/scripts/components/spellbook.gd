@@ -75,8 +75,8 @@ func try_cast(slot: int) -> int:
 	var cast_time := spell.cast_time / caster.get_cast_speed()
 	_cast_end_time = RPG.now() + cast_time
 	if spell.face_aim:
-		var aim := caster.compute_aim(spell.spell_range)
-		caster.face_location(aim.location)
+		_lag_compensated(caster, func() -> void:
+			caster.face_location(caster.compute_aim(spell.spell_range).location))
 	caster.play_cast_pose(cast_time, spell.color, spell.animation, spell.animation_speed * caster.get_cast_speed())
 	var delay := spell.release_delay / caster.get_cast_speed()
 	if delay <= 0.0:
@@ -86,6 +86,34 @@ func try_cast(slot: int) -> int:
 	spell_cast.emit(slot, spell)
 	caster.on_spell_cast(spell)
 	return RPG.CastResult.SUCCESS
+
+
+## Client: the cosmetic half of a cast we just asked the server for (pose, facing, cooldown and
+## busy time start at once instead of a round trip later). The server's result wins.
+func predict_cast(slot: int) -> void:
+	var caster := get_caster()
+	var spell := get_spell(slot)
+	if caster == null or spell == null:
+		return
+	spell.start_cooldown(caster.get_cooldown_rate())
+	spell.predicted_at = RPG.now()
+	var cast_time := spell.cast_time / caster.get_cast_speed()
+	_cast_end_time = RPG.now() + cast_time
+	if spell.face_aim:
+		caster.face_location(caster.compute_aim(spell.spell_range).location)
+	caster.play_cast_pose_local(cast_time, spell.color, spell.animation, spell.animation_speed * caster.get_cast_speed())
+
+
+func cancel_cast_prediction() -> void:
+	_cast_end_time = 0.0
+
+
+## Runs instant hit logic with other characters rewound to what a remote player saw.
+static func _lag_compensated(caster: RPGCharacter, fn: Callable) -> void:
+	if Game.world:
+		Game.world.with_lag_compensation(caster, fn)
+	else:
+		fn.call()
 
 
 func make_context(spell: Spell) -> Spell.Context:
@@ -106,7 +134,7 @@ func _release(spell: Spell) -> void:
 		return
 	if spell.resource_gain > 0.0 and caster.resource:
 		caster.resource.gain(spell.resource_gain)
-	spell.execute(make_context(spell))
+	_lag_compensated(caster, func() -> void: spell.execute(make_context(spell)))
 	if spell.channel_time > 0.0:
 		_channel = spell
 		_channel_end = RPG.now() + spell.channel_time
@@ -125,7 +153,7 @@ func stop_channel() -> void:
 
 
 func _process(_delta: float) -> void:
-	if _channel == null:
+	if _channel == null or not multiplayer.is_server():
 		return
 	var caster := get_caster()
 	if not is_instance_valid(caster) or not caster.can_act() or RPG.now() >= _channel_end:
@@ -133,10 +161,12 @@ func _process(_delta: float) -> void:
 		return
 	if RPG.now() >= _channel_next:
 		_channel_next += _channel.channel_interval
-		var ctx := make_context(_channel)
-		caster.face_location(ctx.aim_location, 0.2)
-		caster.play_cast_pose(0.3, _channel.color)
-		_channel.channel_tick(ctx)
+		var channel := _channel
+		_lag_compensated(caster, func() -> void:
+			var ctx := make_context(channel)
+			caster.face_location(ctx.aim_location, 0.2)
+			caster.play_cast_pose(0.3, channel.color)
+			channel.channel_tick(ctx))
 
 
 func reset_cooldowns() -> void:

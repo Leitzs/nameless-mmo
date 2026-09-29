@@ -45,6 +45,8 @@ var active_modifier := &""
 var _base_values: Dictionary = {}
 
 var _cooldown_end := 0.0
+## Client: when we last started this cooldown ourselves (predicted cast).
+var predicted_at := -100.0
 
 
 ## Icon texture name when it differs from the display name (several spells share art).
@@ -90,6 +92,14 @@ func reset_cooldown() -> void:
 
 func get_cooldown_remaining() -> float:
 	return maxf(0.0, _cooldown_end - RPG.now())
+
+
+## Client: the server's cooldown (StateSync). A cast we predicted in the last half second is
+## still on its way to the server, so a lower server value doesn't cancel it.
+func set_cooldown_remaining(remaining: float) -> void:
+	if remaining < get_cooldown_remaining() and RPG.now() - predicted_at < 0.5:
+		return
+	_cooldown_end = RPG.now() + remaining
 
 
 ## Called every channel_interval while a channelled spell is held (ctx re-aimed each tick).

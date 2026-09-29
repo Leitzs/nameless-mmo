@@ -17,6 +17,49 @@ static func chill(caster: RPGCharacter, target: RPGCharacter, stacks := 1) -> vo
 		caster.resource.gain(4.0 * stacks)
 
 
+## Builds an ice wall (collision + shards) standing at [param at]. The server's blocks projectiles and
+## movement; clients build their own copy (VISUAL "wall") so their predicted movement collides too.
+static func spawn_ice_wall(_context: Node, at: Vector3, yaw: float, width: float, height: float, duration: float) -> StaticBody3D:
+	var wall := StaticBody3D.new()
+	wall.collision_layer = RPG.LAYER_WORLD
+	wall.collision_mask = 0
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(width, height, 0.8)
+	var col := CollisionShape3D.new()
+	col.shape = shape
+	col.position.y = height * 0.5
+	wall.add_child(col)
+	if Net.renders():
+		for i in 7:
+			var shard := MeshInstance3D.new()
+			var prism := PrismMesh.new()
+			prism.size = Vector3(1.3, height * randf_range(0.75, 1.15), 0.9)
+			shard.mesh = prism
+			shard.position = Vector3(-width * 0.5 + (i + 0.5) * width / 7.0, prism.size.y * 0.5, randf_range(-0.15, 0.15))
+			shard.rotation.z = randf_range(-0.12, 0.12)
+			var mat := StandardMaterial3D.new()
+			mat.albedo_color = Color(0.75, 0.92, 1.0, 0.72)
+			mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			mat.roughness = 0.05
+			mat.metallic_specular = 1.0
+			mat.emission_enabled = true
+			mat.emission = DEEP_ICE
+			mat.emission_energy_multiplier = 0.4
+			shard.material_override = mat
+			wall.add_child(shard)
+	Game.add_to_world(wall)
+	wall.global_position = at
+	wall.rotation.y = yaw
+	wall.scale = Vector3(1, 0.05, 1)
+	wall.create_tween().tween_property(wall, "scale", Vector3.ONE, 0.2)
+	# Clients also melt their copy on time in case the end event is late.
+	if not wall.multiplayer.is_server():
+		wall.get_tree().create_timer(duration + 0.5, false).timeout.connect(func() -> void:
+			if is_instance_valid(wall):
+				wall.queue_free())
+	return wall
+
+
 static func frost_burst(caster: RPGCharacter, at: Vector3, size: float) -> void:
 	Ability.impact(caster, at, ICE, ParticleFX.Kind.SHARDS, size, 0.1 * size)
 	ParticleFX.burst(caster, at, ParticleFX.Kind.MIST, Color(0.85, 0.95, 1.0), 8, size)
@@ -135,37 +178,8 @@ class IceWall extends Ability:
 		var fwd := RPG.flat(at - caster.global_position).normalized()
 		if fwd.length() < 0.1:
 			fwd = RPG.flat(caster.get_forward())
-		var wall := StaticBody3D.new()
-		wall.collision_layer = RPG.LAYER_WORLD
-		wall.collision_mask = 0
-		var shape := BoxShape3D.new()
-		shape.size = Vector3(width, height, 0.8)
-		var col := CollisionShape3D.new()
-		col.shape = shape
-		col.position.y = height * 0.5
-		wall.add_child(col)
-		for i in 7:
-			var shard := MeshInstance3D.new()
-			var prism := PrismMesh.new()
-			prism.size = Vector3(1.3, height * randf_range(0.75, 1.15), 0.9)
-			shard.mesh = prism
-			shard.position = Vector3(-width * 0.5 + (i + 0.5) * width / 7.0, prism.size.y * 0.5, randf_range(-0.15, 0.15))
-			shard.rotation.z = randf_range(-0.12, 0.12)
-			var mat := StandardMaterial3D.new()
-			mat.albedo_color = Color(0.75, 0.92, 1.0, 0.72)
-			mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-			mat.roughness = 0.05
-			mat.metallic_specular = 1.0
-			mat.emission_enabled = true
-			mat.emission = DEEP_ICE
-			mat.emission_energy_multiplier = 0.4
-			shard.material_override = mat
-			wall.add_child(shard)
-		caster.get_tree().current_scene.add_child(wall)
-		wall.global_position = at
-		wall.rotation.y = yaw_of(fwd)
-		wall.scale = Vector3(1, 0.05, 1)
-		wall.create_tween().tween_property(wall, "scale", Vector3.ONE, 0.2)
+		var wall := CryoKit.spawn_ice_wall(caster, at, yaw_of(fwd), width, height, duration)
+		var visual_id := Game.world.announce_visual(&"wall", [at, yaw_of(fwd), width, height, duration]) if Game.world else 0
 		CryoKit.frost_burst(caster, at + Vector3.UP, 1.5)
 		for e in enemies_in_line(caster, at - wall.global_basis.x * width * 0.5, wall.global_basis.x, width, 1.5):
 			CryoKit.chill(caster, e, 2)
@@ -173,7 +187,9 @@ class IceWall extends Ability:
 		later(caster, duration, func() -> void:
 			if is_instance_valid(wall):
 				CryoKit.frost_burst(caster, wall.global_position + Vector3.UP, 1.2)
-				wall.queue_free())
+				wall.queue_free()
+				if Game.world:
+					Game.world.end_visual(visual_id))
 
 
 ## [4] Crystal Armor: consumes Frost for a shield (bigger with more Frost); attackers get Chilled.

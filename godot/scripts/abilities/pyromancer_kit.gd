@@ -106,8 +106,7 @@ class FlameWave extends Ability:
 			hit(caster, e, damage, RPG.DamageType.FIRE)
 			PyroKit.add_burn(caster, e)
 			e.apply_knockback(RPG.flat(e.global_position - caster.global_position).normalized() * 7.0 + Vector3.UP * 2.5)
-		if is_instance_valid(Game.player) and caster == Game.player:
-			Game.player.add_shake(0.25)
+		Ability.camera_shake(caster.global_position, 0.25, caster)
 
 
 ## [3] Ember Dash: dash forward, leaving a trail of burning ground.
@@ -229,9 +228,10 @@ static func meteor(caster: RPGCharacter, at: Vector3, radius: float, damage: flo
 	rock.opacity = 0.9
 	rock.light_energy = 4.0
 	rock.light_range = 10.0
-	var fx := TransientFX.spawn(caster, at + Vector3(4.0, 22.0, 4.0), rock)
-	if fx:
-		fx.create_tween().tween_property(fx, "global_position", at + Vector3.UP * 0.5, windup).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	rock.moves = true
+	rock.move_to = at + Vector3.UP * 0.5
+	rock.move_time = windup
+	TransientFX.spawn(caster, at + Vector3(4.0, 22.0, 4.0), rock)
 	Ability.later(caster, windup, func() -> void:
 		Ability.impact(caster, at + Vector3.UP * 0.5, DEEP_FIRE, ParticleFX.Kind.EMBERS, radius * 0.6, 0.6)
 		ParticleFX.burst(caster, at + Vector3.UP, ParticleFX.Kind.SMOKE, Color(0.15, 0.1, 0.08), 14, radius * 0.5)

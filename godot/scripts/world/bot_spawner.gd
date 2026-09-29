@@ -16,15 +16,20 @@ func _ready() -> void:
 		spawn_bot.call_deferred()
 
 
+## Server only: bots are spawned on every peer through the level's NetWorld.
 func spawn_bot() -> void:
-	var bot: RPGCharacter = bot_script.new()
 	var angle := randf() * TAU
 	var offset := Vector3(cos(angle), 0.0, sin(angle)) * randf() * spawn_radius
-	bot.position = position + offset
-	get_parent().add_child(bot)
+	var bot: RPGCharacter
+	if Game.world:
+		bot = Game.world.spawn_character({"script": bot_script.resource_path, "pos": global_position + offset, "yaw": randf() * TAU})
+	else:
+		bot = bot_script.new()
+		bot.position = position + offset
+		bot.rotation.y = randf() * TAU
+		get_parent().add_child(bot)
 	if bot is EnemyBot:
 		(bot as EnemyBot).home = bot.global_position
-	bot.rotation.y = randf() * TAU
 	bot.died.connect(_on_bot_died)
 	bots.append(bot)
 

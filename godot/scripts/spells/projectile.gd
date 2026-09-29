@@ -1,7 +1,15 @@
 ## Spell projectile (port of ARPGProjectile): flies straight or homes on a target, explodes on
 ## impact for direct + splash damage and optional burn.
+##
+## Online, the server's projectile is the real one. Clients get a visual-only copy (VISUAL event)
+## that flies the same path and is removed when the server's ends; the explosion arrives as
+## effect events. A remote player's projectile is advanced by half their round trip on launch
+## (latency catch-up), so it is where they expect it.
 class_name Projectile
 extends Node3D
+
+## Latency catch-up is capped at this many seconds.
+const MAX_CATCH_UP := 0.1
 
 const COLLISION_RADIUS := 0.16
 
@@ -42,14 +50,61 @@ var _velocity := Vector3.ZERO
 var _age := 0.0
 var _exploded := false
 var _trail_accum := 0.0
+## Client copy: draws only, never hits.
+var visual_only := false
+var _visual_id := 0
 
 
 func launch(from: Vector3, direction: Vector3) -> void:
 	global_position = from
 	_velocity = direction.normalized() * speed
+	if not visual_only and multiplayer.is_server():
+		# Deferred: callers set homing and callbacks right after launch().
+		_announce.call_deferred()
+
+
+func _announce() -> void:
+	if _exploded or not is_inside_tree() or Game.world == null or not Game.world.broadcasting():
+		return
+	var shooter := instigator as PlayerCharacter
+	if shooter and not shooter.is_local() and shooter.owner_peer > 1:
+		var catch_up := minf(Net.get_rtt_ms(shooter.owner_peer) * 0.0005, MAX_CATCH_UP)
+		var step := 1.0 / Engine.physics_ticks_per_second
+		while catch_up > 0.0 and not _exploded:
+			_advance(minf(step, catch_up))
+			catch_up -= step
+		if _exploded:
+			return
+	_visual_id = Game.world.announce_visual(&"projectile", [global_position, _velocity, color, visual_scale, trail_kind,
+		NetWorld.id_of(homing_target), homing_acceleration, lifetime - _age, speed])
+
+
+## Client: the visual copy of a server projectile.
+static func spawn_visual(context: Node, args: Array) -> Projectile:
+	if not Net.renders():
+		return null
+	var p := Projectile.new()
+	p.visual_only = true
+	p.color = args[2]
+	p.visual_scale = args[3]
+	p.trail_kind = args[4]
+	p.homing_target = (context as NetWorld).find_character(args[5]) if context is NetWorld else null
+	p.homing_acceleration = args[6]
+	p.lifetime = args[7]
+	p.speed = args[8]
+	Game.add_to_world(p)
+	p.global_position = args[0]
+	p._velocity = args[1]
+	return p
+
+
+func end_visual() -> void:
+	queue_free()
 
 
 func _ready() -> void:
+	if not Net.renders():
+		return
 	var core := MeshInstance3D.new()
 	core.mesh = TransientFX.make_mesh(TransientFX.Shape.SPHERE)
 	core.scale = Vector3.ONE * 0.34 * visual_scale
@@ -68,10 +123,18 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	_advance(delta)
+
+
+func _advance(delta: float) -> void:
 	if _exploded:
 		return
 	_age += delta
 	if _age >= lifetime:
+		if visual_only:
+			queue_free()
+			_exploded = true
+			return
 		_explode(global_position, null)
 		return
 	if is_instance_valid(homing_target) and homing_target.is_alive() and homing_acceleration > 0.0:
@@ -80,10 +143,15 @@ func _physics_process(delta: float) -> void:
 
 	var from := global_position
 	var to := from + _velocity * delta
-	var query := PhysicsRayQueryParameters3D.create(from, to, RPG.LAYER_WORLD | RPG.LAYER_CHARACTERS)
+	var query := PhysicsRayQueryParameters3D.create(from, to, RPG.LAYER_WORLD if visual_only else RPG.LAYER_WORLD | RPG.LAYER_CHARACTERS)
 	if is_instance_valid(instigator):
 		query.exclude = [instigator.get_rid()] + _pierced
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if visual_only and not hit.is_empty():
+		# The copy stops at walls; the server decides who was hit.
+		_exploded = true
+		visible = false
+		return
 	if not hit.is_empty():
 		var c := hit.collider as RPGCharacter
 		if c and pierce > 0 and RPG.are_hostile(instigator, c):
@@ -100,7 +168,7 @@ func _physics_process(delta: float) -> void:
 			dilation = 0.3
 	global_position = from + _velocity * delta * dilation
 	if trail_kind >= 0 and randf() < 0.5:
-		ParticleFX.burst(self, global_position, trail_kind, color, 2, visual_scale)
+		ParticleFX.burst_local(self, global_position, trail_kind, color, 2, visual_scale)
 
 	_trail_accum += delta
 	if _trail_accum >= 0.03:
@@ -111,7 +179,7 @@ func _physics_process(delta: float) -> void:
 		p.start_scale = Vector3.ONE * 0.45 * visual_scale
 		p.end_scale = Vector3.ONE * 0.05
 		p.opacity = 0.35
-		TransientFX.spawn(self, global_position, p)
+		TransientFX.spawn_local(self, global_position, p)
 
 
 func _explode(location: Vector3, direct_hit: Object) -> void:
@@ -144,6 +212,8 @@ func _explode(location: Vector3, direct_hit: Object) -> void:
 		ParticleFX.burst(self, location, impact_kind, color, 18, maxf(1.0, splash_radius * 0.5))
 	if on_hit.is_valid():
 		on_hit.call(null, location)
+	if Game.world:
+		Game.world.end_visual(_visual_id)
 	queue_free()
 
 

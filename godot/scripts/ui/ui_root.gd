@@ -1,10 +1,12 @@
 ## Top-level UI (port of ARPGHUD + WBP_RootLayout): the gameplay HUD with the menu stack and a
-## confirm modal layered above it. Opening a menu pauses the game and frees the cursor.
+## confirm modal layered above it. Opening a menu frees the cursor and, offline only, pauses the
+## game (a networked world keeps running).
 class_name UIRoot
 extends CanvasLayer
 
 const SCREENS := {
 	&"MainMenu": "res://scripts/ui/screens/main_menu_screen.gd",
+	&"Multiplayer": "res://scripts/ui/screens/multiplayer_screen.gd",
 	&"PauseMenu": "res://scripts/ui/screens/pause_menu_screen.gd",
 	&"ClassSelection": "res://scripts/ui/screens/class_selection_screen.gd",
 	&"Spellbook": "res://scripts/ui/screens/spellbook_screen.gd",
@@ -40,6 +42,10 @@ func _ready() -> void:
 func set_player(player: PlayerCharacter) -> void:
 	if hud:
 		hud.queue_free()
+		hud = null
+	if player == null:
+		_update_mode()
+		return
 	hud = PlayerHUD.new()
 	hud.player = player
 	add_child(hud)
@@ -132,6 +138,16 @@ func show_confirm(title: String, body: String, confirm_label: String, on_confirm
 	cancel.grab_focus.call_deferred()
 
 
+func toast(text: String) -> void:
+	if hud:
+		hud.toast(text)
+
+
+## A message with a single OK (e.g. why we were disconnected).
+func show_notice(title: String, body: String) -> void:
+	show_confirm(title, body, "OK", func() -> void: pass)
+
+
 func close_modal() -> void:
 	if _modal:
 		_modal.queue_free()
@@ -167,7 +183,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func _update_mode() -> void:
 	var menu_open := not _stack.is_empty()
 	if is_inside_tree():
-		get_tree().paused = menu_open
+		get_tree().paused = menu_open and not Net.is_online() and not Net.is_connecting()
+		if Game.player:
+			Game.player.input_enabled = not menu_open
 	if hud:
 		hud.visible = not menu_open
 	if Game.is_self_test():

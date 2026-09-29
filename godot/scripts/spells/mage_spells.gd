@@ -42,7 +42,7 @@ class Fireball extends Spell:
 		projectile.instigator = caster
 		projectile.homing_target = ctx.target
 		projectile.homing_acceleration = homing_acceleration
-		caster.get_tree().current_scene.add_child(projectile)
+		Game.add_to_world(projectile)
 		projectile.launch(spawn, direction)
 
 		var flash := fx(color)
@@ -152,7 +152,7 @@ class LightningStrike extends Spell:
 		blast.color = color
 		blast.instigator = caster
 		blast.tracked_target = ctx.target
-		caster.get_tree().current_scene.add_child(blast)
+		Game.add_to_world(blast)
 		blast.global_position = strike
 
 		var spark := fx(color)

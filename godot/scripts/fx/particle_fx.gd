@@ -13,8 +13,18 @@ static var _meshes: Dictionary = {}
 
 
 ## Emits [param amount] particles of [param kind] at [param position]; [param scale] grows spread/size.
+## On the server it is also sent to every client.
 static func burst(context: Node, position: Vector3, kind: Kind, color: Color, amount := 20, scale := 1.0, follow: Node3D = null) -> ParticleFX:
 	if context == null or not context.is_inside_tree():
+		return null
+	if Game.world and Game.world.broadcasting():
+		Game.world.queue_event([NetWorld.Ev.PARTICLE, position, kind, color, amount, scale, NetWorld.id_of(follow)])
+	return burst_local(context, position, kind, color, amount, scale, follow)
+
+
+## Emits on this peer only (trails and puffs from effect nodes, and replicated events).
+static func burst_local(context: Node, position: Vector3, kind: Kind, color: Color, amount := 20, scale := 1.0, follow: Node3D = null) -> ParticleFX:
+	if context == null or not context.is_inside_tree() or not Net.renders():
 		return null
 	var p := ParticleFX.new()
 	p.one_shot = true
@@ -27,8 +37,10 @@ static func burst(context: Node, position: Vector3, kind: Kind, color: Color, am
 	p.local_coords = false
 	p.scale = Vector3.ONE * scale
 	p.fixed_fps = 0
-	var parent: Node = follow if follow else context.get_tree().current_scene
-	parent.add_child(p)
+	if follow:
+		follow.add_child(p)
+	else:
+		Game.add_to_world(p)
 	p.global_position = position
 	p.emitting = true
 	p.get_tree().create_timer(p.lifetime + 0.2, false).timeout.connect(p.queue_free)
